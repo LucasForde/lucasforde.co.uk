@@ -1,0 +1,150 @@
+type NullableElement<T extends Element> = T | null;
+
+const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+const allsortsLayer = document.querySelector<HTMLElement>("[data-image-layer='allsorts']");
+const beansLayer = document.querySelector<HTMLElement>("[data-image-layer='beans']");
+const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
+const contactHeading = document.querySelector<HTMLElement>("[data-contact-heading]");
+
+const requiredNodes: NullableElement<HTMLElement>[] = [
+  heroTitle,
+  ghostTitle,
+  allsortsLayer,
+  beansLayer,
+  introSection,
+  headingSection,
+  contactHeading,
+];
+
+const prefersStatic = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
+
+let viewportHeight = window.innerHeight;
+let introTop = 0;
+let headingTop = 0;
+let headingHeight = 0;
+let ticking = false;
+
+function px(value: number): string {
+  return `${value}px`;
+}
+
+function documentTop(element: HTMLElement): number {
+  return element.getBoundingClientRect().top + window.scrollY;
+}
+
+function measure(): void {
+  viewportHeight = window.innerHeight;
+
+  if (!introSection || !headingSection || !contactHeading) {
+    return;
+  }
+
+  introTop = documentTop(introSection);
+  headingTop = documentTop(headingSection);
+
+  const styles = window.getComputedStyle(contactHeading);
+  const lineHeight = Number.parseFloat(styles.lineHeight);
+  const padding = Number.parseFloat(styles.paddingTop) * 2;
+  headingHeight = lineHeight + padding;
+}
+
+function setStaticLayout(): void {
+  heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  allsortsLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  beansLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
+
+  if (contactHeading) {
+    contactHeading.style.top = px(viewportHeight * 0.2);
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.opacity = "1";
+  }
+}
+
+function positionTitles(scrollY: number): void {
+  if (!heroTitle || !ghostTitle) {
+    return;
+  }
+
+  const trigger = viewportHeight * 0.5;
+  const viewportShift = scrollY < trigger ? 0 : (trigger - scrollY) * 0.5;
+
+  heroTitle.style.transform = `translate3d(0, ${px(scrollY + viewportShift)}, 0)`;
+  ghostTitle.style.transform = `translate3d(0, ${px(viewportShift)}, 0)`;
+}
+
+function positionImages(scrollY: number): void {
+  if (!allsortsLayer || !beansLayer) {
+    return;
+  }
+
+  const allsortsStart = introTop - viewportHeight;
+  const allsortsShift = Math.max(0, scrollY - allsortsStart) * 0.375;
+  const beansShift = Math.max(0, scrollY - headingTop) * 0.375;
+
+  allsortsLayer.hidden = scrollY > introTop;
+  allsortsLayer.style.transform = `translate3d(0, ${px(-allsortsShift)}, 0)`;
+  beansLayer.style.transform = `translate3d(0, ${px(-beansShift)}, 0)`;
+}
+
+function positionHeading(scrollY: number): void {
+  if (!contactHeading) {
+    return;
+  }
+
+  const beansShift = scrollY - headingTop;
+
+  if (scrollY <= introTop) {
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.opacity = "0.3";
+    return;
+  }
+
+  if (scrollY > headingTop + headingHeight) {
+    contactHeading.style.top = px(beansShift);
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.opacity = "1";
+    return;
+  }
+
+  contactHeading.style.top = px(beansShift * 0.5);
+  contactHeading.style.marginTop = px(headingHeight * 0.5);
+  contactHeading.style.opacity = "0.3";
+}
+
+function render(): void {
+  ticking = false;
+
+  if (prefersStatic.matches) {
+    setStaticLayout();
+    return;
+  }
+
+  const scrollY = window.scrollY;
+  positionTitles(scrollY);
+  positionImages(scrollY);
+  positionHeading(scrollY);
+}
+
+function requestRender(): void {
+  if (!ticking) {
+    ticking = true;
+    window.requestAnimationFrame(render);
+  }
+}
+
+function refresh(): void {
+  measure();
+  requestRender();
+}
+
+if (requiredNodes.every(Boolean)) {
+  refresh();
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", refresh);
+  prefersStatic.addEventListener("change", refresh);
+  window.addEventListener("load", refresh, { once: true });
+}
