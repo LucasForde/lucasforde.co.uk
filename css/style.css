@@ -189,15 +189,6 @@ footer {
 		padding: 80px 51px 92px 51px;
 	}
 
-	form {
-		padding: 80px 51px;
-	}
-	input[type="text"], input[type="email"], textarea, button[type="submit"], form > div {
-		font-size: 50px;
-		line-height: 56px;
-		margin: 40px 0;
-	}
-
 }
 
 
@@ -230,15 +221,6 @@ footer {
 		padding: 60px 42px 72px 42px;
 	}
 
-	form {
-		padding: 60px 42px;
-	}
-	input[type="text"], input[type="email"], textarea, button[type="submit"], form > div {
-		font-size: 39px;
-		line-height: 44px;
-		margin: 30px 0;
-	}
-
 }
 
 
@@ -262,15 +244,6 @@ footer {
 		font-size: 32px;
 		line-height: 36px;
 		padding: 40px 29px 50px 29px;
-	}
-
-	form {
-		padding: 40px 29px;
-	}
-	input[type="text"], input[type="email"], textarea, button[type="submit"], form > div {
-		font-size: 32px;
-		line-height: 36px;
-		margin: 20px 0;
 	}
 
 }
@@ -298,18 +271,6 @@ footer {
 		padding: 35px 20px 43px 20px;
 	}
 
-	form {
-		padding: 35px 20px;
-	}
-	input[type="text"], input[type="email"], textarea, button[type="submit"], form > div {
-		font-size: 28px;
-		line-height: 31px;
-		margin: 18px 0;
-	}
-		form > div {
-			margin-bottom: 50px;
-		}
-
 }
 
 
@@ -333,70 +294,6 @@ footer {
 		padding: 30px 13px 35px 13px;
 	}
 
-	form {
-		padding: 30px 13px;
-	}
-	input[type="text"], input[type="email"], textarea, button[type="submit"], form > div {
-		margin: 15px 0;
-	}
-		form > div {
-			margin-bottom: 50px;
-		}
-
-}
-
-
-
-/* form */
-
-form {
-	margin: 0 auto;
-}
-input[type="text"], input[type="email"], textarea {
-	display: block;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 100;
-	color: #fff;
-	letter-spacing: -1px;
-	background: none;
-	border: none;
-	width: 100%;
-	outline: none;
-	padding: 10px 0;
-	box-shadow: none;
-}
-::-webkit-input-placeholder {
-	color: #fff;
-}
-::-moz-placeholder {
-	color: #fff;
-	opacity: 1;
-}
-textarea {
-	resize: none;
-	overflow: hidden;
-}
-input.invalid, textarea.invalid {
-	
-}
-button[type="submit"] {
-	display: block;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 500;
-	color: #fff;
-	letter-spacing: -1px;
-	background: none;
-	border: none;
-	outline: none;
-	padding: 10px 0;
-	box-shadow: none;
-	cursor: pointer;
-}
-form > div {
-	font-family: 'Roboto', sans-serif;
-	font-weight: 100;
-	letter-spacing: -1px;
-	padding: 10px 0;
 }
 
 
