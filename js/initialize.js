@@ -92,10 +92,11 @@ $(document).ready(function() {
 	var bgBeans = $("#bg3");
 	var sectionTwo = sections.eq(1);
 	var sectionThree = sections.eq(2);
+	var headingContact = sectionThree.children("h2");
 
 	// functions
 
-	var winWidth, winHeight, scrollTop, headerTrigger, bgAllsortsTrigger, bgAllsortsShift, bgBeansTrigger, bgBeansShift;
+	var winWidth, winHeight, scrollTop, headerTrigger, bgAllsortsTrigger, bgAllsortsShift, bgBeansTrigger, bgBeansShift, hcLineHeight, hcPadding, hcHeight;
 	function getWinDim() {
 		winWidth = $(window).width();
 		winHeight = $(window).height();
@@ -118,13 +119,13 @@ $(document).ready(function() {
 	getScrollVars();
 
 	function headersPos() {
-		if (scrollTop < headerTrigger) {
-			headerOne.offset({ top: scrollTop });
-			headerTwo.offset({ top: scrollTop });
-		} else {
-			headerOne.offset({ top: (headerTrigger + scrollTop) * 0.5 });
-			headerTwo.offset({ top: (headerTrigger + scrollTop) * 0.5 });
+		var viewportTop = 0;
+		if (scrollTop >= headerTrigger) {
+			viewportTop = (headerTrigger - scrollTop) * 0.5;
 		}
+
+		headerOne.css({ top: scrollTop + viewportTop });
+		headerTwo.css({ top: viewportTop });
 	}
 
 	function bgAllsortsPos() {
@@ -155,10 +156,32 @@ $(document).ready(function() {
 		}
 	}
 
+	function headingsPos() {
+		if (scrollTop > sectionTop(sectionTwo)) {
+			hcLineHeight = parseInt(headingContact.css("line-height").slice(0,-2));
+			hcPadding = parseInt(headingContact.css("padding-top").slice(0,-2)) * 2;
+			hcHeight = hcLineHeight + hcPadding;
+			headingContact.css({ top: bgBeansShift * 0.5, marginTop: (hcHeight * 0.5), opacity: 0.3 });
+		}
+		if (scrollTop > (sectionTop(sectionThree) + hcHeight)) {
+			headingContact.css({ top: bgBeansShift, marginTop: 0, opacity: 1 });
+		}
+	}
+
+	function headingsStatic() {
+		if (staticVersion.length > 0) {
+			headingContact.css({ top: winHeight * 0.2 });
+		}
+	}
+	headingsStatic();
+
 	if ($(window).scrollTop() !== 0) {
-		headersPos();
-		bgAllsortsPos();
-		bgBeansPos();
+		if (staticVersion.length === 0) {
+			headersPos();
+			bgAllsortsPos();
+			bgBeansPos();
+			headingsPos();
+		}
 		bgHandler();
 	}
 
@@ -168,12 +191,14 @@ $(document).ready(function() {
 
 		getWinDim();
 		getScrollVars();
+		headingsStatic();
 
 		if (staticVersion.length === 0) {
 
 			headersPos();
 			bgAllsortsPos();
 			bgBeansPos();
+			headingsPos();
 
 		}
 
@@ -192,6 +217,7 @@ $(document).ready(function() {
 			headersPos();
 			bgAllsortsPos();
 			bgBeansPos();
+			headingsPos();
 
 		}
 
