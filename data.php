@@ -3,7 +3,7 @@
 	if(isset($_POST["Name"])) {
 	
 		$email = $_POST["Email"];
-		$to="lucas@lucasmforde.co.uk, lucasmforde@gmail.com";
+		$to="lucas@lucasforde.co.uk, lucasforde@gmail.com";
 		$subject="LUCASMFORDE.CO.UK ENQUIRY";
 		$from = stripslashes($email);
 		$headers = "From: $from\r\n";
