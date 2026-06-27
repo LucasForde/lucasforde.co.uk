@@ -16,6 +16,7 @@
   --copy-line: 44px;
   --copy-pad-block: 60px;
   --copy-pad-inline: 42px;
+  --heading-block: calc(var(--heading-line) + (var(--title-pad) * 2));
 }
 
 * {
@@ -79,6 +80,8 @@ p:last-child {
 .panel--heading {
   z-index: 30;
   background: transparent;
+  padding-top: var(--heading-block);
+  overflow: visible;
 }
 
 .panel--contact {
@@ -120,19 +123,19 @@ p:last-child {
 
 .site-title,
 .section-heading {
-  position: relative;
   margin: 0;
   padding: var(--title-pad);
   font-family: var(--font-sans);
   letter-spacing: 0;
-  will-change: transform, top;
 }
 
 .site-title {
+  position: relative;
   z-index: 4;
   font-size: var(--title-size);
   font-weight: 700;
   line-height: var(--title-line);
+  will-change: transform;
 }
 
 .site-title span {
@@ -153,12 +156,21 @@ p:last-child {
 }
 
 .section-heading {
-  height: 0;
+  position: sticky;
+  top: 0;
   z-index: 1;
   font-size: var(--heading-size);
   font-weight: 100;
   line-height: var(--heading-line);
   opacity: 0.3;
+}
+
+.section-heading.is-solid {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  margin-top: 0;
+  opacity: 1;
 }
 
 .copy {
@@ -260,5 +272,52 @@ p:last-child {
   .section-heading,
   .image-layer {
     will-change: auto;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .site-title--hero {
+    animation: hero-title-lock linear both;
+    animation-range: 0 200vh;
+    animation-timeline: scroll(root block);
+  }
+
+  .site-title--ghost {
+    animation: ghost-title-lock linear both;
+    animation-range: 0 200vh;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes hero-title-lock {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  25% {
+    transform: translate3d(0, 50vh, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 125vh, 0);
+  }
+}
+
+@keyframes ghost-title-lock {
+  0%,
+  25% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, -75vh, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .site-title--hero,
+  .site-title--ghost {
+    animation: none;
+    transform: translate3d(0, 0, 0);
   }
 }

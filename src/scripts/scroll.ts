@@ -7,6 +7,7 @@ const beansLayer = document.querySelector<HTMLElement>("[data-image-layer='beans
 const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
 const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
 const contactHeading = document.querySelector<HTMLElement>("[data-contact-heading]");
+const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
 
 const requiredNodes: NullableElement<HTMLElement>[] = [
   heroTitle,
@@ -16,6 +17,7 @@ const requiredNodes: NullableElement<HTMLElement>[] = [
   introSection,
   headingSection,
   contactHeading,
+  contactSection,
 ];
 
 const prefersStatic = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
@@ -23,8 +25,10 @@ const prefersStatic = window.matchMedia("(prefers-reduced-motion: reduce), (poin
 let viewportHeight = window.innerHeight;
 let introTop = 0;
 let headingTop = 0;
-let headingHeight = 0;
+let contactTop = 0;
 let ticking = false;
+
+const usesCssTitleTimeline = CSS.supports("animation-timeline: scroll()");
 
 function px(value: number): string {
   return `${value}px`;
@@ -37,29 +41,27 @@ function documentTop(element: HTMLElement): number {
 function measure(): void {
   viewportHeight = window.innerHeight;
 
-  if (!introSection || !headingSection || !contactHeading) {
+  if (!introSection || !headingSection || !contactHeading || !contactSection) {
     return;
   }
 
   introTop = documentTop(introSection);
   headingTop = documentTop(headingSection);
+  contactTop = documentTop(contactSection);
 
-  const styles = window.getComputedStyle(contactHeading);
-  const lineHeight = Number.parseFloat(styles.lineHeight);
-  const padding = Number.parseFloat(styles.paddingTop) * 2;
-  headingHeight = lineHeight + padding;
 }
 
 function setStaticLayout(): void {
-  heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
-  ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  if (!usesCssTitleTimeline) {
+    heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+    ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  }
+
   allsortsLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
   beansLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   if (contactHeading) {
-    contactHeading.style.top = px(viewportHeight * 0.2);
-    contactHeading.style.marginTop = "0";
-    contactHeading.style.opacity = "1";
+    contactHeading.classList.add("is-solid");
   }
 }
 
@@ -94,25 +96,9 @@ function positionHeading(scrollY: number): void {
     return;
   }
 
-  const beansShift = scrollY - headingTop;
-
-  if (scrollY <= introTop) {
-    contactHeading.style.top = "0";
-    contactHeading.style.marginTop = "0";
-    contactHeading.style.opacity = "0.3";
-    return;
-  }
-
-  if (scrollY > headingTop + headingHeight) {
-    contactHeading.style.top = px(beansShift);
-    contactHeading.style.marginTop = "0";
-    contactHeading.style.opacity = "1";
-    return;
-  }
-
-  contactHeading.style.top = px(beansShift * 0.5);
-  contactHeading.style.marginTop = px(headingHeight * 0.5);
-  contactHeading.style.opacity = "0.3";
+  const headingRect = contactHeading.getBoundingClientRect();
+  const isHeadingActive = scrollY > headingTop && scrollY < contactTop;
+  contactHeading.classList.toggle("is-solid", isHeadingActive && headingRect.top <= 0);
 }
 
 function render(): void {
@@ -124,7 +110,9 @@ function render(): void {
   }
 
   const scrollY = window.scrollY;
-  positionTitles(scrollY);
+  if (!usesCssTitleTimeline) {
+    positionTitles(scrollY);
+  }
   positionImages(scrollY);
   positionHeading(scrollY);
 }
