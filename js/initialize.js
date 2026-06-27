@@ -35,11 +35,11 @@ $(document).ready(function() {
 
 	// start
 
-	$("section:first-of-type").html('<h1>' + $("header > h1").html() + '</h1><aside id="bg1"></aside><aside id="bg2"></aside><aside id="bg3"></aside>');
+	$("section:first-of-type").html('<h1>' + $("header > h1").html() + '</h1><aside id="bg1"></aside><aside id="bg3"></aside>');
 
 	if ($(window).scrollTop() === 0) {
 
-		$("body").append('<div id="loadimg" style="display: none;"><img src="images/bg_allsorts.jpg"><img src="images/bg_jellies.jpg"><img src="images/bg_beans.jpg"></div>');
+		$("body").append('<div id="loadimg" style="display: none;"><img src="images/bg_allsorts.jpg"><img src="images/bg_beans.jpg"></div>');
 	
 		$("body").prepend('<div class="loader"><div><div><div class="loadanim"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div></div></div>');
 
@@ -84,40 +84,35 @@ $(document).ready(function() {
 	}
 
 	// element variables
-	
+
+	var sections = $("section");
 	var headerOne = $("header > h1");
-	var sectionOne = $("section:first-of-type");
-	var headerTwo = $("section:first-of-type > h1");
+	var headerTwo = sections.eq(0).children("h1");
 	var bgAllsorts = $("#bg1");
-	var bgJellies = $("#bg2");
 	var bgBeans = $("#bg3");
-	var sectionTwo = $("section:nth-of-type(2)");
-	var sectionTwoArticle = $("section:nth-of-type(2) > article");
-	var sectionThree = $("section:nth-of-type(3)");
-	var sectionFour = $("section:nth-of-type(4)");
-	var sectionFive = $("section:nth-of-type(5)");
-	var sectionSix = $("section:last-of-type");
-	var headingSkills = sectionThree.children("h2");
-	var headingContact = sectionFive.children("h2");
+	var sectionTwo = sections.eq(1);
+	var sectionThree = sections.eq(2);
 
 	// functions
 
-	var winWidth, winHeight, scrollTop, headerTrigger, bgAllsortsTrigger, bgAllsortsShift, bgJelliesTrigger, bgJelliesShift, bgBeansTrigger, bgBeansShift, hsLineHeight, hsPadding, hsHeight, hcLineHeight, hcPadding, hcHeight;
-
+	var winWidth, winHeight, scrollTop, headerTrigger, bgAllsortsTrigger, bgAllsortsShift, bgBeansTrigger, bgBeansShift;
 	function getWinDim() {
 		winWidth = $(window).width();
 		winHeight = $(window).height();
 	}
 	getWinDim();
 
+	function sectionTop(section) {
+		var offset = section.offset();
+		return offset ? offset.top : 0;
+	}
+
 	function getScrollVars() {
 		scrollTop = $(window).scrollTop();
 		headerTrigger = winHeight * 0.5;
-		bgAllsortsTrigger = sectionTwo.offset().top - winHeight;
+		bgAllsortsTrigger = sectionTop(sectionTwo) - winHeight;
 		bgAllsortsShift = scrollTop - bgAllsortsTrigger;
-		bgJelliesTrigger = sectionThree.offset().top;
-		bgJelliesShift = scrollTop - bgJelliesTrigger;
-		bgBeansTrigger = sectionFive.offset().top;
+		bgBeansTrigger = sectionTop(sectionThree);
 		bgBeansShift = scrollTop - bgBeansTrigger;
 	}
 	getScrollVars();
@@ -141,15 +136,6 @@ $(document).ready(function() {
 		}
 	}
 
-	function bgJelliesPos() {
-		getScrollVars();
-		if (scrollTop > bgJelliesTrigger) {
-			bgJellies.css({ top: -(bgJelliesShift * 0.375) });
-		} else {
-			bgJellies.css({ top: 0 });
-		}
-	}
-
 	function bgBeansPos() {
 		getScrollVars();
 		if (scrollTop > bgBeansTrigger) {
@@ -160,51 +146,21 @@ $(document).ready(function() {
 	}
 
 	function bgHandler() {
-		if (scrollTop > sectionTwo.offset().top) {
+		if (scrollTop > sectionTop(sectionTwo)) {
 			bgAllsorts.hide();
 			headerTwo.hide();
 		} else {
 			bgAllsorts.show();
 			headerTwo.show();
 		}
-		if (scrollTop > sectionFour.offset().top) {
-			bgJellies.hide();
-		} else {
-			bgJellies.show();
-		}
 	}
 
-	function headingsPos() {
-	
-		if (scrollTop > sectionTwo.offset().top) {
-			hsLineHeight = parseInt(headingSkills.css("line-height").slice(0,-2));
-			hsPadding = parseInt(headingSkills.css("padding-top").slice(0,-2)) * 2;
-			hsHeight = hsLineHeight + hsPadding;
-			headingSkills.css({ top: bgJelliesShift * 0.5, marginTop: (hsHeight * 0.5), opacity: 0.3 });
-		}
-		if (scrollTop > (sectionThree.offset().top + hsHeight)) {
-			headingSkills.css({ top: bgJelliesShift, marginTop: 0, opacity: 1 });
-		}
-		
-		if (scrollTop > sectionFour.offset().top) {
-			hcLineHeight = parseInt(headingContact.css("line-height").slice(0,-2));
-			hcPadding = parseInt(headingContact.css("padding-top").slice(0,-2)) * 2;
-			hcHeight = hcLineHeight + hcPadding;
-			headingContact.css({ top: bgBeansShift * 0.5, marginTop: (hcHeight * 0.5), opacity: 0.3 });
-		}
-		if (scrollTop > (sectionFive.offset().top + hcHeight)) {
-			headingContact.css({ top: bgBeansShift, marginTop: 0, opacity: 1 });
-		}
-	
+	if ($(window).scrollTop() !== 0) {
+		headersPos();
+		bgAllsortsPos();
+		bgBeansPos();
+		bgHandler();
 	}
-
-	function headingsStatic() {
-		if (staticVersion.length > 0) {
-			headingSkills.css({ top: winHeight * 0.2 });
-			headingContact.css({ top: winHeight * 0.2 });
-		}
-	}
-	headingsStatic();
 
 	// resize
 
@@ -212,15 +168,12 @@ $(document).ready(function() {
 
 		getWinDim();
 		getScrollVars();
-		headingsStatic();
 
 		if (staticVersion.length === 0) {
 
 			headersPos();
 			bgAllsortsPos();
-			bgJelliesPos();
 			bgBeansPos();
-			headingsPos();
 
 		}
 
@@ -238,9 +191,7 @@ $(document).ready(function() {
 
 			headersPos();
 			bgAllsortsPos();
-			bgJelliesPos();
 			bgBeansPos();
-			headingsPos();
 
 		}
 

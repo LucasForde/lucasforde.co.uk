@@ -108,13 +108,17 @@ section:first-of-type {
 		background-image: url("../images/bg_allsorts.jpg");
 		z-index: 504;
 	}
-	#bg2 {
-		background-image: url("../images/bg_jellies.jpg");
-		z-index: 503;
-	}
 	#bg3 {
 		background-image: url("../images/bg_beans.jpg");
 		z-index: 502;
+	}
+
+section article {
+	font-weight: 100;
+	letter-spacing: -1px;
+}
+	section article strong {
+		font-weight: 500;
 	}
 
 section:nth-of-type(2) {
@@ -122,34 +126,16 @@ section:nth-of-type(2) {
 	background-color: #6cf;
 	z-index: 600;
 }
-	section:nth-of-type(2) article,
-	section:nth-of-type(4) article,
-	section:last-of-type article {
-		font-weight: 100;
-		letter-spacing: -1px;
-	}
-		section:nth-of-type(2) article strong {
-			font-weight: 500;
-		}
 
 section:nth-of-type(3) {
 	top: 100%;
+	overflow: visible;
 	z-index: 700;
 }
-
-section:nth-of-type(4) {
-	top: 100%;
-	background-color: #f60;
-	z-index: 800;
-}
-		section:nth-of-type(4) article strong {
-			font-weight: 500;
-		}
-
-section:nth-of-type(5) {
-	top: 100%;
-	z-index: 900;
-}
+	section:nth-of-type(3) > h2 {
+		position: sticky;
+		top: 0;
+	}
 
 section:last-of-type {
 	top: 100%;
@@ -197,9 +183,7 @@ footer {
 		padding: 30px;
 	}
 
-	section:nth-of-type(2) article,
-	section:nth-of-type(4) article,
-	section:last-of-type article {
+	section article {
 		font-size: 50px;
 		line-height: 56px;
 		padding: 80px 51px 92px 51px;
@@ -240,9 +224,7 @@ footer {
 		padding: 30px;
 	}
 
-	section:nth-of-type(2) article,
-	section:nth-of-type(4) article,
-	section:last-of-type article {
+	section article {
 		font-size: 39px;
 		line-height: 44px;
 		padding: 60px 42px 72px 42px;
@@ -276,9 +258,7 @@ footer {
 			margin: 15px 0 0 3px;
 		}
 
-	section:nth-of-type(2) article,
-	section:nth-of-type(4) article,
-	section:last-of-type article {
+	section article {
 		font-size: 32px;
 		line-height: 36px;
 		padding: 40px 29px 50px 29px;
@@ -312,9 +292,7 @@ footer {
 			margin: 10px 0 0 2px;
 		}
 
-	section:nth-of-type(2) article,
-	section:nth-of-type(4) article,
-	section:last-of-type article {
+	section article {
 		font-size: 28px;
 		line-height: 31px;
 		padding: 35px 20px 43px 20px;
@@ -351,9 +329,7 @@ footer {
 			margin: 7px 0 0 2px;
 		}
 
-	section:nth-of-type(2) article,
-	section:nth-of-type(4) article,
-	section:last-of-type article {
+	section article {
 		padding: 30px 13px 35px 13px;
 	}
 
