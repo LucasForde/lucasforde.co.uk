@@ -8,6 +8,7 @@ const introSection = document.querySelector<HTMLElement>("[data-intro-section]")
 const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
 const contactHeading = document.querySelector<HTMLElement>("[data-contact-heading]");
 const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
+const HERO_TITLE_RELEASE_VIEWPORTS = 1;
 
 const requiredNodes: NullableElement<HTMLElement>[] = [
   heroTitle,
@@ -87,7 +88,7 @@ function positionTitles(scrollY: number): void {
     return;
   }
 
-  const trigger = viewportHeight * 0.5;
+  const trigger = viewportHeight * HERO_TITLE_RELEASE_VIEWPORTS;
   const viewportShift = scrollY < trigger ? 0 : (trigger - scrollY) * 0.5;
 
   heroTitle.style.transform = `translate3d(0, ${px(scrollY + viewportShift)}, 0)`;
@@ -128,8 +129,8 @@ function positionHeading(scrollY: number): void {
 
   if (scrollY > introTop) {
     const headingShift = scrollY - headingTop;
-    contactHeading.style.top = px(headingShift * 0.5);
-    contactHeading.style.marginTop = px(headingHeight * 0.5);
+    contactHeading.style.top = px(headingShift * 0.5 + headingHeight * 0.5);
+    contactHeading.style.marginTop = "0";
   } else {
     contactHeading.style.top = "0";
     contactHeading.style.marginTop = "0";

@@ -295,23 +295,23 @@ p:last-child {
     transform: translate3d(0, 0, 0);
   }
 
-  25% {
-    transform: translate3d(0, 50vh, 0);
+  50% {
+    transform: translate3d(0, 100vh, 0);
   }
 
   100% {
-    transform: translate3d(0, 125vh, 0);
+    transform: translate3d(0, 150vh, 0);
   }
 }
 
 @keyframes ghost-title-lock {
   0%,
-  25% {
+  50% {
     transform: translate3d(0, 0, 0);
   }
 
   100% {
-    transform: translate3d(0, -75vh, 0);
+    transform: translate3d(0, -50vh, 0);
   }
 }
 
