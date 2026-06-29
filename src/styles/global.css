@@ -204,7 +204,7 @@ p:last-child {
   white-space: nowrap;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 2150px) {
   :root {
     --title-size: 375px;
     --title-line: 300px;
