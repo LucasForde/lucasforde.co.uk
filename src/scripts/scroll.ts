@@ -65,6 +65,18 @@ function setStaticLayout(): void {
   }
 }
 
+function updateSceneVisibility(scrollY: number): void {
+  const showHeroScene = scrollY <= introTop;
+
+  if (ghostTitle) {
+    ghostTitle.hidden = !showHeroScene;
+  }
+
+  if (allsortsLayer) {
+    allsortsLayer.hidden = !showHeroScene;
+  }
+}
+
 function positionTitles(scrollY: number): void {
   if (!heroTitle || !ghostTitle) {
     return;
@@ -86,7 +98,6 @@ function positionImages(scrollY: number): void {
   const allsortsShift = Math.max(0, scrollY - allsortsStart) * 0.375;
   const beansShift = Math.max(0, scrollY - headingTop) * 0.375;
 
-  allsortsLayer.hidden = scrollY > introTop;
   allsortsLayer.style.transform = `translate3d(0, ${px(-allsortsShift)}, 0)`;
   beansLayer.style.transform = `translate3d(0, ${px(-beansShift)}, 0)`;
 }
@@ -110,6 +121,8 @@ function render(): void {
   }
 
   const scrollY = window.scrollY;
+  updateSceneVisibility(scrollY);
+
   if (!usesCssTitleTimeline) {
     positionTitles(scrollY);
   }

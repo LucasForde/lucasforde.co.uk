@@ -33,6 +33,39 @@ test("hero title copies stay aligned through the handoff", async ({ page, isMobi
   }
 });
 
+test("hero ghost title is hidden before the contact image scene", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+
+  const result = await page.evaluate(async () => {
+    const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+    const allsortsLayer = document.querySelector<HTMLElement>("[data-image-layer='allsorts']");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!introSection || !ghostTitle || !allsortsLayer) {
+      return null;
+    }
+
+    const introTop = introSection.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, introTop + 1);
+    await nextFrame();
+    await nextFrame();
+
+    return {
+      ghostHidden: ghostTitle.hidden,
+      allsortsHidden: allsortsLayer.hidden,
+    };
+  });
+
+  expect(result).toEqual({
+    ghostHidden: true,
+    allsortsHidden: true,
+  });
+});
+
 test("contact heading fades from image heading to fixed solid heading", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
