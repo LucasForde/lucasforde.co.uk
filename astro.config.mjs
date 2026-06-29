@@ -5,4 +5,9 @@ export default defineConfig({
   devToolbar: {
     enabled: false,
   },
+  vite: {
+    build: {
+      cssMinify: false,
+    },
+  },
 });
