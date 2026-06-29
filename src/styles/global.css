@@ -78,9 +78,8 @@ p:last-child {
 }
 
 .panel--heading {
-  z-index: 30;
+  z-index: 15;
   background: transparent;
-  padding-top: var(--heading-block);
   overflow: visible;
 }
 
@@ -156,8 +155,9 @@ p:last-child {
 }
 
 .section-heading {
-  position: sticky;
+  position: relative;
   top: 0;
+  height: 0;
   z-index: 1;
   font-size: var(--heading-size);
   font-weight: 100;
@@ -171,6 +171,7 @@ p:last-child {
   width: 100%;
   margin-top: 0;
   opacity: 1;
+  z-index: 45;
 }
 
 .copy {

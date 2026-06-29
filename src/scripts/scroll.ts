@@ -25,6 +25,7 @@ const prefersStatic = window.matchMedia("(prefers-reduced-motion: reduce), (poin
 let viewportHeight = window.innerHeight;
 let introTop = 0;
 let headingTop = 0;
+let headingHeight = 0;
 let contactTop = 0;
 let ticking = false;
 
@@ -49,6 +50,10 @@ function measure(): void {
   headingTop = documentTop(headingSection);
   contactTop = documentTop(contactSection);
 
+  const headingStyles = window.getComputedStyle(contactHeading);
+  headingHeight =
+    Number.parseFloat(headingStyles.lineHeight) +
+    Number.parseFloat(headingStyles.paddingTop) * 2;
 }
 
 function setStaticLayout(): void {
@@ -107,9 +112,28 @@ function positionHeading(scrollY: number): void {
     return;
   }
 
-  const headingRect = contactHeading.getBoundingClientRect();
-  const isHeadingActive = scrollY > headingTop && scrollY < contactTop;
-  contactHeading.classList.toggle("is-solid", isHeadingActive && headingRect.top <= 0);
+  if (scrollY >= contactTop) {
+    contactHeading.classList.remove("is-solid");
+    return;
+  }
+
+  if (scrollY > headingTop + headingHeight) {
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+    contactHeading.classList.add("is-solid");
+    return;
+  }
+
+  contactHeading.classList.remove("is-solid");
+
+  if (scrollY > introTop) {
+    const headingShift = scrollY - headingTop;
+    contactHeading.style.top = px(headingShift * 0.5);
+    contactHeading.style.marginTop = px(headingHeight * 0.5);
+  } else {
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+  }
 }
 
 function render(): void {

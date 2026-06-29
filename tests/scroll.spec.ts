@@ -66,6 +66,50 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
   });
 });
 
+test("contact heading approaches at parallax speed before locking", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+
+  const result = await page.evaluate(async () => {
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!heading || !headingSection) {
+      return null;
+    }
+
+    const headingTop = headingSection.getBoundingClientRect().top + window.scrollY;
+    const samples = [];
+
+    for (const y of [headingTop - 300, headingTop - 100]) {
+      window.scrollTo(0, y);
+      await nextFrame();
+      await nextFrame();
+      samples.push({
+        scrollY: window.scrollY,
+        top: heading.getBoundingClientRect().top,
+        opacity: window.getComputedStyle(heading).opacity,
+        fixed: window.getComputedStyle(heading).position === "fixed",
+      });
+    }
+
+    return {
+      scrollDelta: samples[1].scrollY - samples[0].scrollY,
+      headingDelta: samples[0].top - samples[1].top,
+      samples,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result?.samples.every((sample) => sample.opacity === "0.3")).toBe(true);
+  expect(result?.samples.every((sample) => !sample.fixed)).toBe(true);
+  expect(result?.headingDelta ?? 0).toBeGreaterThan((result?.scrollDelta ?? 0) * 0.45);
+  expect(result?.headingDelta ?? 0).toBeLessThan((result?.scrollDelta ?? 0) * 0.55);
+});
+
 test("contact heading fades from image heading to fixed solid heading", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
