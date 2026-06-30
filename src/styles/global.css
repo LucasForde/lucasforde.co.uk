@@ -111,9 +111,9 @@ p:last-child {
   background-image: url("/images/bg_code.jpg");
 }
 
-.image-layer--beans {
+.image-layer--dash {
   z-index: 1;
-  background-image: url("/images/bg_beans.jpg");
+  background-image: url("/images/bg_dash.jpg");
 }
 
 .image-layer[hidden] {
