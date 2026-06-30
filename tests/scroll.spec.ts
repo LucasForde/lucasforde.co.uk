@@ -1,10 +1,93 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+async function openLoadedPage(page: Page): Promise<void> {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
+}
+
+test("loader lingers, exits upward, and releases the hero title", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Loader motion is covered on desktop.");
+
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const loader = page.locator("[data-loader]");
+  await expect(loader).toBeVisible();
+
+  const initial = await page.evaluate(() => {
+    const title = document.querySelector<HTMLElement>("[data-hero-title]");
+    const dots = document.querySelectorAll("[data-loader-dot]");
+
+    if (!title) {
+      return null;
+    }
+
+    return {
+      dotCount: dots.length,
+      titleTop: title.getBoundingClientRect().top,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(initial).not.toBeNull();
+  expect(initial?.dotCount).toBe(8);
+  expect(initial?.titleTop ?? 0).toBeGreaterThan((initial?.viewportHeight ?? 0) * 0.9);
+
+  await page.waitForFunction(() => document.body.classList.contains("is-loaded"));
+  await page.waitForTimeout(500);
+
+  const exiting = await page.evaluate(() => {
+    const loader = document.querySelector<HTMLElement>("[data-loader]");
+    const loadanim = document.querySelector<HTMLElement>("[data-loadanim]");
+    const title = document.querySelector<HTMLElement>("[data-hero-title]");
+
+    if (!loader || !loadanim || !title) {
+      return null;
+    }
+
+    return {
+      loaderTop: window.getComputedStyle(loader).top,
+      loadanimTransform: window.getComputedStyle(loadanim).transform,
+      titleTop: title.getBoundingClientRect().top,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(exiting).not.toBeNull();
+  expect(exiting?.loaderTop).toBe("0px");
+  expect(exiting?.loadanimTransform).not.toBe("none");
+  expect(exiting?.titleTop ?? 999).toBeLessThan((exiting?.viewportHeight ?? 0) * 0.9);
+
+  await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
+
+  const finalTitleTop = await page.evaluate(() => {
+    const title = document.querySelector<HTMLElement>("[data-hero-title]");
+    return title?.getBoundingClientRect().top ?? null;
+  });
+
+  expect(finalTitleTop).not.toBeNull();
+  expect(Math.abs(finalTitleTop ?? 999)).toBeLessThan(1);
+});
+
+test("loader refresh starts and finishes at the top of the page", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Loader motion is covered on desktop.");
+
+  await openLoadedPage(page);
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-loader]")).toBeVisible();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+
+  await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
 
 test("hero title copies stay aligned through the handoff", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
-	await page.goto("/");
-	await page.waitForLoadState("networkidle");
+	await openLoadedPage(page);
 
 	const samples = await page.evaluate(async () => {
 		const heroTitle = document.querySelector("[data-hero-title]");
@@ -36,8 +119,7 @@ test("hero title copies stay aligned through the handoff", async ({ page, isMobi
 test("hero title stays locked until the ghost title is fully revealed", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
-  await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await openLoadedPage(page);
 
   const result = await page.evaluate(async () => {
     const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
@@ -76,8 +158,7 @@ test("hero title stays locked until the ghost title is fully revealed", async ({
 test("hero ghost title is hidden before the contact image scene", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
-  await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await openLoadedPage(page);
 
   const result = await page.evaluate(async () => {
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
@@ -109,8 +190,7 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
 test("contact heading approaches at parallax speed before locking", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
-  await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await openLoadedPage(page);
 
   const result = await page.evaluate(async () => {
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
@@ -153,8 +233,7 @@ test("contact heading approaches at parallax speed before locking", async ({ pag
 test("contact panel does not jump when contact heading locks", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
-  await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await openLoadedPage(page);
 
   const result = await page.evaluate(async () => {
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
@@ -200,8 +279,7 @@ test("contact panel does not jump when contact heading locks", async ({ page, is
 test("contact heading fades from image heading to fixed solid heading", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
-	await page.goto("/");
-  await page.waitForLoadState("networkidle");
+	await openLoadedPage(page);
 
   const result = await page.evaluate(async () => {
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
