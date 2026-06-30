@@ -1,8 +1,6 @@
 :root {
-  --color-yellow: #020c2c;
-  --color-blue: #66ccff;
-  --color-pink: #f6007b;
-  --color-white: #ffffff;
+  --color-background: #020c2c;
+  --color-foreground: #ffffff;
   --font-sans: "Roboto", Arial, Helvetica, sans-serif;
   --title-size: 250px;
   --title-line: 200px;
@@ -29,14 +27,14 @@ body {
 }
 
 html {
-  background: var(--color-white);
+  background: var(--color-background);
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--color-white);
-  color: var(--color-white);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-sans);
   font-style: normal;
 }
@@ -66,15 +64,15 @@ p:last-child {
   overflow: hidden;
 }
 
-.panel--yellow {
+.panel--hero {
   z-index: 50;
-  background: var(--color-yellow);
+  background: var(--color-background);
 }
 
 .panel--intro {
   z-index: 20;
   margin-top: 100vh;
-  background: var(--color-blue);
+  background: var(--color-background);
 }
 
 .panel--heading {
@@ -85,7 +83,7 @@ p:last-child {
 
 .panel--contact {
   z-index: 40;
-  background: var(--color-pink);
+  background: var(--color-background);
 }
 
 .fixed-scene {
