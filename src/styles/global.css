@@ -1,5 +1,5 @@
 :root {
-  --color-yellow: #ffcc00;
+  --color-yellow: #020c2c;
   --color-blue: #66ccff;
   --color-pink: #f6007b;
   --color-white: #ffffff;
@@ -106,9 +106,9 @@ p:last-child {
   will-change: transform;
 }
 
-.image-layer--allsorts {
+.image-layer--code {
   z-index: 2;
-  background-image: url("/images/bg_allsorts.jpg");
+  background-image: url("/images/bg_code.jpg");
 }
 
 .image-layer--beans {

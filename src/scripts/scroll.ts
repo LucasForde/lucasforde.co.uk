@@ -2,7 +2,7 @@ type NullableElement<T extends Element> = T | null;
 
 const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
 const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
-const allsortsLayer = document.querySelector<HTMLElement>("[data-image-layer='allsorts']");
+const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
 const beansLayer = document.querySelector<HTMLElement>("[data-image-layer='beans']");
 const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
 const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
@@ -13,7 +13,7 @@ const HERO_TITLE_RELEASE_VIEWPORTS = 1;
 const requiredNodes: NullableElement<HTMLElement>[] = [
   heroTitle,
   ghostTitle,
-  allsortsLayer,
+  codeLayer,
   beansLayer,
   introSection,
   headingSection,
@@ -63,7 +63,7 @@ function setStaticLayout(): void {
     ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
   }
 
-  allsortsLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  codeLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
   beansLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   if (contactHeading) {
@@ -78,8 +78,8 @@ function updateSceneVisibility(scrollY: number): void {
     ghostTitle.hidden = !showHeroScene;
   }
 
-  if (allsortsLayer) {
-    allsortsLayer.hidden = !showHeroScene;
+  if (codeLayer) {
+    codeLayer.hidden = !showHeroScene;
   }
 }
 
@@ -96,15 +96,15 @@ function positionTitles(scrollY: number): void {
 }
 
 function positionImages(scrollY: number): void {
-  if (!allsortsLayer || !beansLayer) {
+  if (!codeLayer || !beansLayer) {
     return;
   }
 
-  const allsortsStart = introTop - viewportHeight;
-  const allsortsShift = Math.max(0, scrollY - allsortsStart) * 0.375;
+  const codeStart = introTop - viewportHeight;
+  const codeShift = Math.max(0, scrollY - codeStart) * 0.375;
   const beansShift = Math.max(0, scrollY - headingTop) * 0.375;
 
-  allsortsLayer.style.transform = `translate3d(0, ${px(-allsortsShift)}, 0)`;
+  codeLayer.style.transform = `translate3d(0, ${px(-codeShift)}, 0)`;
   beansLayer.style.transform = `translate3d(0, ${px(-beansShift)}, 0)`;
 }
 

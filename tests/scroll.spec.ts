@@ -82,10 +82,10 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
   const result = await page.evaluate(async () => {
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
-    const allsortsLayer = document.querySelector<HTMLElement>("[data-image-layer='allsorts']");
+    const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
     const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
 
-    if (!introSection || !ghostTitle || !allsortsLayer) {
+    if (!introSection || !ghostTitle || !codeLayer) {
       return null;
     }
 
@@ -96,13 +96,13 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
 
     return {
       ghostHidden: ghostTitle.hidden,
-      allsortsHidden: allsortsLayer.hidden,
+      codeHidden: codeLayer.hidden,
     };
   });
 
   expect(result).toEqual({
     ghostHidden: true,
-    allsortsHidden: true,
+    codeHidden: true,
   });
 });
 
