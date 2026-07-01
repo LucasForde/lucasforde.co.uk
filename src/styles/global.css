@@ -374,7 +374,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   white-space: nowrap;
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1500px) and (min-height: 870px) {
   :root {
     --title-size: 350px;
     --title-line: 280px;
@@ -384,6 +384,11 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --strapline-line: 143px;
     --strapline-gap: 25px;
     --strapline-tracking: -11px;
+  }
+}
+
+@media (min-width: 1500px) {
+  :root {
     --heading-size: 312px;
     --heading-line: 250px;
     --heading-tracking: -19px;
