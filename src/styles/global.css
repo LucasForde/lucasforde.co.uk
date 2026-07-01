@@ -454,6 +454,12 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   }
 }
 
+body.is-static-layout .site-title,
+body.is-static-layout .section-heading,
+body.is-static-layout .image-layer {
+  will-change: auto;
+}
+
 @supports (animation-timeline: scroll()) {
   .site-title--hero {
     animation: hero-title-lock linear both;
@@ -499,4 +505,10 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     animation: none;
     transform: translate3d(0, 0, 0);
   }
+}
+
+body.is-static-layout .site-title--hero,
+body.is-static-layout .site-title--ghost {
+  animation: none;
+  transform: translate3d(0, 0, 0);
 }

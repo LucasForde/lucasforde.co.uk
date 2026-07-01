@@ -6,6 +6,10 @@ async function openLoadedPage(page: Page): Promise<void> {
   await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
 }
 
+function isZeroTransform(transform: string): boolean {
+  return transform === "none" || transform === "matrix(1, 0, 0, 1, 0, 0)";
+}
+
 test("loader lingers, exits upward, and releases the hero title", async ({ page, isMobile }) => {
   test.skip(isMobile, "Loader motion is covered on desktop.");
 
@@ -82,6 +86,80 @@ test("loader refresh starts and finishes at the top of the page", async ({ page,
 
   await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
+
+test("static layout matches the original mobile branch", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Static layout is covered on mobile/coarse-pointer devices.");
+
+  await openLoadedPage(page);
+
+  const initial = await page.evaluate(() => {
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+    const dashLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+
+    if (!heading || !codeLayer || !dashLayer || !ghostTitle) {
+      return null;
+    }
+
+    const headingStyles = window.getComputedStyle(heading);
+    const codeStyles = window.getComputedStyle(codeLayer);
+    const dashStyles = window.getComputedStyle(dashLayer);
+
+    return {
+      bodyStatic: document.body.classList.contains("is-static-layout"),
+      headingTop: Number.parseFloat(headingStyles.top),
+      headingOpacity: headingStyles.opacity,
+      headingPosition: headingStyles.position,
+      viewportHeight: window.innerHeight,
+      codeTransform: codeStyles.transform,
+      dashTransform: dashStyles.transform,
+      codeHidden: codeLayer.hidden,
+      ghostHidden: ghostTitle.hidden,
+    };
+  });
+
+  expect(initial).not.toBeNull();
+  expect(initial?.bodyStatic).toBe(true);
+  expect(initial?.headingPosition).not.toBe("fixed");
+  expect(initial?.headingOpacity).toBe("1");
+  expect(Math.abs((initial?.headingTop ?? 0) - (initial?.viewportHeight ?? 0) * 0.2)).toBeLessThan(1);
+  expect(isZeroTransform(initial?.codeTransform ?? "")).toBe(true);
+  expect(isZeroTransform(initial?.dashTransform ?? "")).toBe(true);
+  expect(initial?.codeHidden).toBe(false);
+  expect(initial?.ghostHidden).toBe(false);
+
+  const afterIntro = await page.evaluate(async () => {
+    const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+    const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!introSection || !codeLayer || !ghostTitle || !heading) {
+      return null;
+    }
+
+    const introTop = introSection.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, introTop + 1);
+    await nextFrame();
+    await nextFrame();
+
+    return {
+      codeHidden: codeLayer.hidden,
+      ghostHidden: ghostTitle.hidden,
+      headingPosition: window.getComputedStyle(heading).position,
+      headingOpacity: window.getComputedStyle(heading).opacity,
+    };
+  });
+
+  expect(afterIntro).toEqual({
+    codeHidden: true,
+    ghostHidden: true,
+    headingPosition: "relative",
+    headingOpacity: "1",
+  });
 });
 
 test("hero title copies stay aligned through the handoff", async ({ page, isMobile }) => {

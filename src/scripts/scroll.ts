@@ -9,6 +9,22 @@ const headingSection = document.querySelector<HTMLElement>("[data-contact-headin
 const contactHeading = document.querySelector<HTMLElement>("[data-contact-heading]");
 const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
 const HERO_TITLE_RELEASE_VIEWPORTS = 1;
+const userAgent = navigator.userAgent.toLowerCase();
+const isMacSafari =
+  userAgent.includes("mac") &&
+  userAgent.includes("safari") &&
+  !userAgent.includes("chrome");
+const usesLegacyStaticVersion = [
+  "ipad",
+  "iphone",
+  "ipod",
+  "android",
+  "windows phone",
+  "touch",
+  "blackberry",
+  "edge",
+  "trident",
+].some((device) => userAgent.includes(device)) || isMacSafari;
 
 const requiredNodes: NullableElement<HTMLElement>[] = [
   heroTitle,
@@ -21,7 +37,7 @@ const requiredNodes: NullableElement<HTMLElement>[] = [
   contactSection,
 ];
 
-const prefersStatic = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
+const staticLayoutQuery = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
 
 let viewportHeight = window.innerHeight;
 let introTop = 0;
@@ -57,7 +73,14 @@ function measure(): void {
     Number.parseFloat(headingStyles.paddingTop) * 2;
 }
 
-function setStaticLayout(): void {
+function shouldUseStaticLayout(): boolean {
+  return usesLegacyStaticVersion || staticLayoutQuery.matches;
+}
+
+function setStaticLayout(scrollY: number): void {
+  document.body.classList.add("is-static-layout");
+  updateSceneVisibility(scrollY);
+
   if (!usesCssTitleTimeline) {
     heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
     ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
@@ -67,8 +90,16 @@ function setStaticLayout(): void {
   dashLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   if (contactHeading) {
-    contactHeading.classList.add("is-solid");
+    contactHeading.classList.remove("is-solid");
+    contactHeading.style.top = px(viewportHeight * 0.2);
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.opacity = "1";
   }
+}
+
+function clearStaticLayout(): void {
+  document.body.classList.remove("is-static-layout");
+  contactHeading?.style.removeProperty("opacity");
 }
 
 function updateSceneVisibility(scrollY: number): void {
@@ -140,12 +171,14 @@ function positionHeading(scrollY: number): void {
 function render(): void {
   ticking = false;
 
-  if (prefersStatic.matches) {
-    setStaticLayout();
+  const scrollY = window.scrollY;
+
+  if (shouldUseStaticLayout()) {
+    setStaticLayout(scrollY);
     return;
   }
 
-  const scrollY = window.scrollY;
+  clearStaticLayout();
   updateSceneVisibility(scrollY);
 
   if (!usesCssTitleTimeline) {
@@ -171,6 +204,6 @@ if (requiredNodes.every(Boolean)) {
   refresh();
   window.addEventListener("scroll", requestRender, { passive: true });
   window.addEventListener("resize", refresh);
-  prefersStatic.addEventListener("change", refresh);
+  staticLayoutQuery.addEventListener("change", refresh);
   window.addEventListener("load", refresh, { once: true });
 }
