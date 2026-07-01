@@ -1,5 +1,5 @@
 :root {
-  --color-page-chrome: #eeeeee;
+  --color-page-chrome: #333333;
   --color-background: #020c2c;
   --color-hero-background: #e45f27;
   --color-foreground: #ffffff;
@@ -161,7 +161,7 @@ p:last-child {
 }
 
 .loadanim span.is-base {
-  opacity: 0.3;
+  opacity: 0; /* 0.3; */
 }
 
 .loadanim span.is-visible {
