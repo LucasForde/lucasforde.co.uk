@@ -1,5 +1,6 @@
 const loader = document.querySelector<HTMLElement>("[data-loader]");
 const preload = document.querySelector<HTMLElement>("[data-loader-preload]");
+const loadanim = document.querySelector<HTMLElement>("[data-loadanim]");
 const loaderDots = Array.from(document.querySelectorAll<HTMLElement>("[data-loader-dot]"));
 
 const dotShowDelays = [250, 300, 350, 400, 450, 500, 550, 600];
@@ -8,6 +9,7 @@ const cycleDuration = 1800;
 const lingerDuration = 2000;
 const exitDuration = 1000;
 const timers: number[] = [];
+let isCleanedUp = false;
 
 function resetScroll(): void {
   window.scrollTo(0, 0);
@@ -39,17 +41,35 @@ function animateLoaderDots(): void {
   queue(animateLoaderDots, cycleDuration);
 }
 
+function cleanupLoader(): void {
+  if (isCleanedUp) {
+    return;
+  }
+
+  isCleanedUp = true;
+  resetScroll();
+  clearTimers();
+  document.body.classList.remove("is-loading");
+  loader?.remove();
+  preload?.remove();
+}
+
 function exitLoader(): void {
   resetScroll();
+
+  loadanim?.addEventListener(
+    "transitionend",
+    (event) => {
+      if (event.propertyName === "transform") {
+        cleanupLoader();
+      }
+    },
+    { once: true },
+  );
+
   document.body.classList.add("is-loaded");
 
-  queue(() => {
-    resetScroll();
-    clearTimers();
-    document.body.classList.remove("is-loading");
-    loader?.remove();
-    preload?.remove();
-  }, exitDuration);
+  queue(cleanupLoader, exitDuration + 100);
 }
 
 function startExitTimer(): void {
