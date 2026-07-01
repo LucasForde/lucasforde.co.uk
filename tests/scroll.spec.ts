@@ -116,6 +116,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       codeTransform: codeStyles.transform,
       dashTransform: dashStyles.transform,
       codeHidden: codeLayer.hidden,
+      dashHidden: dashLayer.hidden,
       ghostHidden: ghostTitle.hidden,
     };
   });
@@ -128,16 +129,18 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(isZeroTransform(initial?.codeTransform ?? "")).toBe(true);
   expect(isZeroTransform(initial?.dashTransform ?? "")).toBe(true);
   expect(initial?.codeHidden).toBe(false);
+  expect(initial?.dashHidden).toBe(false);
   expect(initial?.ghostHidden).toBe(false);
 
   const afterIntro = await page.evaluate(async () => {
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
     const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+    const dashLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
     const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
 
-    if (!introSection || !codeLayer || !ghostTitle || !heading) {
+    if (!introSection || !codeLayer || !dashLayer || !ghostTitle || !heading) {
       return null;
     }
 
@@ -148,6 +151,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
     return {
       codeHidden: codeLayer.hidden,
+      dashHidden: dashLayer.hidden,
       ghostHidden: ghostTitle.hidden,
       headingPosition: window.getComputedStyle(heading).position,
       headingOpacity: window.getComputedStyle(heading).opacity,
@@ -155,7 +159,8 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   });
 
   expect(afterIntro).toEqual({
-    codeHidden: true,
+    codeHidden: false,
+    dashHidden: true,
     ghostHidden: true,
     headingPosition: "relative",
     headingOpacity: "1",
@@ -267,9 +272,10 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
     const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+    const dashLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
     const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
 
-    if (!introSection || !ghostTitle || !codeLayer) {
+    if (!introSection || !ghostTitle || !codeLayer || !dashLayer) {
       return null;
     }
 
@@ -281,12 +287,14 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
     return {
       ghostHidden: ghostTitle.hidden,
       codeHidden: codeLayer.hidden,
+      dashHidden: dashLayer.hidden,
     };
   });
 
   expect(result).toEqual({
     ghostHidden: true,
-    codeHidden: true,
+    codeHidden: false,
+    dashHidden: true,
   });
 });
 

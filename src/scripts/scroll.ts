@@ -2,8 +2,8 @@ type NullableElement<T extends Element> = T | null;
 
 const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
 const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
-const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
 const dashLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
 const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
 const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
 const contactHeading = document.querySelector<HTMLElement>("[data-contact-heading]");
@@ -29,8 +29,8 @@ const usesLegacyStaticVersion = [
 const requiredNodes: NullableElement<HTMLElement>[] = [
   heroTitle,
   ghostTitle,
-  codeLayer,
   dashLayer,
+  codeLayer,
   introSection,
   headingSection,
   contactHeading,
@@ -86,8 +86,8 @@ function setStaticLayout(scrollY: number): void {
     ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
   }
 
-  codeLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
   dashLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  codeLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   if (contactHeading) {
     contactHeading.classList.remove("is-solid");
@@ -109,8 +109,8 @@ function updateSceneVisibility(scrollY: number): void {
     ghostTitle.hidden = !showHeroScene;
   }
 
-  if (codeLayer) {
-    codeLayer.hidden = !showHeroScene;
+  if (dashLayer) {
+    dashLayer.hidden = !showHeroScene;
   }
 }
 
@@ -127,16 +127,16 @@ function positionTitles(scrollY: number): void {
 }
 
 function positionImages(scrollY: number): void {
-  if (!codeLayer || !dashLayer) {
+  if (!dashLayer || !codeLayer) {
     return;
   }
 
-  const codeStart = introTop - viewportHeight;
-  const codeShift = Math.max(0, scrollY - codeStart) * 0.375;
-  const dashShift = Math.max(0, scrollY - headingTop) * 0.375;
+  const dashStart = introTop - viewportHeight;
+  const dashShift = Math.max(0, scrollY - dashStart) * 0.375;
+  const codeShift = Math.max(0, scrollY - headingTop) * 0.375;
 
-  codeLayer.style.transform = `translate3d(0, ${px(-codeShift)}, 0)`;
   dashLayer.style.transform = `translate3d(0, ${px(-dashShift)}, 0)`;
+  codeLayer.style.transform = `translate3d(0, ${px(-codeShift)}, 0)`;
 }
 
 function positionHeading(scrollY: number): void {

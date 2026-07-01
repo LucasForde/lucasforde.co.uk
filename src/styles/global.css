@@ -269,12 +269,12 @@ body.is-loaded .loadanim {
 }
 
 .image-layer--code {
-  z-index: 2;
+  z-index: 1;
   background-image: url("/images/bg_code.jpg");
 }
 
 .image-layer--dash {
-  z-index: 1;
+  z-index: 2;
   background-image: url("/images/bg_dash.jpg");
 }
 
