@@ -88,7 +88,9 @@ body {
 
 html {
   background: var(--color-page-chrome);
+  overflow-y: scroll;
   overflow-anchor: none;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -99,6 +101,15 @@ body {
   font-family: var(--font-sans);
   font-style: normal;
   overflow-anchor: none;
+}
+
+html.is-loading,
+body.is-loading {
+  overscroll-behavior: none;
+}
+
+body.is-loading {
+  touch-action: none;
 }
 
 a {

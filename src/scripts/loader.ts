@@ -9,12 +9,43 @@ const cycleDuration = 1800;
 const lingerDuration = 2000;
 const exitDuration = 1000;
 const timers: number[] = [];
+const scrollKeys = new Set([" ", "ArrowDown", "ArrowUp", "End", "Home", "PageDown", "PageUp"]);
 let isCleanedUp = false;
 
 function resetScroll(): void {
   window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
+}
+
+function blockScroll(event: Event): void {
+  event.preventDefault();
+  resetScroll();
+}
+
+function blockScrollKey(event: KeyboardEvent): void {
+  if (scrollKeys.has(event.key)) {
+    event.preventDefault();
+    resetScroll();
+  }
+}
+
+function keepScrollAtTop(): void {
+  resetScroll();
+}
+
+function lockScroll(): void {
+  window.addEventListener("wheel", blockScroll, { passive: false });
+  window.addEventListener("touchmove", blockScroll, { passive: false });
+  window.addEventListener("keydown", blockScrollKey);
+  window.addEventListener("scroll", keepScrollAtTop, { passive: true });
+}
+
+function unlockScroll(): void {
+  window.removeEventListener("wheel", blockScroll);
+  window.removeEventListener("touchmove", blockScroll);
+  window.removeEventListener("keydown", blockScrollKey);
+  window.removeEventListener("scroll", keepScrollAtTop);
 }
 
 function clearTimers(): void {
@@ -49,6 +80,8 @@ function cleanupLoader(): void {
   isCleanedUp = true;
   resetScroll();
   clearTimers();
+  unlockScroll();
+  document.documentElement.classList.remove("is-loading");
   document.body.classList.remove("is-loading");
   loader?.remove();
   preload?.remove();
@@ -81,7 +114,9 @@ if (loader) {
     window.history.scrollRestoration = "manual";
   }
 
+  document.documentElement.classList.add("is-loading");
   resetScroll();
+  lockScroll();
   animateLoaderDots();
 
   if (document.readyState === "complete") {

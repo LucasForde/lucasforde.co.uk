@@ -28,6 +28,9 @@ test("loader lingers, exits upward, and releases the hero title", async ({ page,
 
     return {
       dotCount: dots.length,
+      htmlLoading: document.documentElement.classList.contains("is-loading"),
+      bodyOverflowY: window.getComputedStyle(document.body).overflowY,
+      htmlOverflowY: window.getComputedStyle(document.documentElement).overflowY,
       titleTop: title.getBoundingClientRect().top,
       viewportHeight: window.innerHeight,
     };
@@ -35,7 +38,13 @@ test("loader lingers, exits upward, and releases the hero title", async ({ page,
 
   expect(initial).not.toBeNull();
   expect(initial?.dotCount).toBe(8);
+  expect(initial?.htmlLoading).toBe(true);
+  expect(initial?.htmlOverflowY).toBe("scroll");
+  expect(initial?.bodyOverflowY).not.toBe("hidden");
   expect(initial?.titleTop ?? 0).toBeGreaterThan((initial?.viewportHeight ?? 0) * 0.9);
+
+  await page.mouse.wheel(0, 1000);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
 
   await page.waitForFunction(() => document.body.classList.contains("is-loaded"));
   await page.waitForTimeout(500);
@@ -64,13 +73,19 @@ test("loader lingers, exits upward, and releases the hero title", async ({ page,
 
   await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
 
-  const finalTitleTop = await page.evaluate(() => {
+  const finalState = await page.evaluate(() => {
     const title = document.querySelector<HTMLElement>("[data-hero-title]");
-    return title?.getBoundingClientRect().top ?? null;
+    return {
+      htmlLoading: document.documentElement.classList.contains("is-loading"),
+      bodyLoading: document.body.classList.contains("is-loading"),
+      titleTop: title?.getBoundingClientRect().top ?? null,
+    };
   });
 
-  expect(finalTitleTop).not.toBeNull();
-  expect(Math.abs(finalTitleTop ?? 999)).toBeLessThan(1);
+  expect(finalState.titleTop).not.toBeNull();
+  expect(finalState.htmlLoading).toBe(false);
+  expect(finalState.bodyLoading).toBe(false);
+  expect(Math.abs(finalState.titleTop ?? 999)).toBeLessThan(1);
 });
 
 test("loader refresh starts and finishes at the top of the page", async ({ page, isMobile }) => {
