@@ -1,5 +1,6 @@
 :root {
   --color-background: #020c2c;
+  --color-hero-background: #e45f27;
   --color-foreground: #ffffff;
   --font-sans: "Roboto", Arial, Helvetica, sans-serif;
   --title-size: 250px;
@@ -174,7 +175,7 @@ body.is-loaded .loadanim {
 
 .panel--hero {
   z-index: 50;
-  background: var(--color-background);
+  background: var(--color-hero-background);
 }
 
 .panel--intro {
