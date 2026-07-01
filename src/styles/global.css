@@ -5,17 +5,17 @@
   --title-size: 250px;
   --title-line: 200px;
   --title-pad: 30px;
-  --title-tracking: 0; /* original: -15px */
+  --title-tracking: -15px;
   --strapline-size: 120px;
   --strapline-line: 100px;
   --strapline-gap: 20px;
-  --strapline-tracking: 0; /* original: -8px */
+  --strapline-tracking: -8px;
   --heading-size: 200px;
   --heading-line: 160px;
-  --heading-tracking: 0; /* original: -12px */
+  --heading-tracking: -12px;
   --copy-size: 39px;
   --copy-line: 44px;
-  --copy-tracking: 0; /* original: -1px */
+  --copy-tracking: -1px;
   --copy-pad-block: 60px;
   --copy-pad-inline: 42px;
   --heading-block: calc(var(--heading-line) + (var(--title-pad) * 2));
@@ -323,14 +323,14 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 375px;
     --title-line: 300px;
     --title-pad: 30px;
-    --title-tracking: 0; /* original: -23px */
+    --title-tracking: -23px;
     --strapline-size: 180px;
     --strapline-line: 150px;
     --strapline-gap: 30px;
-    --strapline-tracking: 0; /* original: -12px */
+    --strapline-tracking: -12px;
     --heading-size: 312px;
     --heading-line: 250px;
-    --heading-tracking: 0; /* original: -19px */
+    --heading-tracking: -19px;
     --copy-size: 50px;
     --copy-line: 56px;
     --copy-pad-block: 80px;
@@ -343,12 +343,12 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 190px;
     --title-line: 150px;
     --title-pad: 20px;
-    --title-tracking: 0; /* original: -12px */
+    --title-tracking: -12px;
     --strapline-size: 90px;
     --strapline-line: 75px;
     --strapline-gap: 15px;
-    --strapline-tracking: 0; /* original: -6px */
-    --heading-tracking: 0; /* original: -12px */
+    --strapline-tracking: -6px;
+    --heading-tracking: -12px;
     --copy-size: 32px;
     --copy-line: 36px;
     --copy-pad-block: 40px;
@@ -361,14 +361,14 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 125px;
     --title-line: 100px;
     --title-pad: 15px;
-    --title-tracking: 0; /* original: -8px */
+    --title-tracking: -8px;
     --strapline-size: 60px;
     --strapline-line: 50px;
     --strapline-gap: 10px;
-    --strapline-tracking: 0; /* original: -4px */
+    --strapline-tracking: -4px;
     --heading-size: 125px;
     --heading-line: 100px;
-    --heading-tracking: 0; /* original: -8px */
+    --heading-tracking: -8px;
     --copy-size: 28px;
     --copy-line: 31px;
     --copy-pad-block: 35px;
@@ -381,14 +381,14 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 83px;
     --title-line: 66px;
     --title-pad: 10px;
-    --title-tracking: 0; /* original: -5px */
+    --title-tracking: -5px;
     --strapline-size: 40px;
     --strapline-line: 33px;
     --strapline-gap: 7px;
-    --strapline-tracking: 0; /* original: -3px */
+    --strapline-tracking: -3px;
     --heading-size: 83px;
     --heading-line: 66px;
-    --heading-tracking: 0; /* original: -5px */
+    --heading-tracking: -5px;
     --copy-pad-block: 30px;
     --copy-pad-inline: 13px;
   }
