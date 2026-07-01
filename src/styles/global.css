@@ -5,13 +5,17 @@
   --title-size: 250px;
   --title-line: 200px;
   --title-pad: 30px;
+  --title-tracking: 0; /* original: -15px */
   --strapline-size: 120px;
   --strapline-line: 100px;
   --strapline-gap: 20px;
+  --strapline-tracking: 0; /* original: -8px */
   --heading-size: 200px;
   --heading-line: 160px;
+  --heading-tracking: 0; /* original: -12px */
   --copy-size: 39px;
   --copy-line: 44px;
+  --copy-tracking: 0; /* original: -1px */
   --copy-pad-block: 60px;
   --copy-pad-inline: 42px;
   --heading-block: calc(var(--heading-line) + (var(--title-pad) * 2));
@@ -227,7 +231,7 @@ body.is-loaded .loadanim {
   margin: 0;
   padding: var(--title-pad);
   font-family: var(--font-sans);
-  letter-spacing: 0;
+  letter-spacing: var(--title-tracking);
 }
 
 .site-title {
@@ -244,6 +248,7 @@ body.is-loaded .loadanim {
   margin-top: var(--strapline-gap);
   font-size: var(--strapline-size);
   font-weight: 100;
+  letter-spacing: var(--strapline-tracking);
   line-height: var(--strapline-line);
 }
 
@@ -269,6 +274,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   z-index: 1;
   font-size: var(--heading-size);
   font-weight: 100;
+  letter-spacing: var(--heading-tracking);
   line-height: var(--heading-line);
   opacity: 0.3;
 }
@@ -286,7 +292,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   padding: var(--copy-pad-block) var(--copy-pad-inline) calc(var(--copy-pad-block) + 12px);
   font-size: var(--copy-size);
   font-weight: 100;
-  letter-spacing: 0;
+  letter-spacing: var(--copy-tracking);
   line-height: var(--copy-line);
 }
 
@@ -317,11 +323,14 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 375px;
     --title-line: 300px;
     --title-pad: 30px;
+    --title-tracking: 0; /* original: -23px */
     --strapline-size: 180px;
     --strapline-line: 150px;
     --strapline-gap: 30px;
+    --strapline-tracking: 0; /* original: -12px */
     --heading-size: 312px;
     --heading-line: 250px;
+    --heading-tracking: 0; /* original: -19px */
     --copy-size: 50px;
     --copy-line: 56px;
     --copy-pad-block: 80px;
@@ -334,9 +343,12 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 190px;
     --title-line: 150px;
     --title-pad: 20px;
+    --title-tracking: 0; /* original: -12px */
     --strapline-size: 90px;
     --strapline-line: 75px;
     --strapline-gap: 15px;
+    --strapline-tracking: 0; /* original: -6px */
+    --heading-tracking: 0; /* original: -12px */
     --copy-size: 32px;
     --copy-line: 36px;
     --copy-pad-block: 40px;
@@ -349,11 +361,14 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 125px;
     --title-line: 100px;
     --title-pad: 15px;
+    --title-tracking: 0; /* original: -8px */
     --strapline-size: 60px;
     --strapline-line: 50px;
     --strapline-gap: 10px;
+    --strapline-tracking: 0; /* original: -4px */
     --heading-size: 125px;
     --heading-line: 100px;
+    --heading-tracking: 0; /* original: -8px */
     --copy-size: 28px;
     --copy-line: 31px;
     --copy-pad-block: 35px;
@@ -366,11 +381,14 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     --title-size: 83px;
     --title-line: 66px;
     --title-pad: 10px;
+    --title-tracking: 0; /* original: -5px */
     --strapline-size: 40px;
     --strapline-line: 33px;
     --strapline-gap: 7px;
+    --strapline-tracking: 0; /* original: -3px */
     --heading-size: 83px;
     --heading-line: 66px;
+    --heading-tracking: 0; /* original: -5px */
     --copy-pad-block: 30px;
     --copy-pad-inline: 13px;
   }
