@@ -1,4 +1,5 @@
 :root {
+  --color-page-chrome: #eeeeee;
   --color-background: #020c2c;
   --color-hero-background: #e45f27;
   --color-foreground: #ffffff;
@@ -85,14 +86,14 @@ body {
 }
 
 html {
-  background: var(--color-background);
+  background: var(--color-page-chrome);
   overflow-anchor: none;
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--color-background);
+  background: var(--color-page-chrome);
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-style: normal;
