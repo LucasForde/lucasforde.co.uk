@@ -95,17 +95,17 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
   const initial = await page.evaluate(() => {
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
-    const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
-    const dashLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
 
-    if (!heading || !codeLayer || !dashLayer || !ghostTitle) {
+    if (!heading || !topImageLayer || !bottomImageLayer || !ghostTitle) {
       return null;
     }
 
     const headingStyles = window.getComputedStyle(heading);
-    const codeStyles = window.getComputedStyle(codeLayer);
-    const dashStyles = window.getComputedStyle(dashLayer);
+    const topImageStyles = window.getComputedStyle(topImageLayer);
+    const bottomImageStyles = window.getComputedStyle(bottomImageLayer);
 
     return {
       bodyStatic: document.body.classList.contains("is-static-layout"),
@@ -113,10 +113,10 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       headingOpacity: headingStyles.opacity,
       headingPosition: headingStyles.position,
       viewportHeight: window.innerHeight,
-      codeTransform: codeStyles.transform,
-      dashTransform: dashStyles.transform,
-      codeHidden: codeLayer.hidden,
-      dashHidden: dashLayer.hidden,
+      topImageTransform: topImageStyles.transform,
+      bottomImageTransform: bottomImageStyles.transform,
+      topImageHidden: topImageLayer.hidden,
+      bottomImageHidden: bottomImageLayer.hidden,
       ghostHidden: ghostTitle.hidden,
     };
   });
@@ -126,21 +126,21 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(initial?.headingPosition).not.toBe("fixed");
   expect(initial?.headingOpacity).toBe("1");
   expect(Math.abs((initial?.headingTop ?? 0) - (initial?.viewportHeight ?? 0) * 0.2)).toBeLessThan(1);
-  expect(isZeroTransform(initial?.codeTransform ?? "")).toBe(true);
-  expect(isZeroTransform(initial?.dashTransform ?? "")).toBe(true);
-  expect(initial?.codeHidden).toBe(false);
-  expect(initial?.dashHidden).toBe(false);
+  expect(isZeroTransform(initial?.topImageTransform ?? "")).toBe(true);
+  expect(isZeroTransform(initial?.bottomImageTransform ?? "")).toBe(true);
+  expect(initial?.topImageHidden).toBe(false);
+  expect(initial?.bottomImageHidden).toBe(false);
   expect(initial?.ghostHidden).toBe(false);
 
   const afterIntro = await page.evaluate(async () => {
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
-    const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
-    const dashLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
     const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
 
-    if (!introSection || !codeLayer || !dashLayer || !ghostTitle || !heading) {
+    if (!introSection || !topImageLayer || !bottomImageLayer || !ghostTitle || !heading) {
       return null;
     }
 
@@ -150,8 +150,8 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
     await nextFrame();
 
     return {
-      codeHidden: codeLayer.hidden,
-      dashHidden: dashLayer.hidden,
+      topImageHidden: topImageLayer.hidden,
+      bottomImageHidden: bottomImageLayer.hidden,
       ghostHidden: ghostTitle.hidden,
       headingPosition: window.getComputedStyle(heading).position,
       headingOpacity: window.getComputedStyle(heading).opacity,
@@ -159,8 +159,8 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   });
 
   expect(afterIntro).toEqual({
-    codeHidden: false,
-    dashHidden: true,
+    topImageHidden: true,
+    bottomImageHidden: false,
     ghostHidden: true,
     headingPosition: "relative",
     headingOpacity: "1",
@@ -271,11 +271,11 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
   const result = await page.evaluate(async () => {
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
-    const codeLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
-    const dashLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
     const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
 
-    if (!introSection || !ghostTitle || !codeLayer || !dashLayer) {
+    if (!introSection || !ghostTitle || !topImageLayer || !bottomImageLayer) {
       return null;
     }
 
@@ -286,15 +286,15 @@ test("hero ghost title is hidden before the contact image scene", async ({ page,
 
     return {
       ghostHidden: ghostTitle.hidden,
-      codeHidden: codeLayer.hidden,
-      dashHidden: dashLayer.hidden,
+      topImageHidden: topImageLayer.hidden,
+      bottomImageHidden: bottomImageLayer.hidden,
     };
   });
 
   expect(result).toEqual({
     ghostHidden: true,
-    codeHidden: false,
-    dashHidden: true,
+    topImageHidden: true,
+    bottomImageHidden: false,
   });
 });
 
