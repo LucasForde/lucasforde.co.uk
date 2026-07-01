@@ -160,6 +160,31 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
     headingPosition: "relative",
     headingOpacity: "1",
   });
+
+  const atBottom = await page.evaluate(async () => {
+    const contactCopy = document.querySelector<HTMLElement>(".copy--contact");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!contactCopy) {
+      return null;
+    }
+
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await nextFrame();
+    await nextFrame();
+
+    const rect = contactCopy.getBoundingClientRect();
+
+    return {
+      copyTop: rect.top,
+      copyBottom: rect.bottom,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(atBottom).not.toBeNull();
+  expect(atBottom?.copyTop ?? -1).toBeGreaterThanOrEqual(0);
+  expect(atBottom?.copyBottom ?? 99999).toBeLessThanOrEqual(atBottom?.viewportHeight ?? 0);
 });
 
 test("hero title copies stay aligned through the handoff", async ({ page, isMobile }) => {
