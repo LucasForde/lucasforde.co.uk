@@ -1,7 +1,8 @@
 :root {
   --color-page-chrome: #1e1e1e;
-  --color-background: #020c2c;
   --color-hero-background: #e45f27;
+  --color-intro-background: #1e6fb8;
+  --color-contact-background: #61b63d;
   --color-foreground: #ffffff;
   --font-sans: "Roboto", Arial, Helvetica, sans-serif;
   --loader-exit-duration: 1000ms;
@@ -235,7 +236,7 @@ body.is-loaded .loadanim {
 .panel--intro {
   z-index: 20;
   margin-top: var(--panel-height);
-  background: var(--color-background);
+  background: var(--color-intro-background);
 }
 
 .panel--heading {
@@ -246,7 +247,7 @@ body.is-loaded .loadanim {
 
 .panel--contact {
   z-index: 40;
-  background: var(--color-background);
+  background: var(--color-contact-background);
 }
 
 .fixed-scene {
