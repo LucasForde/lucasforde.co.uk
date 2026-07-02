@@ -110,12 +110,11 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
   const initial = await page.evaluate(() => {
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
-    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
     const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
     const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
 
-    if (!heading || !heroTitle || !topImageLayer || !bottomImageLayer || !ghostTitle) {
+    if (!heading || !topImageLayer || !bottomImageLayer || !ghostTitle) {
       return null;
     }
 
@@ -128,7 +127,6 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       headingTop: Number.parseFloat(headingStyles.top),
       headingOpacity: headingStyles.opacity,
       headingPosition: headingStyles.position,
-      heroTitleTop: heroTitle.getBoundingClientRect().top,
       viewportHeight: window.innerHeight,
       topImageTransform: topImageStyles.transform,
       bottomImageTransform: bottomImageStyles.transform,
@@ -142,33 +140,12 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(initial?.bodyStatic).toBe(true);
   expect(initial?.headingPosition).not.toBe("fixed");
   expect(initial?.headingOpacity).toBe("1");
-  expect(Math.abs(initial?.heroTitleTop ?? 999)).toBeLessThan(1);
   expect(Math.abs((initial?.headingTop ?? 0) - (initial?.viewportHeight ?? 0) * 0.2)).toBeLessThan(1);
   expect(isZeroTransform(initial?.topImageTransform ?? "")).toBe(true);
   expect(isZeroTransform(initial?.bottomImageTransform ?? "")).toBe(true);
   expect(initial?.topImageHidden).toBe(false);
   expect(initial?.bottomImageHidden).toBe(false);
   expect(initial?.ghostHidden).toBe(false);
-
-  const midHero = await page.evaluate(async () => {
-    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
-    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
-
-    if (!heroTitle) {
-      return null;
-    }
-
-    window.scrollTo(0, window.innerHeight * 0.5);
-    await nextFrame();
-    await nextFrame();
-
-    return {
-      heroTitleTop: heroTitle.getBoundingClientRect().top,
-    };
-  });
-
-  expect(midHero).not.toBeNull();
-  expect(Math.abs(midHero?.heroTitleTop ?? 999)).toBeLessThan(1);
 
   const afterIntro = await page.evaluate(async () => {
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");

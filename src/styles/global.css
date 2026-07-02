@@ -1,5 +1,5 @@
 :root {
-  --color-page-chrome: #ffffff;
+  --color-page-background: #ffffff;
   --color-hero-background: #e45f27;
   --color-intro-background: #1e6fb8;
   --color-contact-background: #61b63d;
@@ -87,7 +87,7 @@ body {
 }
 
 html {
-  background: var(--color-page-chrome);
+  background: var(--color-page-background);
   overflow-y: scroll;
   overflow-anchor: none;
   scrollbar-gutter: stable;
@@ -96,7 +96,7 @@ html {
 body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--color-page-chrome);
+  background: var(--color-page-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-style: normal;

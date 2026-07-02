@@ -80,7 +80,11 @@ function shouldUseStaticLayout(): boolean {
 function setStaticLayout(scrollY: number): void {
   document.body.classList.add("is-static-layout");
   updateSceneVisibility(scrollY);
-  positionTitles(scrollY);
+
+  if (!usesCssTitleTimeline) {
+    heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+    ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  }
 
   topImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
   bottomImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
