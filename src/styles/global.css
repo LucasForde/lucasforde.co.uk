@@ -476,6 +476,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 
   .site-title,
   .section-heading,
+  .fixed-scene,
   .image-layer {
     will-change: auto;
   }
@@ -499,6 +500,13 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     min-height: var(--static-contact-panel-height);
   }
 
+  .fixed-scene {
+    right: 0;
+    bottom: auto;
+    height: var(--panel-height);
+    min-height: var(--panel-height);
+  }
+
   .site-title--hero {
     width: 100%;
     padding-right: var(--title-pad);
@@ -515,6 +523,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 
 body.is-static-layout .site-title,
 body.is-static-layout .section-heading,
+body.is-static-layout .fixed-scene,
 body.is-static-layout .image-layer {
   will-change: auto;
 }
@@ -536,6 +545,13 @@ body.is-static-layout .panel--intro {
 body.is-static-layout .panel--contact {
   height: var(--static-contact-panel-height);
   min-height: var(--static-contact-panel-height);
+}
+
+body.is-static-layout .fixed-scene {
+  right: 0;
+  bottom: auto;
+  height: var(--panel-height);
+  min-height: var(--panel-height);
 }
 
 body.is-static-layout .site-title--hero {

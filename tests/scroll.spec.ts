@@ -136,6 +136,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
   const initial = await page.evaluate(() => {
     const hero = document.querySelector<HTMLElement>("[data-hero]");
+    const fixedScene = document.querySelector<HTMLElement>("[data-fixed-scene]");
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
     const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
@@ -146,6 +147,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
     if (
       !hero ||
+      !fixedScene ||
       !heading ||
       !heroTitle ||
       !introSection ||
@@ -164,6 +166,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
     const topImageStyles = window.getComputedStyle(topImageLayer);
     const bottomImageStyles = window.getComputedStyle(bottomImageLayer);
     const heroRect = hero.getBoundingClientRect();
+    const fixedSceneRect = fixedScene.getBoundingClientRect();
     const heroTitleRect = heroTitle.getBoundingClientRect();
     const introRect = introSection.getBoundingClientRect();
     const headingBlockHeight =
@@ -181,6 +184,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       introGap: introRect.top - heroRect.bottom,
       headingTop: Number.parseFloat(headingStyles.top),
       headingHeight: headingBlockHeight,
+      fixedSceneHeight: fixedSceneRect.height,
       stableViewportHeight: heroRect.height,
       headingOpacity: headingStyles.opacity,
       headingPosition: headingStyles.position,
@@ -200,6 +204,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(initial?.heroTitleTextAlign).toBe("center");
   expect(initial?.heroTitleOffset ?? 0).toBeLessThan(0);
   expect(initial?.heroTitleCenter ?? 99999).toBeLessThan((initial?.viewportHeight ?? 0) * 0.5);
+  expect(Math.abs((initial?.fixedSceneHeight ?? 0) - (initial?.stableViewportHeight ?? 0))).toBeLessThan(1);
   expect(Math.abs((initial?.contactHeight ?? 0) - (initial?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
   expect(Math.abs(initial?.introGap ?? 999)).toBeLessThan(1);
   expect(initial?.headingPosition).not.toBe("fixed");
