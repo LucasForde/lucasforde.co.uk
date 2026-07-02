@@ -1,5 +1,5 @@
 :root {
-  --color-page-chrome: #1e1e1e;
+  --color-page-chrome: #ffffff;
   --color-hero-background: #e45f27;
   --color-intro-background: #1e6fb8;
   --color-contact-background: #61b63d;
@@ -533,9 +533,9 @@ body.is-static-layout .site-title--ghost {
   transform: translate3d(0, 0, 0);
 }
 
-@supports (height: 100dvh) {
+@supports (height: 100lvh) {
   body.is-static-layout {
-    --panel-height: 100dvh;
-    --image-layer-height: 120dvh;
+    --panel-height: 100lvh;
+    --image-layer-height: 120lvh;
   }
 }
