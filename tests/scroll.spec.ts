@@ -181,6 +181,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       introGap: introRect.top - heroRect.bottom,
       headingTop: Number.parseFloat(headingStyles.top),
       headingHeight: headingBlockHeight,
+      stableViewportHeight: heroRect.height,
       headingOpacity: headingStyles.opacity,
       headingPosition: headingStyles.position,
       viewportHeight: window.innerHeight,
@@ -203,12 +204,51 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(Math.abs(initial?.introGap ?? 999)).toBeLessThan(1);
   expect(initial?.headingPosition).not.toBe("fixed");
   expect(initial?.headingOpacity).toBe("1");
-  expect(Math.abs((initial?.headingTop ?? 0) - ((initial?.viewportHeight ?? 0) - (initial?.headingHeight ?? 0) - (initial?.viewportHeight ?? 0) * 0.04))).toBeLessThan(1);
+  expect(Math.abs((initial?.headingTop ?? 0) - ((initial?.stableViewportHeight ?? 0) - (initial?.headingHeight ?? 0) - (initial?.stableViewportHeight ?? 0) * 0.04))).toBeLessThan(1);
   expect(isZeroTransform(initial?.topImageTransform ?? "")).toBe(true);
   expect(isZeroTransform(initial?.bottomImageTransform ?? "")).toBe(true);
   expect(initial?.topImageHidden).toBe(false);
   expect(initial?.bottomImageHidden).toBe(false);
   expect(initial?.ghostHidden).toBe(false);
+
+  const afterBrowserChromeChange = await page.evaluate(async () => {
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!heading) {
+      return null;
+    }
+
+    const originalInnerHeight = window.innerHeight;
+    const beforeTop = Number.parseFloat(window.getComputedStyle(heading).top);
+
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: originalInnerHeight - 120,
+    });
+
+    window.dispatchEvent(new Event("resize"));
+    await nextFrame();
+    await nextFrame();
+
+    const afterTop = Number.parseFloat(window.getComputedStyle(heading).top);
+
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: originalInnerHeight,
+    });
+    window.dispatchEvent(new Event("resize"));
+    await nextFrame();
+    await nextFrame();
+
+    return {
+      beforeTop,
+      afterTop,
+    };
+  });
+
+  expect(afterBrowserChromeChange).not.toBeNull();
+  expect(Math.abs((afterBrowserChromeChange?.beforeTop ?? 0) - (afterBrowserChromeChange?.afterTop ?? 999))).toBeLessThan(1);
 
   const afterIntro = await page.evaluate(async () => {
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");

@@ -3,6 +3,7 @@ import { getStaticLayoutQuery, shouldUseStaticLayout } from "./static-layout";
 type NullableElement<T extends Element> = T | null;
 
 const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+const heroSection = document.querySelector<HTMLElement>("[data-hero]");
 const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
 const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
 const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
@@ -13,6 +14,7 @@ const contactSection = document.querySelector<HTMLElement>("[data-contact-sectio
 const HERO_TITLE_RELEASE_VIEWPORTS = 1;
 
 const requiredNodes: NullableElement<HTMLElement>[] = [
+  heroSection,
   heroTitle,
   ghostTitle,
   topImageLayer,
@@ -40,6 +42,10 @@ function px(value: number): string {
 
 function documentTop(element: HTMLElement): number {
   return element.getBoundingClientRect().top + window.scrollY;
+}
+
+function staticViewportHeight(): number {
+  return heroSection?.getBoundingClientRect().height ?? viewportHeight;
 }
 
 function measure(): void {
@@ -79,8 +85,9 @@ function setStaticLayout(scrollY: number): void {
   bottomImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   if (contactHeading) {
-    const headingGap = viewportHeight * 0.04;
-    const staticHeadingTop = Math.max(0, viewportHeight - headingHeight - headingGap);
+    const stableViewportHeight = staticViewportHeight();
+    const headingGap = stableViewportHeight * 0.04;
+    const staticHeadingTop = Math.max(0, stableViewportHeight - headingHeight - headingGap);
 
     contactHeading.classList.remove("is-solid");
     contactHeading.style.top = px(staticHeadingTop);
