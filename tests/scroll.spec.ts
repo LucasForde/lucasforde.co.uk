@@ -106,6 +106,32 @@ test("loader refresh starts and finishes at the top of the page", async ({ page,
 test("static layout matches the original mobile branch", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Static layout is covered on mobile/coarse-pointer devices.");
 
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const initialPaint = await page.evaluate(() => {
+    const loader = document.querySelector<HTMLElement>("[data-loader]");
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+
+    if (!heroTitle) {
+      return null;
+    }
+
+    return {
+      bodyLoading: document.body.classList.contains("is-loading"),
+      htmlLoading: document.documentElement.classList.contains("is-loading"),
+      htmlStatic: document.documentElement.classList.contains("is-static-layout"),
+      loaderDisplay: loader ? window.getComputedStyle(loader).display : "detached",
+      titleTop: heroTitle.getBoundingClientRect().top,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(initialPaint).not.toBeNull();
+  expect(initialPaint?.htmlStatic).toBe(true);
+  expect(initialPaint?.htmlLoading).toBe(false);
+  expect(["none", "detached"]).toContain(initialPaint?.loaderDisplay);
+  expect(initialPaint?.titleTop ?? 999).toBeLessThan((initialPaint?.viewportHeight ?? 0) * 0.75);
+
   await openLoadedPage(page);
 
   const initial = await page.evaluate(() => {
@@ -113,14 +139,25 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
     const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
     const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+    const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
     const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
     const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
 
-    if (!hero || !heading || !heroTitle || !introSection || !topImageLayer || !bottomImageLayer || !ghostTitle) {
+    if (
+      !hero ||
+      !heading ||
+      !heroTitle ||
+      !introSection ||
+      !contactSection ||
+      !topImageLayer ||
+      !bottomImageLayer ||
+      !ghostTitle
+    ) {
       return null;
     }
 
+    const contactStyles = window.getComputedStyle(contactSection);
     const heroStyles = window.getComputedStyle(hero);
     const headingStyles = window.getComputedStyle(heading);
     const heroTitleStyles = window.getComputedStyle(heroTitle);
@@ -129,15 +166,21 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
     const heroRect = hero.getBoundingClientRect();
     const heroTitleRect = heroTitle.getBoundingClientRect();
     const introRect = introSection.getBoundingClientRect();
+    const headingBlockHeight =
+      Number.parseFloat(headingStyles.lineHeight) +
+      Number.parseFloat(headingStyles.paddingTop) * 2;
 
     return {
       bodyStatic: document.body.classList.contains("is-static-layout"),
       heroBackgroundImage: heroStyles.backgroundImage,
       heroBackgroundColor: heroStyles.backgroundColor,
       heroTitleCenter: heroTitleRect.top + heroTitleRect.height / 2,
+      heroTitleOffset: Number.parseFloat(heroTitleStyles.top),
       heroTitleTextAlign: heroTitleStyles.textAlign,
+      contactHeight: Number.parseFloat(contactStyles.height),
       introGap: introRect.top - heroRect.bottom,
       headingTop: Number.parseFloat(headingStyles.top),
+      headingHeight: headingBlockHeight,
       headingOpacity: headingStyles.opacity,
       headingPosition: headingStyles.position,
       viewportHeight: window.innerHeight,
@@ -154,11 +197,13 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(initial?.heroBackgroundImage).toContain("bg_dash.jpg");
   expect(initial?.heroBackgroundColor).toBe("rgb(51, 51, 51)");
   expect(initial?.heroTitleTextAlign).toBe("center");
-  expect(Math.abs((initial?.heroTitleCenter ?? 0) - (initial?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
+  expect(initial?.heroTitleOffset ?? 0).toBeLessThan(0);
+  expect(initial?.heroTitleCenter ?? 99999).toBeLessThan((initial?.viewportHeight ?? 0) * 0.5);
+  expect(Math.abs((initial?.contactHeight ?? 0) - (initial?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
   expect(Math.abs(initial?.introGap ?? 999)).toBeLessThan(1);
   expect(initial?.headingPosition).not.toBe("fixed");
   expect(initial?.headingOpacity).toBe("1");
-  expect(Math.abs((initial?.headingTop ?? 0) - (initial?.viewportHeight ?? 0) * 0.2)).toBeLessThan(1);
+  expect(Math.abs((initial?.headingTop ?? 0) - ((initial?.viewportHeight ?? 0) - (initial?.headingHeight ?? 0) - (initial?.viewportHeight ?? 0) * 0.04))).toBeLessThan(1);
   expect(isZeroTransform(initial?.topImageTransform ?? "")).toBe(true);
   expect(isZeroTransform(initial?.bottomImageTransform ?? "")).toBe(true);
   expect(initial?.topImageHidden).toBe(false);
@@ -201,9 +246,11 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
   const atBottom = await page.evaluate(async () => {
     const contactCopy = document.querySelector<HTMLElement>(".copy--contact");
+    const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
     const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
 
-    if (!contactCopy) {
+    if (!contactCopy || !contactSection || !heading) {
       return null;
     }
 
@@ -212,15 +259,27 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
     await nextFrame();
 
     const rect = contactCopy.getBoundingClientRect();
+    const contactRect = contactSection.getBoundingClientRect();
+    const headingRect = heading.getBoundingClientRect();
+    const headingStyles = window.getComputedStyle(heading);
+    const headingBlockHeight =
+      Number.parseFloat(headingStyles.lineHeight) +
+      Number.parseFloat(headingStyles.paddingTop) * 2;
 
     return {
+      contactTop: contactRect.top,
+      contactHeight: contactRect.height,
       copyTop: rect.top,
       copyBottom: rect.bottom,
+      headingBottom: headingRect.top + headingBlockHeight,
       viewportHeight: window.innerHeight,
     };
   });
 
   expect(atBottom).not.toBeNull();
+  expect(Math.abs((atBottom?.contactTop ?? 0) - (atBottom?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
+  expect(Math.abs((atBottom?.contactHeight ?? 0) - (atBottom?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
+  expect(atBottom?.headingBottom ?? 99999).toBeLessThan(atBottom?.contactTop ?? 0);
   expect(atBottom?.copyTop ?? -1).toBeGreaterThanOrEqual(0);
   expect(atBottom?.copyBottom ?? 99999).toBeLessThanOrEqual(atBottom?.viewportHeight ?? 0);
 });

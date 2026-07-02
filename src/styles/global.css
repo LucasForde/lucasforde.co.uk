@@ -26,6 +26,8 @@
   --copy-pad-block: 60px;
   --copy-pad-inline: 42px;
   --heading-block: calc(var(--heading-line) + (var(--title-pad) * 2));
+  --static-hero-title-offset: -6vh;
+  --static-contact-panel-height: 50vh;
 }
 
 @supports (transition-timing-function: linear(0, 1)) {
@@ -467,6 +469,11 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 }
 
 @media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .loader,
+  .loader-preload {
+    display: none;
+  }
+
   .site-title,
   .section-heading,
   .image-layer {
@@ -487,11 +494,22 @@ body.is-loading:not(.is-loaded) .site-title--hero {
     margin-top: 0;
   }
 
+  .panel--contact {
+    height: var(--static-contact-panel-height);
+    min-height: var(--static-contact-panel-height);
+  }
+
   .site-title--hero {
     width: 100%;
     padding-right: var(--title-pad);
     padding-left: var(--title-pad);
+    top: var(--static-hero-title-offset);
     text-align: center;
+    transition: none;
+  }
+
+  body.is-loading:not(.is-loaded) .site-title--hero {
+    top: var(--static-hero-title-offset);
   }
 }
 
@@ -515,11 +533,28 @@ body.is-static-layout .panel--intro {
   margin-top: 0;
 }
 
+body.is-static-layout .panel--contact {
+  height: var(--static-contact-panel-height);
+  min-height: var(--static-contact-panel-height);
+}
+
 body.is-static-layout .site-title--hero {
   width: 100%;
   padding-right: var(--title-pad);
   padding-left: var(--title-pad);
+  top: var(--static-hero-title-offset);
   text-align: center;
+  transition: none;
+}
+
+html.is-static-layout .loader,
+html.is-static-layout .loader-preload {
+  display: none;
+}
+
+html.is-static-layout body.is-loading:not(.is-loaded) .site-title--hero,
+body.is-static-layout.is-loading:not(.is-loaded) .site-title--hero {
+  top: var(--static-hero-title-offset);
 }
 
 @supports (animation-timeline: scroll()) {
@@ -576,6 +611,11 @@ body.is-static-layout .site-title--ghost {
 }
 
 @supports (height: 100lvh) {
+  :root {
+    --static-hero-title-offset: -6lvh;
+    --static-contact-panel-height: 50lvh;
+  }
+
   body.is-static-layout {
     --panel-height: 100lvh;
     --image-layer-height: 120lvh;

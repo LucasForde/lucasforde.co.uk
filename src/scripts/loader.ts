@@ -11,6 +11,27 @@ const exitDuration = 1000;
 const timers: number[] = [];
 const scrollKeys = new Set([" ", "ArrowDown", "ArrowUp", "End", "Home", "PageDown", "PageUp"]);
 let isCleanedUp = false;
+const userAgent = navigator.userAgent.toLowerCase();
+const isMacSafari =
+  userAgent.includes("mac") &&
+  userAgent.includes("safari") &&
+  !userAgent.includes("chrome");
+const usesLegacyStaticVersion = [
+  "ipad",
+  "iphone",
+  "ipod",
+  "android",
+  "windows phone",
+  "touch",
+  "blackberry",
+  "edge",
+  "trident",
+].some((device) => userAgent.includes(device)) || isMacSafari;
+const staticLayoutQuery = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
+
+function shouldUseStaticLayout(): boolean {
+  return usesLegacyStaticVersion || staticLayoutQuery.matches;
+}
 
 function resetScroll(): void {
   window.scrollTo(0, 0);
@@ -114,14 +135,20 @@ if (loader) {
     window.history.scrollRestoration = "manual";
   }
 
-  document.documentElement.classList.add("is-loading");
-  resetScroll();
-  lockScroll();
-  animateLoaderDots();
-
-  if (document.readyState === "complete") {
-    startExitTimer();
+  if (shouldUseStaticLayout()) {
+    cleanupLoader();
   } else {
-    window.addEventListener("load", startExitTimer, { once: true });
+    document.documentElement.classList.add("is-loading");
+    resetScroll();
+    lockScroll();
+    animateLoaderDots();
+
+    if (document.readyState === "complete") {
+      startExitTimer();
+    } else {
+      window.addEventListener("load", startExitTimer, { once: true });
+    }
   }
 }
+
+export {};

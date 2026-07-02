@@ -23,6 +23,30 @@ const description = "Frontend web developer focused on thoughtful design, clean 
       }
 
       scrollTo(0, 0);
+
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMacSafari =
+        userAgent.includes("mac") &&
+        userAgent.includes("safari") &&
+        !userAgent.includes("chrome");
+      const usesLegacyStaticVersion =
+        [
+          "ipad",
+          "iphone",
+          "ipod",
+          "android",
+          "windows phone",
+          "touch",
+          "blackberry",
+          "edge",
+          "trident",
+        ].some((device) => userAgent.includes(device)) || isMacSafari;
+      const staticLayoutQuery = matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
+
+      if (usesLegacyStaticVersion || staticLayoutQuery.matches) {
+        document.documentElement.classList.add("is-static-layout");
+        document.documentElement.classList.remove("is-loading");
+      }
     </script>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

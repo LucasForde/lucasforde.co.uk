@@ -79,6 +79,7 @@ function shouldUseStaticLayout(): boolean {
 
 function syncStaticLayoutClass(): boolean {
   const useStaticLayout = shouldUseStaticLayout();
+  document.documentElement.classList.toggle("is-static-layout", useStaticLayout);
   document.body.classList.toggle("is-static-layout", useStaticLayout);
   return useStaticLayout;
 }
@@ -96,8 +97,11 @@ function setStaticLayout(scrollY: number): void {
   bottomImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   if (contactHeading) {
+    const headingGap = viewportHeight * 0.04;
+    const staticHeadingTop = Math.max(0, viewportHeight - headingHeight - headingGap);
+
     contactHeading.classList.remove("is-solid");
-    contactHeading.style.top = px(viewportHeight * 0.2);
+    contactHeading.style.top = px(staticHeadingTop);
     contactHeading.style.marginTop = "0";
     contactHeading.style.opacity = "1";
   }
@@ -214,3 +218,5 @@ if (requiredNodes.every(Boolean)) {
   staticLayoutQuery.addEventListener("change", refresh);
   window.addEventListener("load", refresh, { once: true });
 }
+
+export {};
