@@ -1,3 +1,5 @@
+import { getStaticLayoutQuery, shouldUseStaticLayout } from "./static-layout";
+
 type NullableElement<T extends Element> = T | null;
 
 const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
@@ -9,22 +11,6 @@ const headingSection = document.querySelector<HTMLElement>("[data-contact-headin
 const contactHeading = document.querySelector<HTMLElement>("[data-contact-heading]");
 const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
 const HERO_TITLE_RELEASE_VIEWPORTS = 1;
-const userAgent = navigator.userAgent.toLowerCase();
-const isMacSafari =
-  userAgent.includes("mac") &&
-  userAgent.includes("safari") &&
-  !userAgent.includes("chrome");
-const usesLegacyStaticVersion = [
-  "ipad",
-  "iphone",
-  "ipod",
-  "android",
-  "windows phone",
-  "touch",
-  "blackberry",
-  "edge",
-  "trident",
-].some((device) => userAgent.includes(device)) || isMacSafari;
 
 const requiredNodes: NullableElement<HTMLElement>[] = [
   heroTitle,
@@ -37,7 +23,7 @@ const requiredNodes: NullableElement<HTMLElement>[] = [
   contactSection,
 ];
 
-const staticLayoutQuery = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
+const staticLayoutQuery = getStaticLayoutQuery();
 
 let viewportHeight = window.innerHeight;
 let introTop = 0;
@@ -73,12 +59,8 @@ function measure(): void {
     Number.parseFloat(headingStyles.paddingTop) * 2;
 }
 
-function shouldUseStaticLayout(): boolean {
-  return usesLegacyStaticVersion || staticLayoutQuery.matches;
-}
-
 function syncStaticLayoutClass(): boolean {
-  const useStaticLayout = shouldUseStaticLayout();
+  const useStaticLayout = shouldUseStaticLayout(staticLayoutQuery);
   document.documentElement.classList.toggle("is-static-layout", useStaticLayout);
   document.body.classList.toggle("is-static-layout", useStaticLayout);
   return useStaticLayout;
@@ -218,5 +200,3 @@ if (requiredNodes.every(Boolean)) {
   staticLayoutQuery.addEventListener("change", refresh);
   window.addEventListener("load", refresh, { once: true });
 }
-
-export {};

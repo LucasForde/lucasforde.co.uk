@@ -468,7 +468,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   }
 }
 
-@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+@media (pointer: coarse) {
   .loader,
   .loader-preload {
     display: none;
@@ -596,7 +596,7 @@ body.is-static-layout.is-loading:not(.is-loaded) .site-title--hero {
   }
 }
 
-@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+@media (pointer: coarse) {
   .site-title--hero,
   .site-title--ghost {
     animation: none;

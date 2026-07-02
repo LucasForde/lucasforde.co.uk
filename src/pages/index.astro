@@ -6,9 +6,12 @@ import FixedScene from "../components/FixedScene.astro";
 import Intro from "../components/Intro.astro";
 import ContactHeading from "../components/ContactHeading.astro";
 import Contact from "../components/Contact.astro";
+import { STATIC_LAYOUT_MEDIA_QUERY, STATIC_LAYOUT_USER_AGENT_TOKENS } from "../scripts/static-layout";
 
 const title = "Lucas Forde | Web Design and Development | Tunbridge Wells";
 const description = "Frontend web developer focused on thoughtful design, clean code, and responsive user interfaces.";
+const staticLayoutUserAgentTokens = STATIC_LAYOUT_USER_AGENT_TOKENS;
+const staticLayoutMediaQuery = STATIC_LAYOUT_MEDIA_QUERY;
 ---
 
 <!doctype html>
@@ -17,7 +20,7 @@ const description = "Frontend web developer focused on thoughtful design, clean 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <script is:inline>
+    <script define:vars={{ staticLayoutMediaQuery, staticLayoutUserAgentTokens }}>
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
       }
@@ -25,25 +28,10 @@ const description = "Frontend web developer focused on thoughtful design, clean 
       scrollTo(0, 0);
 
       const userAgent = navigator.userAgent.toLowerCase();
-      const isMacSafari =
-        userAgent.includes("mac") &&
-        userAgent.includes("safari") &&
-        !userAgent.includes("chrome");
-      const usesLegacyStaticVersion =
-        [
-          "ipad",
-          "iphone",
-          "ipod",
-          "android",
-          "windows phone",
-          "touch",
-          "blackberry",
-          "edge",
-          "trident",
-        ].some((device) => userAgent.includes(device)) || isMacSafari;
-      const staticLayoutQuery = matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
+      const matchesStaticLayoutUserAgent = staticLayoutUserAgentTokens.some((token) => userAgent.includes(token));
+      const staticLayoutQuery = matchMedia(staticLayoutMediaQuery);
 
-      if (usesLegacyStaticVersion || staticLayoutQuery.matches) {
+      if (matchesStaticLayoutUserAgent || staticLayoutQuery.matches) {
         document.documentElement.classList.add("is-static-layout");
         document.documentElement.classList.remove("is-loading");
       }

@@ -1,3 +1,5 @@
+import { shouldUseStaticLayout } from "./static-layout";
+
 const loader = document.querySelector<HTMLElement>("[data-loader]");
 const preload = document.querySelector<HTMLElement>("[data-loader-preload]");
 const loadanim = document.querySelector<HTMLElement>("[data-loadanim]");
@@ -11,27 +13,6 @@ const exitDuration = 1000;
 const timers: number[] = [];
 const scrollKeys = new Set([" ", "ArrowDown", "ArrowUp", "End", "Home", "PageDown", "PageUp"]);
 let isCleanedUp = false;
-const userAgent = navigator.userAgent.toLowerCase();
-const isMacSafari =
-  userAgent.includes("mac") &&
-  userAgent.includes("safari") &&
-  !userAgent.includes("chrome");
-const usesLegacyStaticVersion = [
-  "ipad",
-  "iphone",
-  "ipod",
-  "android",
-  "windows phone",
-  "touch",
-  "blackberry",
-  "edge",
-  "trident",
-].some((device) => userAgent.includes(device)) || isMacSafari;
-const staticLayoutQuery = window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)");
-
-function shouldUseStaticLayout(): boolean {
-  return usesLegacyStaticVersion || staticLayoutQuery.matches;
-}
 
 function resetScroll(): void {
   window.scrollTo(0, 0);
@@ -150,5 +131,3 @@ if (loader) {
     }
   }
 }
-
-export {};
