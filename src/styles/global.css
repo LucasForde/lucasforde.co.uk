@@ -472,12 +472,54 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   .image-layer {
     will-change: auto;
   }
+
+  .panel--hero {
+    display: grid;
+    place-items: center;
+    background-color: #333333;
+    background-image: url("/images/bg_dash.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .panel--intro {
+    margin-top: 0;
+  }
+
+  .site-title--hero {
+    width: 100%;
+    padding-right: var(--title-pad);
+    padding-left: var(--title-pad);
+    text-align: center;
+  }
 }
 
 body.is-static-layout .site-title,
 body.is-static-layout .section-heading,
 body.is-static-layout .image-layer {
   will-change: auto;
+}
+
+body.is-static-layout .panel--hero {
+  display: grid;
+  place-items: center;
+  background-color: #333333;
+  background-image: url("/images/bg_dash.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+body.is-static-layout .panel--intro {
+  margin-top: 0;
+}
+
+body.is-static-layout .site-title--hero {
+  width: 100%;
+  padding-right: var(--title-pad);
+  padding-left: var(--title-pad);
+  text-align: center;
 }
 
 @supports (animation-timeline: scroll()) {

@@ -109,21 +109,34 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   await openLoadedPage(page);
 
   const initial = await page.evaluate(() => {
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+    const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
     const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
     const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
     const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
 
-    if (!heading || !topImageLayer || !bottomImageLayer || !ghostTitle) {
+    if (!hero || !heading || !heroTitle || !introSection || !topImageLayer || !bottomImageLayer || !ghostTitle) {
       return null;
     }
 
+    const heroStyles = window.getComputedStyle(hero);
     const headingStyles = window.getComputedStyle(heading);
+    const heroTitleStyles = window.getComputedStyle(heroTitle);
     const topImageStyles = window.getComputedStyle(topImageLayer);
     const bottomImageStyles = window.getComputedStyle(bottomImageLayer);
+    const heroRect = hero.getBoundingClientRect();
+    const heroTitleRect = heroTitle.getBoundingClientRect();
+    const introRect = introSection.getBoundingClientRect();
 
     return {
       bodyStatic: document.body.classList.contains("is-static-layout"),
+      heroBackgroundImage: heroStyles.backgroundImage,
+      heroBackgroundColor: heroStyles.backgroundColor,
+      heroTitleCenter: heroTitleRect.top + heroTitleRect.height / 2,
+      heroTitleTextAlign: heroTitleStyles.textAlign,
+      introGap: introRect.top - heroRect.bottom,
       headingTop: Number.parseFloat(headingStyles.top),
       headingOpacity: headingStyles.opacity,
       headingPosition: headingStyles.position,
@@ -138,6 +151,11 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
   expect(initial).not.toBeNull();
   expect(initial?.bodyStatic).toBe(true);
+  expect(initial?.heroBackgroundImage).toContain("bg_dash.jpg");
+  expect(initial?.heroBackgroundColor).toBe("rgb(51, 51, 51)");
+  expect(initial?.heroTitleTextAlign).toBe("center");
+  expect(Math.abs((initial?.heroTitleCenter ?? 0) - (initial?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
+  expect(Math.abs(initial?.introGap ?? 999)).toBeLessThan(1);
   expect(initial?.headingPosition).not.toBe("fixed");
   expect(initial?.headingOpacity).toBe("1");
   expect(Math.abs((initial?.headingTop ?? 0) - (initial?.viewportHeight ?? 0) * 0.2)).toBeLessThan(1);

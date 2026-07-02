@@ -77,6 +77,12 @@ function shouldUseStaticLayout(): boolean {
   return usesLegacyStaticVersion || staticLayoutQuery.matches;
 }
 
+function syncStaticLayoutClass(): boolean {
+  const useStaticLayout = shouldUseStaticLayout();
+  document.body.classList.toggle("is-static-layout", useStaticLayout);
+  return useStaticLayout;
+}
+
 function setStaticLayout(scrollY: number): void {
   document.body.classList.add("is-static-layout");
   updateSceneVisibility(scrollY);
@@ -173,7 +179,7 @@ function render(): void {
 
   const scrollY = window.scrollY;
 
-  if (shouldUseStaticLayout()) {
+  if (syncStaticLayoutClass()) {
     setStaticLayout(scrollY);
     return;
   }
@@ -196,6 +202,7 @@ function requestRender(): void {
 }
 
 function refresh(): void {
+  syncStaticLayoutClass();
   measure();
   requestRender();
 }
