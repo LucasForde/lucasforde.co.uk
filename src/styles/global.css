@@ -468,6 +468,82 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   }
 }
 
+html.is-static-layout,
+body.is-static-layout {
+  --title-size: 125px;
+  --title-line: 102px;
+  --title-pad: 15px;
+  --title-tracking: -8px;
+  --strapline-size: 60px;
+  --strapline-line: 53px;
+  --strapline-gap: 10px;
+  --strapline-tracking: -4px;
+  --heading-size: 125px;
+  --heading-line: 100px;
+  --heading-tracking: -8px;
+  --copy-size: 28px;
+  --copy-line: 31px;
+  --copy-pad-block: 35px;
+  --copy-pad-inline: 20px;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --title-size: 125px;
+    --title-line: 102px;
+    --title-pad: 15px;
+    --title-tracking: -8px;
+    --strapline-size: 60px;
+    --strapline-line: 53px;
+    --strapline-gap: 10px;
+    --strapline-tracking: -4px;
+    --heading-size: 125px;
+    --heading-line: 100px;
+    --heading-tracking: -8px;
+    --copy-size: 28px;
+    --copy-line: 31px;
+    --copy-pad-block: 35px;
+    --copy-pad-inline: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  html.is-static-layout,
+  body.is-static-layout {
+    --title-size: 83px;
+    --title-line: 68px;
+    --title-pad: 10px;
+    --title-tracking: -5px;
+    --strapline-size: 40px;
+    --strapline-line: 36px;
+    --strapline-gap: 7px;
+    --strapline-tracking: -3px;
+    --heading-size: 83px;
+    --heading-line: 66px;
+    --heading-tracking: -5px;
+    --copy-pad-block: 30px;
+    --copy-pad-inline: 13px;
+  }
+}
+
+@media (pointer: coarse) and (max-width: 400px) {
+  :root {
+    --title-size: 83px;
+    --title-line: 68px;
+    --title-pad: 10px;
+    --title-tracking: -5px;
+    --strapline-size: 40px;
+    --strapline-line: 36px;
+    --strapline-gap: 7px;
+    --strapline-tracking: -3px;
+    --heading-size: 83px;
+    --heading-line: 66px;
+    --heading-tracking: -5px;
+    --copy-pad-block: 30px;
+    --copy-pad-inline: 13px;
+  }
+}
+
 @media (pointer: coarse) {
   .loader,
   .loader-preload {
