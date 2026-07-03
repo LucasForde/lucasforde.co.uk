@@ -76,6 +76,10 @@ function setStaticLayout(scrollY: number): void {
   document.body.classList.add("is-static-layout");
   updateSceneVisibility(scrollY);
 
+  if (ghostTitle) {
+    ghostTitle.hidden = true;
+  }
+
   if (!usesCssTitleTimeline) {
     heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
     ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");

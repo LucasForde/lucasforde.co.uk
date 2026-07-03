@@ -161,6 +161,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
     const contactStyles = window.getComputedStyle(contactSection);
     const heroStyles = window.getComputedStyle(hero);
+    const fixedSceneStyles = window.getComputedStyle(fixedScene);
     const headingStyles = window.getComputedStyle(heading);
     const heroTitleStyles = window.getComputedStyle(heroTitle);
     const topImageStyles = window.getComputedStyle(topImageLayer);
@@ -177,6 +178,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       bodyStatic: document.body.classList.contains("is-static-layout"),
       heroBackgroundImage: heroStyles.backgroundImage,
       heroBackgroundColor: heroStyles.backgroundColor,
+      fixedSceneBottom: fixedSceneStyles.bottom,
       heroTitleCenter: heroTitleRect.top + heroTitleRect.height / 2,
       heroTitleOffset: Number.parseFloat(heroTitleStyles.top),
       heroTitleTextAlign: heroTitleStyles.textAlign,
@@ -189,7 +191,9 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       headingOpacity: headingStyles.opacity,
       headingPosition: headingStyles.position,
       viewportHeight: window.innerHeight,
+      topImageBottom: topImageStyles.bottom,
       topImageTransform: topImageStyles.transform,
+      bottomImageBottom: bottomImageStyles.bottom,
       bottomImageTransform: bottomImageStyles.transform,
       topImageHidden: topImageLayer.hidden,
       bottomImageHidden: bottomImageLayer.hidden,
@@ -199,8 +203,9 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 
   expect(initial).not.toBeNull();
   expect(initial?.bodyStatic).toBe(true);
-  expect(initial?.heroBackgroundImage).toContain("bg_dash.jpg");
-  expect(initial?.heroBackgroundColor).toBe("rgb(51, 51, 51)");
+  expect(initial?.heroBackgroundImage).toBe("none");
+  expect(initial?.heroBackgroundColor).toBe("rgba(0, 0, 0, 0)");
+  expect(initial?.fixedSceneBottom).toBe("0px");
   expect(initial?.heroTitleTextAlign).toBe("center");
   expect(initial?.heroTitleOffset ?? 0).toBeLessThan(0);
   expect(initial?.heroTitleCenter ?? 99999).toBeLessThan((initial?.viewportHeight ?? 0) * 0.5);
@@ -212,9 +217,11 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(Math.abs((initial?.headingTop ?? 0) - ((initial?.stableViewportHeight ?? 0) - (initial?.headingHeight ?? 0) - (initial?.stableViewportHeight ?? 0) * 0.04))).toBeLessThan(1);
   expect(isZeroTransform(initial?.topImageTransform ?? "")).toBe(true);
   expect(isZeroTransform(initial?.bottomImageTransform ?? "")).toBe(true);
+  expect(initial?.topImageBottom).toBe("0px");
+  expect(initial?.bottomImageBottom).toBe("0px");
   expect(initial?.topImageHidden).toBe(false);
   expect(initial?.bottomImageHidden).toBe(false);
-  expect(initial?.ghostHidden).toBe(false);
+  expect(initial?.ghostHidden).toBe(true);
 
   const afterBrowserChromeChange = await page.evaluate(async () => {
     const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
