@@ -433,11 +433,11 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 @media (max-width: 520px) {
   :root {
     --title-size: 125px;
-    --title-line: 100px;
+    --title-line: 102px;
     --title-pad: 15px;
     --title-tracking: -8px;
     --strapline-size: 60px;
-    --strapline-line: 50px;
+    --strapline-line: 53px;
     --strapline-gap: 10px;
     --strapline-tracking: -4px;
     --heading-size: 125px;
