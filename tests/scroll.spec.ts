@@ -193,6 +193,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       heroStraplineFontSize: heroStraplineStyles.fontSize,
       copyFontSize: copyStyles.fontSize,
       heroTitleTextAlign: heroTitleStyles.textAlign,
+      contactBackgroundColor: contactStyles.backgroundColor,
       contactHeight: Number.parseFloat(contactStyles.height),
       introGap: introRect.top - heroRect.bottom,
       headingTop: Number.parseFloat(headingStyles.top),
@@ -222,6 +223,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(initial?.heroTitleLineHeight).toBe("102px");
   expect(initial?.heroStraplineFontSize).toBe("60px");
   expect(initial?.copyFontSize).toBe("28px");
+  expect(initial?.contactBackgroundColor).toBe("rgb(228, 95, 39)");
   expect(initial?.heroTitleOffset ?? 0).toBeLessThan(0);
   expect(initial?.heroTitleCenter ?? 99999).toBeLessThan((initial?.viewportHeight ?? 0) * 0.5);
   expect(Math.abs((initial?.fixedSceneHeight ?? 0) - (initial?.stableViewportHeight ?? 0))).toBeLessThan(1);
@@ -561,6 +563,7 @@ test("contact panel does not jump when contact heading locks", async ({ page, is
     }
 
     return {
+      contactBackgroundColor: window.getComputedStyle(contactSection).backgroundColor,
       scrollDelta: samples[1].scrollY - samples[0].scrollY,
       contactDelta: samples[0].contactTop - samples[1].contactTop,
       samples,
@@ -568,6 +571,7 @@ test("contact panel does not jump when contact heading locks", async ({ page, is
   });
 
   expect(result).not.toBeNull();
+  expect(result?.contactBackgroundColor).toBe("rgb(97, 182, 61)");
   expect(result?.samples[0].headingFixed).toBe(false);
   expect(result?.samples[1].headingFixed).toBe(true);
   expect(Math.abs((result?.contactDelta ?? 0) - (result?.scrollDelta ?? 0))).toBeLessThan(1);

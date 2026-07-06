@@ -568,6 +568,7 @@ body.is-static-layout {
   }
 
   .panel--contact {
+    background: var(--color-hero-background);
     height: var(--static-contact-panel-height);
     min-height: var(--static-contact-panel-height);
   }
@@ -617,6 +618,7 @@ body.is-static-layout .panel--intro {
 }
 
 body.is-static-layout .panel--contact {
+  background: var(--color-hero-background);
   height: var(--static-contact-panel-height);
   min-height: var(--static-contact-panel-height);
 }
