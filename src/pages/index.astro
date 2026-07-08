@@ -9,7 +9,6 @@ import Contact from "../components/Contact.astro";
 import { STATIC_LAYOUT_MEDIA_QUERY, STATIC_LAYOUT_USER_AGENT_TOKENS } from "../scripts/static-layout";
 
 const title = "Lucas Forde | Web Design and Development | Tunbridge Wells";
-const description = "Frontend web developer focused on thoughtful design, clean code, and responsive user interfaces.";
 const staticLayoutUserAgentTokens = STATIC_LAYOUT_USER_AGENT_TOKENS;
 const staticLayoutMediaQuery = STATIC_LAYOUT_MEDIA_QUERY;
 ---
@@ -19,7 +18,6 @@ const staticLayoutMediaQuery = STATIC_LAYOUT_MEDIA_QUERY;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
     <script define:vars={{ staticLayoutMediaQuery, staticLayoutUserAgentTokens }}>
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
