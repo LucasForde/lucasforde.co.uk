@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="description" content="A minimal one-page website template."><title>One-page website</title><style>:root{--header-height:4rem;color:#000;background:#fff;font-family:sans-serif}*{box-sizing:border-box}body{color:#000;background:#fff;margin:0;line-height:1.5}a{color:inherit}.site-header{z-index:1;width:100%;height:var(--header-height);background:#fff;border-bottom:1px solid #000;position:fixed;top:0}.header-inner{justify-content:space-between;align-items:center;width:100%;max-width:75rem;height:100%;margin:0 auto;padding:0 1rem;display:flex}.site-name,nav a{text-decoration:none}.site-name{font-weight:700}nav ul{gap:1rem;margin:0;padding:0;list-style:none;display:flex}nav a{color:#777}nav a.is-active{color:#000}.page-section{min-height:100svh;padding:calc(var(--header-height) + 4rem) 1rem 4rem;scroll-margin-top:var(--header-height);background:#fff;align-items:center;display:flex}.page-section:nth-child(2n){background:#f5f5f5}.content{width:100%;max-width:50rem;margin:0 auto}h1,h2{margin:0 0 1rem;line-height:1.2}h1{font-size:3rem}h2{font-size:2rem}p{max-width:40rem;margin:0}
+</style></head><body><header class="site-header"><div class="header-inner"><a class="site-name" href="#home">[ LOGO ]</a><nav aria-label="Primary navigation"><ul><li><a href="#home" class="is-active" data-nav-link aria-current="page">Home</a></li><li><a href="#about" data-nav-link>About</a></li><li><a href="#services" data-nav-link>Services</a></li><li><a href="#contact" data-nav-link>Contact</a></li></ul></nav></div></header><main><section id="home" class="page-section" data-section><div class="content"><h1>Page heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></section><section id="about" class="page-section" data-section><div class="content"><h2>About</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></section><section id="services" class="page-section" data-section><div class="content"><h2>Services</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></section><section id="contact" class="page-section" data-section><div class="content"><h2>Contact</h2><p><a href="mailto:hello@example.com">hello@example.com</a></p></div></section></main><script>
+      const links = document.querySelectorAll('[data-nav-link]');
+      const sections = document.querySelectorAll('[data-section]');
+      const scrollDuration = 1000;
+      const easingInStrength = 6;
+      const easingOutStrength = 10;
+      const easingInStart = 2 ** -easingInStrength;
+      let scrollFrame;
+      let visibleSectionId = 'home';
+
+      const easeInOutExpo = (progress) => {
+        if (progress === 0 || progress === 1) return progress;
+        if (progress < 0.5) {
+          const easedProgress = 2 ** (easingInStrength * (progress * 2 - 1));
+          return (easedProgress - easingInStart) / (2 * (1 - easingInStart));
+        }
+        return (2 - 2 ** (-easingOutStrength * (progress * 2 - 1))) / 2;
+      };
+
+      const cancelScroll = () => {
+        if (!scrollFrame) return;
+
+        cancelAnimationFrame(scrollFrame);
+        scrollFrame = undefined;
+        setActiveLink(visibleSectionId);
+      };
+
+      const scrollToSection = (section) => {
+        cancelScroll();
+        setActiveLink(section.id);
+
+        const start = window.scrollY;
+        const headerHeight = document.querySelector('.site-header').offsetHeight;
+        const destination = Math.max(0, section.offsetTop - headerHeight);
+        const distance = destination - start;
+        const startTime = performance.now();
+
+        const step = (time) => {
+          const progress = Math.min((time - startTime) / scrollDuration, 1);
+          window.scrollTo(0, start + distance * easeInOutExpo(progress));
+
+          if (progress < 1) {
+            scrollFrame = requestAnimationFrame(step);
+          } else {
+            scrollFrame = undefined;
+            visibleSectionId = section.id;
+            setActiveLink(section.id);
+          }
+        };
+
+        scrollFrame = requestAnimationFrame(step);
+      };
+
+      const setActiveLink = (id) => {
+        links.forEach((link) => {
+          const isActive = link.getAttribute('href') === `#${id}`;
+          link.classList.toggle('is-active', isActive);
+
+          if (isActive) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const activeSection = entries.find((entry) => entry.isIntersecting);
+          if (!activeSection) return;
+
+          visibleSectionId = activeSection.target.id;
+          if (!scrollFrame) setActiveLink(visibleSectionId);
+        },
+        { rootMargin: '-50% 0px -49% 0px' },
+      );
+
+      sections.forEach((section) => observer.observe(section));
+
+      links.forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const section = document.querySelector(link.hash);
+          if (!section) return;
+
+          event.preventDefault();
+          if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+          scrollToSection(section);
+        });
+      });
+
+      window.addEventListener('wheel', cancelScroll, { passive: true });
+      window.addEventListener('touchstart', cancelScroll, { passive: true });
+      window.addEventListener('pointerdown', cancelScroll);
+      window.addEventListener('keydown', cancelScroll);
+    </script></body></html>
