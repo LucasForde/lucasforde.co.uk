@@ -2,7 +2,8 @@
 </style></head><body><header class="site-header"><div class="header-inner"><a class="site-name" href="#home">[ LOGO ]</a><nav aria-label="Primary navigation"><ul><li><a href="#home" class="is-active" data-nav-link aria-current="page">Home</a></li><li><a href="#about" data-nav-link>About</a></li><li><a href="#services" data-nav-link>Services</a></li><li><a href="#contact" data-nav-link>Contact</a></li></ul></nav></div></header><main><section id="home" class="page-section" data-section><div class="content"><h1>Page heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></section><section id="about" class="page-section" data-section><div class="content"><h2>About</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></section><section id="services" class="page-section" data-section><div class="content"><h2>Services</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></section><section id="contact" class="page-section" data-section><div class="content"><h2>Contact</h2><p><a href="mailto:hello@example.com">hello@example.com</a></p></div></section></main><script>
       const links = document.querySelectorAll('[data-nav-link]');
       const sections = document.querySelectorAll('[data-section]');
-      const scrollDuration = 1000;
+      const baseScrollDuration = 800;
+      const distanceMultiplier = 1.5;
       const easingInStrength = 6;
       const easingOutStrength = 10;
       const easingInStart = 2 ** -easingInStrength;
@@ -33,10 +34,15 @@
         const start = window.scrollY;
         const destination = section.offsetTop;
         const distance = destination - start;
+        const viewportDistance = Math.abs(distance) / window.innerHeight;
+        const scrollDuration =
+          viewportDistance <= 1
+            ? baseScrollDuration * viewportDistance
+            : baseScrollDuration * distanceMultiplier ** (viewportDistance - 1);
         const startTime = performance.now();
 
         const step = (time) => {
-          const progress = Math.min((time - startTime) / scrollDuration, 1);
+          const progress = scrollDuration === 0 ? 1 : Math.min((time - startTime) / scrollDuration, 1);
           window.scrollTo(0, start + distance * easeInOutExpo(progress));
 
           if (progress < 1) {
