@@ -655,45 +655,6 @@ body.is-static-layout.is-loading:not(.is-loaded) .site-title--hero {
   top: var(--static-hero-title-offset);
 }
 
-@supports (animation-timeline: scroll()) {
-  .site-title--hero {
-    animation: hero-title-lock linear both;
-    animation-range: 0 200vh;
-    animation-timeline: scroll(root block);
-  }
-
-  .site-title--ghost {
-    animation: ghost-title-lock linear both;
-    animation-range: 0 200vh;
-    animation-timeline: scroll(root block);
-  }
-}
-
-@keyframes hero-title-lock {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-
-  50% {
-    transform: translate3d(0, 100vh, 0);
-  }
-
-  100% {
-    transform: translate3d(0, 150vh, 0);
-  }
-}
-
-@keyframes ghost-title-lock {
-  0%,
-  50% {
-    transform: translate3d(0, 0, 0);
-  }
-
-  100% {
-    transform: translate3d(0, -50vh, 0);
-  }
-}
-
 @media (pointer: coarse) {
   .site-title--hero,
   .site-title--ghost {

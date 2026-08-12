@@ -34,8 +34,6 @@ let headingHeight = 0;
 let contactTop = 0;
 let ticking = false;
 
-const usesCssTitleTimeline = CSS.supports("animation-timeline: scroll()");
-
 function px(value: number): string {
   return `${value}px`;
 }
@@ -80,10 +78,8 @@ function setStaticLayout(scrollY: number): void {
     ghostTitle.hidden = true;
   }
 
-  if (!usesCssTitleTimeline) {
-    heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
-    ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
-  }
+  heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   topImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
   bottomImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
@@ -184,9 +180,7 @@ function render(): void {
   clearStaticLayout();
   updateSceneVisibility(scrollY);
 
-  if (!usesCssTitleTimeline) {
-    positionTitles(scrollY);
-  }
+  positionTitles(scrollY);
   positionImages(scrollY);
   positionHeading(scrollY);
 }
