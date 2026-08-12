@@ -97,7 +97,7 @@ html {
 
 body {
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--color-page-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
@@ -242,8 +242,10 @@ body.is-loaded .loadanim {
 }
 
 .panel--hero {
+  height: var(--panel-height);
   z-index: 50;
   background: var(--color-hero-background);
+  overflow: clip;
 }
 
 .panel--intro {
@@ -322,9 +324,15 @@ body.is-loaded .loadanim {
 }
 
 .site-title--hero {
+  position: sticky;
   top: 0;
   transform: translate3d(0, 0, 0);
   transition: top var(--loader-exit-duration) var(--loader-exit-ease);
+}
+
+.hero-title-track {
+  width: 100%;
+  height: calc(var(--panel-height) + var(--panel-height));
 }
 
 body.is-loading:not(.is-loaded) .site-title--hero {
@@ -563,6 +571,14 @@ body.is-static-layout {
     background: transparent;
   }
 
+  .hero-title-track {
+    height: auto;
+  }
+
+  .site-title--hero {
+    position: relative;
+  }
+
   .panel--intro {
     margin-top: 0;
   }
@@ -611,6 +627,14 @@ body.is-static-layout .panel--hero {
   display: grid;
   place-items: center;
   background: transparent;
+}
+
+body.is-static-layout .hero-title-track {
+  height: auto;
+}
+
+body.is-static-layout .site-title--hero {
+  position: relative;
 }
 
 body.is-static-layout .panel--intro {

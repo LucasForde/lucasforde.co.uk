@@ -383,31 +383,39 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
 test("hero title copies stay aligned through the handoff", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
-	await openLoadedPage(page);
+  await openLoadedPage(page);
 
-	const samples = await page.evaluate(async () => {
-		const heroTitle = document.querySelector("[data-hero-title]");
-		const ghostTitle = document.querySelector("[data-ghost-title]");
-		const values: number[] = [];
-		const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+  const result = await page.evaluate(async () => {
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+    const values: number[] = [];
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
 
-		if (!heroTitle || !ghostTitle) {
-			return values;
-		}
-
-		for (const y of [0, 150, 350, 600, 900]) {
-			window.scrollTo(0, y);
-			await nextFrame();
-			await nextFrame();
-			const heroTop = heroTitle.getBoundingClientRect().top;
-			const ghostTop = ghostTitle.getBoundingClientRect().top;
-			values.push(Math.abs(heroTop - ghostTop));
+    if (!heroTitle || !ghostTitle) {
+      return null;
     }
 
-    return values;
+    for (const y of [0, 150, 350, 600, window.innerHeight - 1]) {
+      window.scrollTo(0, y);
+      await nextFrame();
+      await nextFrame();
+      const heroTop = heroTitle.getBoundingClientRect().top;
+      const ghostTop = ghostTitle.getBoundingClientRect().top;
+      values.push(Math.abs(heroTop - ghostTop));
+    }
+
+    return {
+      values,
+      heroPosition: window.getComputedStyle(heroTitle).position,
+      heroInlineTransform: heroTitle.style.transform,
+    };
   });
 
-  for (const delta of samples) {
+  expect(result).not.toBeNull();
+  expect(result?.heroPosition).toBe("sticky");
+  expect(result?.heroInlineTransform).toBe("");
+
+  for (const delta of result?.values ?? []) {
     expect(delta).toBeLessThan(1);
   }
 });
@@ -436,6 +444,8 @@ test("hero title stays locked until the ghost title is fully revealed", async ({
       samples.push({
         heroTop: heroTitle.getBoundingClientRect().top,
         ghostTop: ghostTitle.getBoundingClientRect().top,
+        heroPanelBottom:
+          document.querySelector<HTMLElement>("[data-hero]")?.getBoundingClientRect().bottom ?? null,
       });
     }
 
@@ -447,8 +457,8 @@ test("hero title stays locked until the ghost title is fully revealed", async ({
   expect(Math.abs(result?.[0].ghostTop ?? 999)).toBeLessThan(1);
   expect(Math.abs(result?.[1].heroTop ?? 999)).toBeLessThan(1);
   expect(Math.abs(result?.[1].ghostTop ?? 999)).toBeLessThan(1);
-  expect(result?.[2].heroTop ?? 0).toBeLessThan(-10);
-  expect(Math.abs((result?.[2].heroTop ?? 999) - (result?.[2].ghostTop ?? 0))).toBeLessThan(1);
+  expect(result?.[2].heroPanelBottom ?? 999).toBeLessThanOrEqual(0);
+  expect(result?.[2].ghostTop ?? 0).toBeLessThan(-10);
 });
 
 test("hero ghost title is hidden before the contact image scene", async ({ page, isMobile }) => {

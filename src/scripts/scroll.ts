@@ -78,7 +78,6 @@ function setStaticLayout(scrollY: number): void {
     ghostTitle.hidden = true;
   }
 
-  heroTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
   ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
 
   topImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
@@ -113,16 +112,19 @@ function updateSceneVisibility(scrollY: number): void {
   }
 }
 
-function positionTitles(scrollY: number): void {
-  if (!heroTitle || !ghostTitle) {
+function positionGhostTitle(scrollY: number): void {
+  if (!ghostTitle) {
     return;
   }
 
   const trigger = viewportHeight * HERO_TITLE_RELEASE_VIEWPORTS;
-  const viewportShift = scrollY < trigger ? 0 : (trigger - scrollY) * 0.5;
 
-  heroTitle.style.transform = `translate3d(0, ${px(scrollY + viewportShift)}, 0)`;
-  ghostTitle.style.transform = `translate3d(0, ${px(viewportShift)}, 0)`;
+  if (scrollY < trigger) {
+    ghostTitle.style.removeProperty("transform");
+    return;
+  }
+
+  ghostTitle.style.transform = `translate3d(0, ${px((trigger - scrollY) * 0.5)}, 0)`;
 }
 
 function positionImages(scrollY: number): void {
@@ -180,7 +182,7 @@ function render(): void {
   clearStaticLayout();
   updateSceneVisibility(scrollY);
 
-  positionTitles(scrollY);
+  positionGhostTitle(scrollY);
   positionImages(scrollY);
   positionHeading(scrollY);
 }
