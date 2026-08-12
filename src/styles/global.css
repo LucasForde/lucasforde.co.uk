@@ -1,8 +1,8 @@
 :root {
   --color-page-background: #ffffff;
-  --color-hero-background: #e45f27;
-  --color-intro-background: #1e6fb8;
-  --color-contact-background: #61b63d;
+  --color-hero-background: #c8142f;
+  --color-intro-background: #174b66;
+  --color-contact-background: #181818;
   --color-foreground: #ffffff;
   --font-sans: "Roboto", Arial, Helvetica, sans-serif;
   --loader-exit-duration: 1000ms;
@@ -341,7 +341,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 
 .site-title--ghost {
   z-index: 3;
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .section-heading {
@@ -353,7 +353,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   font-weight: 100;
   letter-spacing: var(--heading-tracking);
   line-height: var(--heading-line);
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .section-heading.is-solid {
@@ -581,10 +581,10 @@ body.is-static-layout {
 
   .panel--intro {
     margin-top: 0;
+    background: var(--color-hero-background);
   }
 
   .panel--contact {
-    background: var(--color-hero-background);
     height: var(--static-contact-panel-height);
     min-height: var(--static-contact-panel-height);
   }
@@ -639,10 +639,10 @@ body.is-static-layout .site-title--hero {
 
 body.is-static-layout .panel--intro {
   margin-top: 0;
+  background: var(--color-hero-background);
 }
 
 body.is-static-layout .panel--contact {
-  background: var(--color-hero-background);
   height: var(--static-contact-panel-height);
   min-height: var(--static-contact-panel-height);
 }
