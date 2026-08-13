@@ -226,11 +226,11 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(initial?.heroStraplineFontSize).toBe("60px");
   expect(initial?.copyFontSize).toBe("28px");
   expect(initial?.introBackgroundColor).toBe("rgb(200, 20, 47)");
-  expect(initial?.contactBackgroundColor).toBe("rgb(24, 24, 24)");
+  expect(initial?.contactBackgroundColor).toBe("rgb(23, 75, 102)");
   expect(initial?.heroTitleOffset ?? 0).toBeLessThan(0);
   expect(initial?.heroTitleCenter ?? 99999).toBeLessThan((initial?.viewportHeight ?? 0) * 0.5);
   expect(Math.abs((initial?.fixedSceneHeight ?? 0) - (initial?.stableViewportHeight ?? 0))).toBeLessThan(1);
-  expect(Math.abs((initial?.contactHeight ?? 0) - (initial?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
+  expect(Math.abs((initial?.contactHeight ?? 0) - (initial?.stableViewportHeight ?? 0))).toBeLessThan(1);
   expect(Math.abs(initial?.introGap ?? 999)).toBeLessThan(1);
   expect(initial?.headingPosition).not.toBe("fixed");
   expect(initial?.headingOpacity).toBe("1");
@@ -349,8 +349,8 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   });
 
   expect(atBottom).not.toBeNull();
-  expect(Math.abs((atBottom?.contactTop ?? 0) - (atBottom?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
-  expect(Math.abs((atBottom?.contactHeight ?? 0) - (atBottom?.viewportHeight ?? 0) * 0.5)).toBeLessThan(1);
+  expect(Math.abs(atBottom?.contactTop ?? 999)).toBeLessThan(1);
+  expect(Math.abs((atBottom?.contactHeight ?? 0) - (atBottom?.viewportHeight ?? 0))).toBeLessThan(1);
   expect(atBottom?.headingBottom ?? 99999).toBeLessThan(atBottom?.contactTop ?? 0);
   expect(atBottom?.copyTop ?? -1).toBeGreaterThanOrEqual(0);
   expect(atBottom?.copyBottom ?? 99999).toBeLessThanOrEqual(atBottom?.viewportHeight ?? 0);

@@ -27,7 +27,7 @@
   --copy-pad-inline: 42px;
   --heading-block: calc(var(--heading-line) + (var(--title-pad) * 2));
   --static-hero-title-offset: -6vh;
-  --static-contact-panel-height: 50vh;
+  --static-contact-panel-height: 100vh;
 }
 
 @supports (transition-timing-function: linear(0, 1)) {
@@ -585,6 +585,7 @@ body.is-static-layout {
   }
 
   .panel--contact {
+    background: var(--color-intro-background);
     height: var(--static-contact-panel-height);
     min-height: var(--static-contact-panel-height);
   }
@@ -643,6 +644,7 @@ body.is-static-layout .panel--intro {
 }
 
 body.is-static-layout .panel--contact {
+  background: var(--color-intro-background);
   height: var(--static-contact-panel-height);
   min-height: var(--static-contact-panel-height);
 }
@@ -696,7 +698,7 @@ body.is-static-layout .site-title--ghost {
 @supports (height: 100lvh) {
   :root {
     --static-hero-title-offset: -6lvh;
-    --static-contact-panel-height: 50lvh;
+    --static-contact-panel-height: 100lvh;
   }
 
   body.is-static-layout {
