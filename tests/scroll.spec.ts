@@ -525,6 +525,8 @@ test("contact heading approaches at parallax speed before locking", async ({ pag
         top: heading.getBoundingClientRect().top,
         opacity: window.getComputedStyle(heading).opacity,
         fixed: window.getComputedStyle(heading).position === "fixed",
+        inlineTop: heading.style.top,
+        inlineTransform: heading.style.transform,
       });
     }
 
@@ -536,8 +538,10 @@ test("contact heading approaches at parallax speed before locking", async ({ pag
   });
 
   expect(result).not.toBeNull();
-  expect(result?.samples.every((sample) => sample.opacity === "0.3")).toBe(true);
+  expect(result?.samples.every((sample) => sample.opacity === "0.5")).toBe(true);
   expect(result?.samples.every((sample) => !sample.fixed)).toBe(true);
+  expect(result?.samples.every((sample) => sample.inlineTop === "0px")).toBe(true);
+  expect(result?.samples.every((sample) => sample.inlineTransform.startsWith("translate3d"))).toBe(true);
   expect(result?.headingDelta ?? 0).toBeGreaterThan((result?.scrollDelta ?? 0) * 0.45);
   expect(result?.headingDelta ?? 0).toBeLessThan((result?.scrollDelta ?? 0) * 0.55);
 });
@@ -584,7 +588,7 @@ test("contact panel does not jump when contact heading locks", async ({ page, is
   });
 
   expect(result).not.toBeNull();
-  expect(result?.contactBackgroundColor).toBe("rgb(97, 182, 61)");
+  expect(result?.contactBackgroundColor).toBe("rgb(24, 24, 24)");
   expect(result?.samples[0].headingFixed).toBe(false);
   expect(result?.samples[1].headingFixed).toBe(true);
   expect(Math.abs((result?.contactDelta ?? 0) - (result?.scrollDelta ?? 0))).toBeLessThan(1);
@@ -624,7 +628,7 @@ test("contact heading fades from image heading to fixed solid heading", async ({
   });
 
   expect(result).not.toBeNull();
-  expect(result?.transparentOpacity).toBe("0.3");
+  expect(result?.transparentOpacity).toBe("0.5");
   expect(result?.fixedOpacity).toBe("1");
   expect(Math.abs(result?.fixedTop ?? 999)).toBeLessThan(1);
 });

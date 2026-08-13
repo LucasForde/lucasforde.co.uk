@@ -354,6 +354,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   letter-spacing: var(--heading-tracking);
   line-height: var(--heading-line);
   opacity: 0.5;
+  will-change: transform;
 }
 
 .section-heading.is-solid {
@@ -363,6 +364,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   margin-top: 0;
   opacity: 1;
   z-index: 45;
+  will-change: auto;
 }
 
 .copy {

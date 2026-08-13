@@ -92,6 +92,7 @@ function setStaticLayout(scrollY: number): void {
     contactHeading.style.top = px(staticHeadingTop);
     contactHeading.style.marginTop = "0";
     contactHeading.style.opacity = "1";
+    contactHeading.style.transform = "none";
   }
 }
 
@@ -146,6 +147,9 @@ function positionHeading(scrollY: number): void {
   }
 
   if (scrollY >= contactTop) {
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = "none";
     contactHeading.classList.remove("is-solid");
     return;
   }
@@ -153,6 +157,7 @@ function positionHeading(scrollY: number): void {
   if (scrollY > headingTop + headingHeight) {
     contactHeading.style.top = "0";
     contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = "none";
     contactHeading.classList.add("is-solid");
     return;
   }
@@ -161,11 +166,14 @@ function positionHeading(scrollY: number): void {
 
   if (scrollY > introTop) {
     const headingShift = scrollY - headingTop;
-    contactHeading.style.top = px(headingShift * 0.5 + headingHeight * 0.5);
+    const parallaxOffset = headingShift * 0.5 + headingHeight * 0.5;
+    contactHeading.style.top = "0";
     contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = `translate3d(0, ${px(parallaxOffset)}, 0)`;
   } else {
     contactHeading.style.top = "0";
     contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = "none";
   }
 }
 
