@@ -333,6 +333,7 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
     const rect = contactCopy.getBoundingClientRect();
     const contactRect = contactSection.getBoundingClientRect();
     const headingRect = heading.getBoundingClientRect();
+    const contactCopyStyles = window.getComputedStyle(contactCopy);
     const headingStyles = window.getComputedStyle(heading);
     const headingBlockHeight =
       Number.parseFloat(headingStyles.lineHeight) +
@@ -343,6 +344,9 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
       contactHeight: contactRect.height,
       copyTop: rect.top,
       copyBottom: rect.bottom,
+      copyCenter: rect.top + rect.height / 2,
+      contactCenter: contactRect.top + contactRect.height / 2,
+      copyTextAlign: contactCopyStyles.textAlign,
       headingBottom: headingRect.top + headingBlockHeight,
       viewportHeight: window.innerHeight,
     };
@@ -351,6 +355,8 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(atBottom).not.toBeNull();
   expect(Math.abs(atBottom?.contactTop ?? 999)).toBeLessThan(1);
   expect(Math.abs((atBottom?.contactHeight ?? 0) - (atBottom?.viewportHeight ?? 0))).toBeLessThan(1);
+  expect(atBottom?.copyTextAlign).toBe("center");
+  expect(Math.abs((atBottom?.copyCenter ?? 0) - (atBottom?.contactCenter ?? 999))).toBeLessThan(1);
   expect(atBottom?.headingBottom ?? 99999).toBeLessThan(atBottom?.contactTop ?? 0);
   expect(atBottom?.copyTop ?? -1).toBeGreaterThanOrEqual(0);
   expect(atBottom?.copyBottom ?? 99999).toBeLessThanOrEqual(atBottom?.viewportHeight ?? 0);

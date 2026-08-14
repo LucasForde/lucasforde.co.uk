@@ -587,9 +587,15 @@ body.is-static-layout {
   }
 
   .panel--contact {
+    display: grid;
+    place-items: center;
     background: var(--color-intro-background);
     height: var(--static-contact-panel-height);
     min-height: var(--static-contact-panel-height);
+  }
+
+  .copy--contact {
+    text-align: center;
   }
 
   .fixed-scene {
@@ -646,9 +652,15 @@ body.is-static-layout .panel--intro {
 }
 
 body.is-static-layout .panel--contact {
+  display: grid;
+  place-items: center;
   background: var(--color-intro-background);
   height: var(--static-contact-panel-height);
   min-height: var(--static-contact-panel-height);
+}
+
+body.is-static-layout .copy--contact {
+  text-align: center;
 }
 
 body.is-static-layout .fixed-scene {
