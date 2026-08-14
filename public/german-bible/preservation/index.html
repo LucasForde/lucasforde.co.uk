@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="A modern reading edition of the Library of Congress guidance for preserving, handling, storing, and caring for books.">
+  <title>Book Care — A Practical Preservation Guide</title>
+  <style>
+    :root{
+      --ink:#24231f;
+      --muted:#68675f;
+      --paper:#fffdf8;
+      --wash:#f2eee5;
+      --wash-2:#e9e2d4;
+      --line:#d8d0c1;
+      --green:#245747;
+      --green-dark:#173d32;
+      --green-soft:#dfece5;
+      --amber:#a14f2e;
+      --amber-soft:#f7e7de;
+      --shadow:0 20px 60px rgba(49,44,35,.10);
+      --radius:22px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%,rgba(36,87,71,.10),transparent 28rem),
+        linear-gradient(180deg,#f8f5ee 0,#f1ece2 100%);
+      font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;
+    }
+
+    a{color:var(--green);text-underline-offset:3px;text-decoration-thickness:1px}
+    a:hover{color:var(--green-dark)}
+    button,input{font:inherit}
+    .shell{width:min(calc(100% - 40px),var(--max));margin-inline:auto}
+    .skip-link{position:fixed;z-index:100;top:12px;left:12px;transform:translateY(-150%);padding:10px 14px;border-radius:10px;background:var(--ink);color:#fff}
+    .skip-link:focus{transform:none}
+
+    .site-header{padding:24px 0}
+    .masthead{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;font-weight:750;letter-spacing:-.02em}
+    .brand-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--green);color:#fff;font-family:Georgia,serif;font-size:1.15rem}
+    .source-link{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:rgba(255,253,248,.72);color:var(--ink);font-size:.86rem;text-decoration:none}
+    .source-link:hover{background:#fff;border-color:#aaa090}
+
+    .hero{padding:22px 0 34px}
+    .hero-card{position:relative;overflow:hidden;padding:clamp(34px,6vw,72px);border:1px solid var(--line);border-radius:30px;background:var(--paper);box-shadow:var(--shadow)}
+    .hero-card::after{content:"";position:absolute;right:-7rem;bottom:-10rem;width:30rem;height:30rem;border:5rem solid var(--green-soft);border-radius:50%;opacity:.65;pointer-events:none}
+    .eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 18px;color:var(--green);font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    .eyebrow::before{content:"";width:30px;height:2px;background:currentColor}
+    h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.08;letter-spacing:-.025em}
+    h1{position:relative;z-index:1;max-width:850px;margin:0;font-size:clamp(2.8rem,7vw,6.5rem);font-weight:500}
+    .hero-copy{position:relative;z-index:1;max-width:720px;margin:24px 0 0;color:#504f48;font-size:clamp(1.05rem,2vw,1.3rem)}
+    .hero-meta{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+    .meta-pill{padding:7px 11px;border:1px solid #c8d7cf;border-radius:999px;background:var(--green-soft);color:var(--green-dark);font-size:.82rem;font-weight:650}
+
+    .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+    .quick-card{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(255,253,248,.78)}
+    .quick-card b{display:block;margin-bottom:4px;color:var(--green);font-size:.76rem;letter-spacing:.11em;text-transform:uppercase}
+    .quick-card span{font-family:Georgia,serif;font-size:1.08rem;line-height:1.35}
+
+    .content-grid{display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px;align-items:start;padding:12px 0 72px}
+    .sidebar{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto;padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,253,248,.88);box-shadow:0 10px 35px rgba(49,44,35,.06);backdrop-filter:blur(12px)}
+    .sidebar-label{display:block;margin-bottom:10px;color:var(--muted);font-size:.73rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    .search-wrap{position:relative;margin-bottom:12px}
+    .search-wrap svg{position:absolute;top:50%;left:11px;width:16px;transform:translateY(-50%);color:var(--muted)}
+    #faq-search{width:100%;padding:10px 10px 10px 34px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);outline:none}
+    #faq-search:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(36,87,71,.12)}
+    .sidebar-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+    .sidebar-actions button{padding:7px;border:1px solid var(--line);border-radius:9px;background:var(--wash);color:var(--ink);font-size:.76rem;cursor:pointer}
+    .sidebar-actions button:hover{background:var(--wash-2)}
+    .result-count{margin:0 0 10px;color:var(--muted);font-size:.75rem}
+    .toc{display:grid;gap:2px}
+    .toc a{display:grid;grid-template-columns:25px 1fr;gap:7px;padding:6px 7px;border-radius:8px;color:#4d4c46;font-size:.79rem;line-height:1.35;text-decoration:none}
+    .toc a:hover{background:var(--wash);color:var(--green-dark)}
+    .toc-num{color:#99958b;font-variant-numeric:tabular-nums}
+
+    main{min-width:0}
+    .source-note{display:flex;gap:15px;margin-bottom:14px;padding:18px 20px;border:1px solid #c8d7cf;border-radius:17px;background:var(--green-soft);color:#29443a}
+    .source-note svg{flex:0 0 22px;margin-top:2px}
+    .source-note p{margin:0}
+
+    .faq-list{display:grid;gap:12px}
+    .faq{scroll-margin-top:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);box-shadow:0 8px 30px rgba(49,44,35,.05)}
+    .faq[open]{box-shadow:0 16px 40px rgba(49,44,35,.09)}
+    .faq[hidden]{display:none}
+    summary{display:grid;grid-template-columns:46px minmax(0,1fr) 28px;align-items:center;gap:12px;padding:22px 24px;cursor:pointer;list-style:none}
+    summary::-webkit-details-marker{display:none}
+    summary:focus-visible{outline:3px solid rgba(36,87,71,.25);outline-offset:3px;border-radius:inherit}
+    .question-num{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--wash);color:var(--green);font-size:.75rem;font-weight:800;font-variant-numeric:tabular-nums}
+    summary h2{margin:0;font-size:clamp(1.22rem,2.6vw,1.65rem);font-weight:550}
+    .chevron{width:22px;color:var(--green);transition:transform .2s ease}
+    .faq[open] .chevron{transform:rotate(180deg)}
+    .answer{padding:0 24px 25px 82px;color:#46453f}
+    .answer p{margin:.3rem 0 1rem}
+    .answer p:last-child,.answer ul:last-child{margin-bottom:0}
+    .answer ul{padding-left:1.2rem}
+    .answer li{margin:.45rem 0}
+    .answer strong{color:var(--ink)}
+    .answer-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .answer-links a{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--wash);font-size:.78rem;font-weight:650;text-decoration:none}
+    .alert{margin:14px 0;padding:14px 16px;border-left:4px solid var(--amber);border-radius:0 12px 12px 0;background:var(--amber-soft);color:#63311f}
+    .urgent{border-color:#ddb8a6}
+    .urgent .question-num{background:var(--amber-soft);color:var(--amber)}
+    .urgent summary h2{color:#6b321f}
+    .no-results{display:none;padding:36px;border:1px dashed var(--line);border-radius:var(--radius);text-align:center;color:var(--muted)}
+    .no-results.visible{display:block}
+
+    footer{padding:0 0 50px;color:var(--muted);font-size:.84rem}
+    .footer-card{display:flex;justify-content:space-between;gap:24px;padding-top:22px;border-top:1px solid var(--line)}
+
+    @media (max-width:900px){
+      .quick-grid{grid-template-columns:1fr}
+      .content-grid{grid-template-columns:1fr}
+      .sidebar{position:relative;top:auto;max-height:none}
+      .toc{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width:620px){
+      .shell{width:min(calc(100% - 24px),var(--max))}
+      .site-header{padding:14px 0}
+      .source-link span{display:none}
+      .hero{padding:8px 0 22px}
+      .hero-card{padding:28px 22px;border-radius:22px}
+      .hero-card::after{right:-15rem;bottom:-15rem}
+      h1{font-size:clamp(2.45rem,15vw,4.25rem)}
+      .hero-copy{font-size:1rem}
+      .toc{grid-template-columns:1fr}
+      summary{grid-template-columns:40px minmax(0,1fr) 22px;padding:18px 16px;gap:10px}
+      .question-num{width:38px;height:38px}
+      .answer{padding:0 17px 20px}
+      .footer-card{display:block}
+    }
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.chevron{transition:none}}
+    @media print{
+      body{background:#fff}
+      .shell{width:100%;max-width:none}
+      .site-header,.sidebar,.quick-grid,.hero-meta{display:none}
+      .hero{padding:0 0 20px}
+      .hero-card{padding:0;border:0;box-shadow:none}
+      .hero-card::after{display:none}
+      h1{font-size:3rem}
+      .content-grid{display:block;padding:0}
+      .faq{break-inside:avoid;box-shadow:none}
+      .faq:not([open]) .answer{display:block}
+      summary{padding:16px}.answer{padding:0 16px 18px}
+      .chevron{display:none}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the guide</a>
+
+  <header class="site-header">
+    <div class="shell masthead">
+      <a class="brand" href="#top" aria-label="Book Care home">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span>Book Care</span>
+      </a>
+      <a class="source-link" href="https://www.loc.gov/preservation/about/faqs/books.html" target="_blank" rel="noopener">
+        <span>Original Library of Congress FAQ</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <div id="top" class="hero">
+    <div class="shell">
+      <section class="hero-card" aria-labelledby="page-title">
+        <p class="eyebrow">A practical preservation guide</p>
+        <h1 id="page-title">Care for the books that matter.</h1>
+        <p class="hero-copy">Clear, practical guidance for handling, storing, cleaning, and responding to damage—adapted into a modern reading format from the Library of Congress book-preservation FAQ.</p>
+        <div class="hero-meta" aria-label="Guide topics">
+          <span class="meta-pill">Handling</span>
+          <span class="meta-pill">Storage</span>
+          <span class="meta-pill">Damage</span>
+          <span class="meta-pill">Emergencies</span>
+          <span class="meta-pill">Cleaning</span>
+        </div>
+      </section>
+
+      <section class="quick-grid" aria-label="Preservation essentials">
+        <div class="quick-card"><b>Handle</b><span>Use clean, dry hands and support the book fully.</span></div>
+        <div class="quick-card"><b>Store</b><span>Choose a cool, stable, dry place away from leaks and sunlight.</span></div>
+        <div class="quick-card"><b>Repair</b><span>Avoid tape, oils, and improvised treatments on valuable books.</span></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="shell content-grid">
+    <aside class="sidebar" aria-label="Guide controls and contents">
+      <label class="sidebar-label" for="faq-search">Search the guide</label>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="faq-search" type="search" placeholder="Try “mold” or “storage”" autocomplete="off">
+      </div>
+      <div class="sidebar-actions">
+        <button id="expand-all" type="button">Expand all</button>
+        <button id="collapse-all" type="button">Collapse all</button>
+      </div>
+      <p id="result-count" class="result-count" aria-live="polite">15 topics</p>
+      <nav class="toc" aria-label="On this page">
+        <a href="#preserve"><span class="toc-num">01</span><span>Preserving books</span></a>
+        <a href="#gloves"><span class="toc-num">02</span><span>Wearing gloves</span></a>
+        <a href="#leather"><span class="toc-num">03</span><span>Leather dressings</span></a>
+        <a href="#damage"><span class="toc-num">04</span><span>Damaged books</span></a>
+        <a href="#services"><span class="toc-num">05</span><span>Conservation services</span></a>
+        <a href="#donate"><span class="toc-num">06</span><span>Donating books</span></a>
+        <a href="#packing"><span class="toc-num">07</span><span>Packing books</span></a>
+        <a href="#locations"><span class="toc-num">08</span><span>Storage locations</span></a>
+        <a href="#wet-moldy"><span class="toc-num">09</span><span>Wet or moldy books</span></a>
+        <a href="#musty"><span class="toc-num">10</span><span>Musty smells</span></a>
+        <a href="#insects"><span class="toc-num">11</span><span>Book pests</span></a>
+        <a href="#shelves"><span class="toc-num">12</span><span>Wood shelves</span></a>
+        <a href="#cleaning"><span class="toc-num">13</span><span>Cleaning</span></a>
+        <a href="#copyright"><span class="toc-num">14</span><span>Copyright</span></a>
+        <a href="#labels"><span class="toc-num">15</span><span>Call-number labels</span></a>
+      </nav>
+    </aside>
+
+    <main id="main">
+      <div class="source-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>
+        <p><strong>About this edition.</strong> The guidance below is based on the Library of Congress “Books” preservation FAQ. The layout and headings have been modernised for easier reading; follow the linked source and specialist resources for the authoritative guidance.</p>
+      </div>
+
+      <div id="no-results" class="no-results" role="status">
+        <strong>No matching topics.</strong><br>Try a broader term such as “book,” “storage,” or “damage.”
+      </div>
+
+      <div class="faq-list">
+        <details class="faq" id="preserve" open>
+          <summary><span class="question-num">01</span><h2>How do I preserve my books?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>The most effective and economical preservation measures are preventive: use appropriate storage, maintain a stable storage environment, and handle books carefully.</p>
+            <p>If a book needs treatment, consult a qualified conservator—especially when it has financial, historical, or strong sentimental value.</p>
+            <div class="answer-links"><a href="https://guides.loc.gov/preserving-your-books" target="_blank" rel="noopener">Preserving your books</a><a href="https://www.loc.gov/preservation/about/faqs/general.html#AIC" target="_blank" rel="noopener">Find a conservator</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="gloves">
+          <summary><span class="question-num">02</span><h2>Should I wear gloves when handling rare books?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>Always handle collection material with clean, dry hands, whether or not you wear gloves.</p>
+            <p>Clean gloves reduce the transfer of natural skin oils, but they can make page turning harder and reduce tactility. For many paper books, careful handling with freshly washed and thoroughly dried hands presents less physical risk than clumsy handling in gloves.</p>
+          </div>
+        </details>
+
+        <details class="faq" id="leather">
+          <summary><span class="question-num">03</span><h2>Should I oil my leather books?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <div class="alert"><strong>Do not oil or “dress” leather bindings.</strong> These treatments can stain, weaken, or complicate later conservation.</div>
+            <p>If leather is powdery, crumbling, stiff, or cracked, place the book in a suitable protective box or consult a conservator. For books that must be handled, a properly made polyester-film jacket can help contain leather dust and prevent transfer to hands and pages.</p>
+            <div class="answer-links"><a href="https://www.collectioncare.org/boxes" target="_blank" rel="noopener">Protective book boxes</a><a href="https://www.nedcc.org/free-resources/preservation-leaflets/4.-storage-and-handling/4.8-polyester-film-book-jacket" target="_blank" rel="noopener">Polyester-film jackets</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="damage">
+          <summary><span class="question-num">04</span><h2>What should I do if my books are damaged?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>Conservation treatment is time-consuming and costly when done correctly. For a valuable book that is rarely used, leaving it as-is, boxing it, and improving its storage conditions may be the safest choice.</p>
+            <p>For a book of personal value with minor damage, carefully researched paper-mending guidance may be appropriate if you accept the risk of further damage. If the book is valuable, deteriorating, frequently handled, or structurally complicated, consult a conservator.</p>
+            <div class="alert"><strong>Do not use self-stick tape</strong>, including products marketed as “archival.” Focus on safer handling, protective housing, and a better environment.</div>
+            <div class="answer-links"><a href="https://www.nedcc.org/free-resources/preservation-leaflets/7.-conservation-procedures/7.3-repairing-paper-artifacts" target="_blank" rel="noopener">Repairing paper artifacts</a><a href="https://www.loc.gov/preservation/about/faqs/general.html#AIC" target="_blank" rel="noopener">Find a conservator</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="services">
+          <summary><span class="question-num">05</span><h2>Can I bring my books to the Library of Congress for conservation?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>No. The Library of Congress cannot provide preservation or digitisation services for material that is not part of its collections.</p>
+            <p>Private owners can seek help from a conservator in private practice or from a regional conservation centre. Professional organisations provide directories searchable by region, speciality, and service.</p>
+            <div class="answer-links"><a href="https://www.culturalheritage.org/about-conservation/find-a-conservator" target="_blank" rel="noopener">Find a professional conservator</a><a href="https://www.rap-arcc.org/" target="_blank" rel="noopener">Regional Alliance for Preservation</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="donate">
+          <summary><span class="question-num">06</span><h2>Can I donate my books to the Library of Congress?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>The Library’s Acquisitions office handles offers of books and other material. Review the Library’s donation guidance before sending anything; unsolicited material should not simply be mailed to the Library.</p>
+            <div class="answer-links"><a href="https://www.loc.gov/philanthropy/books.php" target="_blank" rel="noopener">Donating books and materials</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="packing">
+          <summary><span class="question-num">07</span><h2>How should I pack books for storage or shipping?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <ul>
+              <li>Choose boxes small enough to remain safe and manageable when full.</li>
+              <li>For long-term storage, use acid- and lignin-free boxes.</li>
+              <li>Pack books flat with the largest and heaviest at the bottom, or vertically with their spines down.</li>
+              <li>Centre the weight, pad empty spaces, and do not overpack.</li>
+              <li>Keep packed books in a stable, appropriate storage environment.</li>
+            </ul>
+            <div class="answer-links"><a href="https://www.nedcc.org/working-with-nedcc/packing-and-shipping-paper-artifacts" target="_blank" rel="noopener">Packing and shipping paper artifacts</a><a href="https://www.slv.vic.gov.au/sites/default/files/Preventive-conservation-guides/Packing-and-storing-books.pdf" target="_blank" rel="noopener">Packing and storing books</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="locations">
+          <summary><span class="question-num">08</span><h2>Can books be stored in a basement, attic, or garage if they are in plastic?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <div class="alert"><strong>Do not store valuable books in basements, attics, or garages.</strong> These spaces commonly have unstable temperatures and humidity, with a greater risk of leaks and flooding.</div>
+            <p>Polyethylene or polypropylene bags and bins can provide secondary protection against water, but they cannot protect books from environmental extremes. Sealed plastic in a humid location can also increase the risk of mould.</p>
+          </div>
+        </details>
+
+        <details class="faq urgent" id="wet-moldy">
+          <summary><span class="question-num">09</span><h2>What should I do if my books get wet or moldy?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <div class="alert"><strong>Protect yourself first.</strong> Water contaminated by sewage and active mould growth can present health hazards. Follow appropriate safety precautions and do not handle unsafe material without suitable protection.</div>
+            <p>Begin air-drying books immediately after they become wet or mould is discovered, while controlling room temperature and relative humidity. If newly wet or mouldy books cannot be air-dried within two days, prepare them for freezing.</p>
+            <p>If only old mould stains remain, maintain relative humidity between 40% and 65% to discourage regrowth and inspect the books regularly.</p>
+            <div class="answer-links"><a href="https://www.loc.gov/preservation/emergprep/dry.html" target="_blank" rel="noopener">Drying wet books</a><a href="https://www.nedcc.org/free-resources/preservation-leaflets/3.-emergency-management/3.12-freezing-and-drying-wet-books-and-records" target="_blank" rel="noopener">Freezing and drying</a><a href="https://www.epa.gov/mold/mold-cleanup-your-home" target="_blank" rel="noopener">EPA mould safety</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="musty">
+          <summary><span class="question-num">10</span><h2>How can I reduce a musty or mildew smell?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>If there is active, furry, or dried mould, follow the wet-and-mouldy-books guidance first. Odours generally lessen when books receive air circulation in a cool environment with relative humidity around 35–55%.</p>
+            <ul>
+              <li>Expose more of the book to moving air without forcing it flat. Stand a sound hardcover slightly open, or support the covers of a large or flexible book and turn to different sections over several days.</li>
+              <li>A book may be placed in a closed container with activated charcoal or baking soda nearby. Prevent direct contact, and inspect frequently for mould.</li>
+              <li>Brief sunlight exposure may reduce odour, but only when fading, discolouration, and yellowing are acceptable risks.</li>
+            </ul>
+            <div class="answer-links"><a href="https://www.nedcc.org/free-resources/ask-nedcc/faqs" target="_blank" rel="noopener">NEDCC preservation FAQs</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="insects">
+          <summary><span class="question-num">11</span><h2>How do I get rid of book pests?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>Prevention is the first line of defence. Keep collection areas clean, uncluttered, and free of food or drink residues. Maintain relative humidity around 35–50%.</p>
+            <p>Infested books can sometimes be treated by carefully controlled freezing. Follow specialist instructions rather than placing a valuable book directly into a household freezer without preparation.</p>
+            <div class="answer-links"><a href="https://www.hrc.utexas.edu/conservation/resources/insects/" target="_blank" rel="noopener">Insect problems in books</a><a href="https://museumpests.net/solutions-low-temperature-treatment/" target="_blank" rel="noopener">Low-temperature treatment</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="shelves">
+          <summary><span class="question-num">12</span><h2>Are wood bookshelves safe to use?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>When buying new storage furniture, powder-coated metal shelving is generally preferable because acids and other compounds from wood can migrate into paper and contribute to deterioration.</p>
+            <p>Existing wooden shelves can be lined with a stable barrier—such as polyester film, corrugated polyethylene or polypropylene board, metal-foil laminate, acrylic sheet, or glass—to prevent direct contact between books and wood.</p>
+            <div class="answer-links"><a href="https://www.nedcc.org/free-resources/preservation-leaflets/4.-storage-and-handling/4.2-storage-furniture-a-brief-review-of-current-options" target="_blank" rel="noopener">Storage furniture guidance</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="cleaning">
+          <summary><span class="question-num">13</span><h2>How should I clean books and bookshelves?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>Begin with good housekeeping: keep books off the floor and replace heating and air-conditioning filters regularly.</p>
+            <p>Dust books and shelves using dusters that contain no fragrance or added chemicals. A book may be vacuumed with a small, soft-brush hose attachment only when the suction can be reduced. Support fragile material and stop if loose pieces are being disturbed.</p>
+            <div class="answer-links"><a href="https://www.nedcc.org/free-resources/preservation-leaflets/4.-storage-and-handling/4.3-cleaning-books-and-shelves" target="_blank" rel="noopener">Cleaning books and shelves</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="copyright">
+          <summary><span class="question-num">14</span><h2>How do I copyright my book?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>The United States Copyright Office, not the Library of Congress Preservation Directorate, handles copyright registrations and copyright guidance.</p>
+            <div class="answer-links"><a href="https://www.copyright.gov/" target="_blank" rel="noopener">U.S. Copyright Office</a></div>
+          </div>
+        </details>
+
+        <details class="faq" id="labels">
+          <summary><span class="question-num">15</span><h2>What self-stick call-number labels are safe?</h2><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="answer">
+            <p>The Library of Congress publishes specifications for pressure-sensitive call-number labels used on book spines and boxes. For a valuable or fragile book, avoid attaching a label directly when a non-invasive alternative will work.</p>
+            <p>Two alternatives are:</p>
+            <ul>
+              <li>Place the book in a protective box and attach the label to the box.</li>
+              <li>Insert a 2-inch-wide cardstock tab inside the front cover. Make the tab about ⅜ inch taller than the book and place the call number at the top so it remains visible on the shelf.</li>
+            </ul>
+            <div class="answer-links"><a href="https://www.loc.gov/preservation/resources/specifications/index.html" target="_blank" rel="noopener">Library of Congress specifications</a></div>
+          </div>
+        </details>
+      </div>
+    </main>
+  </div>
+
+  <footer class="shell">
+    <div class="footer-card">
+      <span>Modern reading edition · 14 August 2026</span>
+      <span>Source: <a href="https://www.loc.gov/preservation/about/faqs/books.html">Library of Congress Preservation</a></span>
+    </div>
+  </footer>
+
+  <script>
+    const search = document.querySelector('#faq-search');
+    const faqs = [...document.querySelectorAll('.faq')];
+    const tocLinks = [...document.querySelectorAll('.toc a')];
+    const resultCount = document.querySelector('#result-count');
+    const noResults = document.querySelector('#no-results');
+
+    function updateResults() {
+      const term = search.value.trim().toLocaleLowerCase();
+      let visible = 0;
+
+      faqs.forEach((faq) => {
+        const matches = !term || faq.textContent.toLocaleLowerCase().includes(term);
+        faq.hidden = !matches;
+        if (matches) {
+          visible += 1;
+          if (term) faq.open = true;
+        }
+      });
+
+      tocLinks.forEach((link) => {
+        const target = document.querySelector(link.hash);
+        link.hidden = Boolean(target?.hidden);
+      });
+
+      resultCount.textContent = `${visible} ${visible === 1 ? 'topic' : 'topics'}`;
+      noResults.classList.toggle('visible', visible === 0);
+    }
+
+    search.addEventListener('input', updateResults);
+    document.querySelector('#expand-all').addEventListener('click', () => faqs.filter((faq) => !faq.hidden).forEach((faq) => { faq.open = true; }));
+    document.querySelector('#collapse-all').addEventListener('click', () => faqs.filter((faq) => !faq.hidden).forEach((faq) => { faq.open = false; }));
+  </script>
+</body>
+</html>
