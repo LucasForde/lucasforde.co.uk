@@ -38,7 +38,7 @@
 
     a{color:var(--green);text-underline-offset:3px;text-decoration-thickness:1px}
     a:hover{color:var(--green-dark)}
-    button,input{font:inherit}
+    button{font:inherit}
     .shell{width:min(calc(100% - 40px),var(--max));margin-inline:auto}
     .skip-link{position:fixed;z-index:100;top:12px;left:12px;transform:translateY(-150%);padding:10px 14px;border-radius:10px;background:var(--ink);color:#fff}
     .skip-link:focus{transform:none}
@@ -69,14 +69,9 @@
     .content-grid{display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px;align-items:start;padding:12px 0 72px}
     .sidebar{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto;padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,253,248,.88);box-shadow:0 10px 35px rgba(49,44,35,.06);backdrop-filter:blur(12px)}
     .sidebar-label{display:block;margin-bottom:10px;color:var(--muted);font-size:.73rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-    .search-wrap{position:relative;margin-bottom:12px}
-    .search-wrap svg{position:absolute;top:50%;left:11px;width:16px;transform:translateY(-50%);color:var(--muted)}
-    #faq-search{width:100%;padding:10px 10px 10px 34px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);outline:none}
-    #faq-search:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(36,87,71,.12)}
     .sidebar-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
     .sidebar-actions button{padding:7px;border:1px solid var(--line);border-radius:9px;background:var(--wash);color:var(--ink);font-size:.76rem;cursor:pointer}
     .sidebar-actions button:hover{background:var(--wash-2)}
-    .result-count{margin:0 0 10px;color:var(--muted);font-size:.75rem}
     .toc{display:grid;gap:2px}
     .toc a{display:grid;grid-template-columns:25px 1fr;gap:7px;padding:6px 7px;border-radius:8px;color:#4d4c46;font-size:.79rem;line-height:1.35;text-decoration:none}
     .toc a:hover{background:var(--wash);color:var(--green-dark)}
@@ -90,7 +85,6 @@
     .faq-list{display:grid;gap:12px}
     .faq{scroll-margin-top:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);box-shadow:0 8px 30px rgba(49,44,35,.05)}
     .faq[open]{box-shadow:0 16px 40px rgba(49,44,35,.09)}
-    .faq[hidden]{display:none}
     summary{display:grid;grid-template-columns:46px minmax(0,1fr) 28px;align-items:center;gap:12px;padding:22px 24px;cursor:pointer;list-style:none}
     summary::-webkit-details-marker{display:none}
     summary:focus-visible{outline:3px solid rgba(36,87,71,.25);outline-offset:3px;border-radius:inherit}
@@ -110,8 +104,6 @@
     .urgent{border-color:#ddb8a6}
     .urgent .question-num{background:var(--amber-soft);color:var(--amber)}
     .urgent summary h2{color:#6b321f}
-    .no-results{display:none;padding:36px;border:1px dashed var(--line);border-radius:var(--radius);text-align:center;color:var(--muted)}
-    .no-results.visible{display:block}
 
     footer{padding:0 0 50px;color:var(--muted);font-size:.84rem}
     .footer-card{display:flex;justify-content:space-between;gap:24px;padding-top:22px;border-top:1px solid var(--line)}
@@ -195,16 +187,11 @@
 
   <div class="shell content-grid">
     <aside class="sidebar" aria-label="Guide controls and contents">
-      <label class="sidebar-label" for="faq-search">Search the guide</label>
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        <input id="faq-search" type="search" placeholder="Try “mold” or “storage”" autocomplete="off">
-      </div>
+      <span class="sidebar-label">Guide contents</span>
       <div class="sidebar-actions">
         <button id="expand-all" type="button">Expand all</button>
         <button id="collapse-all" type="button">Collapse all</button>
       </div>
-      <p id="result-count" class="result-count" aria-live="polite">15 topics</p>
       <nav class="toc" aria-label="On this page">
         <a href="#preserve"><span class="toc-num">01</span><span>Preserving books</span></a>
         <a href="#gloves"><span class="toc-num">02</span><span>Wearing gloves</span></a>
@@ -228,10 +215,6 @@
       <div class="source-note">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>
         <p><strong>About this edition.</strong> The guidance below is based on the Library of Congress “Books” preservation FAQ. The layout and headings have been modernised for easier reading; follow the linked source and specialist resources for the authoritative guidance.</p>
-      </div>
-
-      <div id="no-results" class="no-results" role="status">
-        <strong>No matching topics.</strong><br>Try a broader term such as “book,” “storage,” or “damage.”
       </div>
 
       <div class="faq-list">
@@ -392,37 +375,9 @@
   </footer>
 
   <script>
-    const search = document.querySelector('#faq-search');
     const faqs = [...document.querySelectorAll('.faq')];
-    const tocLinks = [...document.querySelectorAll('.toc a')];
-    const resultCount = document.querySelector('#result-count');
-    const noResults = document.querySelector('#no-results');
-
-    function updateResults() {
-      const term = search.value.trim().toLocaleLowerCase();
-      let visible = 0;
-
-      faqs.forEach((faq) => {
-        const matches = !term || faq.textContent.toLocaleLowerCase().includes(term);
-        faq.hidden = !matches;
-        if (matches) {
-          visible += 1;
-          if (term) faq.open = true;
-        }
-      });
-
-      tocLinks.forEach((link) => {
-        const target = document.querySelector(link.hash);
-        link.hidden = Boolean(target?.hidden);
-      });
-
-      resultCount.textContent = `${visible} ${visible === 1 ? 'topic' : 'topics'}`;
-      noResults.classList.toggle('visible', visible === 0);
-    }
-
-    search.addEventListener('input', updateResults);
-    document.querySelector('#expand-all').addEventListener('click', () => faqs.filter((faq) => !faq.hidden).forEach((faq) => { faq.open = true; }));
-    document.querySelector('#collapse-all').addEventListener('click', () => faqs.filter((faq) => !faq.hidden).forEach((faq) => { faq.open = false; }));
+    document.querySelector('#expand-all').addEventListener('click', () => faqs.forEach((faq) => { faq.open = true; }));
+    document.querySelector('#collapse-all').addEventListener('click', () => faqs.forEach((faq) => { faq.open = false; }));
   </script>
 </body>
 </html>
