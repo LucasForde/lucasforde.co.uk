@@ -1,0 +1,640 @@
+import { expect, test, type Page } from "@playwright/test";
+
+async function openLoadedPage(page: Page): Promise<void> {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
+}
+
+function isZeroTransform(transform: string): boolean {
+  return transform === "none" || transform === "matrix(1, 0, 0, 1, 0, 0)";
+}
+
+test("loader lingers, exits upward, and releases the hero title", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Loader motion is covered on desktop.");
+
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const loader = page.locator("[data-loader]");
+  await expect(loader).toBeVisible();
+
+  const initial = await page.evaluate(() => {
+    const title = document.querySelector<HTMLElement>("[data-hero-title]");
+    const dots = document.querySelectorAll("[data-loader-dot]");
+
+    if (!title) {
+      return null;
+    }
+
+    return {
+      dotCount: dots.length,
+      htmlLoading: document.documentElement.classList.contains("is-loading"),
+      bodyOverflowY: window.getComputedStyle(document.body).overflowY,
+      htmlOverflowY: window.getComputedStyle(document.documentElement).overflowY,
+      titleTop: title.getBoundingClientRect().top,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(initial).not.toBeNull();
+  expect(initial?.dotCount).toBe(8);
+  expect(initial?.htmlLoading).toBe(true);
+  expect(initial?.htmlOverflowY).toBe("scroll");
+  expect(initial?.bodyOverflowY).not.toBe("hidden");
+  expect(initial?.titleTop ?? 0).toBeGreaterThan((initial?.viewportHeight ?? 0) * 0.9);
+
+  await page.mouse.wheel(0, 1000);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+
+  await page.waitForFunction(() => document.body.classList.contains("is-loaded"));
+  await page.waitForTimeout(500);
+
+  const exiting = await page.evaluate(() => {
+    const loader = document.querySelector<HTMLElement>("[data-loader]");
+    const loadanim = document.querySelector<HTMLElement>("[data-loadanim]");
+    const title = document.querySelector<HTMLElement>("[data-hero-title]");
+
+    if (!loader || !loadanim || !title) {
+      return null;
+    }
+
+    return {
+      loaderTop: window.getComputedStyle(loader).top,
+      loadanimTransform: window.getComputedStyle(loadanim).transform,
+      titleTop: title.getBoundingClientRect().top,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(exiting).not.toBeNull();
+  expect(exiting?.loaderTop).toBe("0px");
+  expect(exiting?.loadanimTransform).not.toBe("none");
+  expect(exiting?.titleTop ?? 999).toBeLessThan((exiting?.viewportHeight ?? 0) * 0.9);
+
+  await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
+
+  const finalState = await page.evaluate(() => {
+    const title = document.querySelector<HTMLElement>("[data-hero-title]");
+    return {
+      htmlLoading: document.documentElement.classList.contains("is-loading"),
+      bodyLoading: document.body.classList.contains("is-loading"),
+      titleTop: title?.getBoundingClientRect().top ?? null,
+    };
+  });
+
+  expect(finalState.titleTop).not.toBeNull();
+  expect(finalState.htmlLoading).toBe(false);
+  expect(finalState.bodyLoading).toBe(false);
+  expect(Math.abs(finalState.titleTop ?? 999)).toBeLessThan(1);
+});
+
+test("loader refresh starts and finishes at the top of the page", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Loader motion is covered on desktop.");
+
+  await openLoadedPage(page);
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 1.5));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-loader]")).toBeVisible();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+
+  await page.waitForSelector("[data-loader]", { state: "detached", timeout: 6000 });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
+
+test("static layout matches the original mobile branch", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Static layout is covered on mobile/coarse-pointer devices.");
+
+  await page.setViewportSize({ width: 700, height: 839 });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const initialPaint = await page.evaluate(() => {
+    const loader = document.querySelector<HTMLElement>("[data-loader]");
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+
+    if (!heroTitle) {
+      return null;
+    }
+
+    return {
+      bodyLoading: document.body.classList.contains("is-loading"),
+      htmlLoading: document.documentElement.classList.contains("is-loading"),
+      htmlStatic: document.documentElement.classList.contains("is-static-layout"),
+      loaderDisplay: loader ? window.getComputedStyle(loader).display : "detached",
+      titleTop: heroTitle.getBoundingClientRect().top,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(initialPaint).not.toBeNull();
+  expect(initialPaint?.htmlStatic).toBe(true);
+  expect(initialPaint?.htmlLoading).toBe(false);
+  expect(["none", "detached"]).toContain(initialPaint?.loaderDisplay);
+  expect(initialPaint?.titleTop ?? 999).toBeLessThan((initialPaint?.viewportHeight ?? 0) * 0.75);
+
+  await openLoadedPage(page);
+
+  const initial = await page.evaluate(() => {
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    const fixedScene = document.querySelector<HTMLElement>("[data-fixed-scene]");
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+    const heroStrapline = heroTitle?.querySelector<HTMLElement>("span");
+    const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+    const copy = document.querySelector<HTMLElement>(".copy");
+    const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
+    const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+
+    if (
+      !hero ||
+      !fixedScene ||
+      !heading ||
+      !heroTitle ||
+      !heroStrapline ||
+      !introSection ||
+      !copy ||
+      !contactSection ||
+      !topImageLayer ||
+      !bottomImageLayer ||
+      !ghostTitle
+    ) {
+      return null;
+    }
+
+    const contactStyles = window.getComputedStyle(contactSection);
+    const heroStyles = window.getComputedStyle(hero);
+    const fixedSceneStyles = window.getComputedStyle(fixedScene);
+    const introStyles = window.getComputedStyle(introSection);
+    const headingStyles = window.getComputedStyle(heading);
+    const heroTitleStyles = window.getComputedStyle(heroTitle);
+    const heroStraplineStyles = window.getComputedStyle(heroStrapline);
+    const copyStyles = window.getComputedStyle(copy);
+    const topImageStyles = window.getComputedStyle(topImageLayer);
+    const bottomImageStyles = window.getComputedStyle(bottomImageLayer);
+    const heroRect = hero.getBoundingClientRect();
+    const fixedSceneRect = fixedScene.getBoundingClientRect();
+    const heroTitleRect = heroTitle.getBoundingClientRect();
+    const introRect = introSection.getBoundingClientRect();
+    const headingBlockHeight =
+      Number.parseFloat(headingStyles.lineHeight) +
+      Number.parseFloat(headingStyles.paddingTop) * 2;
+
+    return {
+      bodyStatic: document.body.classList.contains("is-static-layout"),
+      heroBackgroundImage: heroStyles.backgroundImage,
+      heroBackgroundColor: heroStyles.backgroundColor,
+      fixedSceneBottom: fixedSceneStyles.bottom,
+      heroTitleCenter: heroTitleRect.top + heroTitleRect.height / 2,
+      heroTitleOffset: Number.parseFloat(heroTitleStyles.top),
+      heroTitleFontSize: heroTitleStyles.fontSize,
+      heroTitleLineHeight: heroTitleStyles.lineHeight,
+      heroStraplineFontSize: heroStraplineStyles.fontSize,
+      copyFontSize: copyStyles.fontSize,
+      heroTitleTextAlign: heroTitleStyles.textAlign,
+      introBackgroundColor: introStyles.backgroundColor,
+      contactBackgroundColor: contactStyles.backgroundColor,
+      contactHeight: Number.parseFloat(contactStyles.height),
+      introGap: introRect.top - heroRect.bottom,
+      headingTop: Number.parseFloat(headingStyles.top),
+      headingHeight: headingBlockHeight,
+      fixedSceneHeight: fixedSceneRect.height,
+      stableViewportHeight: heroRect.height,
+      headingOpacity: headingStyles.opacity,
+      headingPosition: headingStyles.position,
+      viewportHeight: window.innerHeight,
+      topImageBottom: topImageStyles.bottom,
+      topImageTransform: topImageStyles.transform,
+      bottomImageBottom: bottomImageStyles.bottom,
+      bottomImageTransform: bottomImageStyles.transform,
+      topImageHidden: topImageLayer.hidden,
+      bottomImageHidden: bottomImageLayer.hidden,
+      ghostHidden: ghostTitle.hidden,
+    };
+  });
+
+  expect(initial).not.toBeNull();
+  expect(initial?.bodyStatic).toBe(true);
+  expect(initial?.heroBackgroundImage).toBe("none");
+  expect(initial?.heroBackgroundColor).toBe("rgba(0, 0, 0, 0)");
+  expect(initial?.fixedSceneBottom).toBe("0px");
+  expect(initial?.heroTitleTextAlign).toBe("center");
+  expect(initial?.heroTitleFontSize).toBe("125px");
+  expect(initial?.heroTitleLineHeight).toBe("102px");
+  expect(initial?.heroStraplineFontSize).toBe("60px");
+  expect(initial?.copyFontSize).toBe("28px");
+  expect(initial?.introBackgroundColor).toBe("rgb(200, 20, 47)");
+  expect(initial?.contactBackgroundColor).toBe("rgb(23, 75, 102)");
+  expect(initial?.heroTitleOffset ?? 0).toBeLessThan(0);
+  expect(initial?.heroTitleCenter ?? 99999).toBeLessThan((initial?.viewportHeight ?? 0) * 0.5);
+  expect(Math.abs((initial?.fixedSceneHeight ?? 0) - (initial?.stableViewportHeight ?? 0))).toBeLessThan(1);
+  expect(Math.abs((initial?.contactHeight ?? 0) - (initial?.stableViewportHeight ?? 0))).toBeLessThan(1);
+  expect(Math.abs(initial?.introGap ?? 999)).toBeLessThan(1);
+  expect(initial?.headingPosition).not.toBe("fixed");
+  expect(initial?.headingOpacity).toBe("1");
+  expect(Math.abs((initial?.headingTop ?? 0) - ((initial?.stableViewportHeight ?? 0) - (initial?.headingHeight ?? 0) - (initial?.stableViewportHeight ?? 0) * 0.04))).toBeLessThan(1);
+  expect(isZeroTransform(initial?.topImageTransform ?? "")).toBe(true);
+  expect(isZeroTransform(initial?.bottomImageTransform ?? "")).toBe(true);
+  expect(initial?.topImageBottom).toBe("0px");
+  expect(initial?.bottomImageBottom).toBe("0px");
+  expect(initial?.topImageHidden).toBe(false);
+  expect(initial?.bottomImageHidden).toBe(false);
+  expect(initial?.ghostHidden).toBe(true);
+
+  const afterBrowserChromeChange = await page.evaluate(async () => {
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!heading) {
+      return null;
+    }
+
+    const originalInnerHeight = window.innerHeight;
+    const beforeTop = Number.parseFloat(window.getComputedStyle(heading).top);
+
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: originalInnerHeight - 120,
+    });
+
+    window.dispatchEvent(new Event("resize"));
+    await nextFrame();
+    await nextFrame();
+
+    const afterTop = Number.parseFloat(window.getComputedStyle(heading).top);
+
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: originalInnerHeight,
+    });
+    window.dispatchEvent(new Event("resize"));
+    await nextFrame();
+    await nextFrame();
+
+    return {
+      beforeTop,
+      afterTop,
+    };
+  });
+
+  expect(afterBrowserChromeChange).not.toBeNull();
+  expect(Math.abs((afterBrowserChromeChange?.beforeTop ?? 0) - (afterBrowserChromeChange?.afterTop ?? 999))).toBeLessThan(1);
+
+  const afterIntro = await page.evaluate(async () => {
+    const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+    const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!introSection || !topImageLayer || !bottomImageLayer || !ghostTitle || !heading) {
+      return null;
+    }
+
+    const introTop = introSection.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, introTop + 1);
+    await nextFrame();
+    await nextFrame();
+
+    return {
+      topImageHidden: topImageLayer.hidden,
+      bottomImageHidden: bottomImageLayer.hidden,
+      ghostHidden: ghostTitle.hidden,
+      headingPosition: window.getComputedStyle(heading).position,
+      headingOpacity: window.getComputedStyle(heading).opacity,
+    };
+  });
+
+  expect(afterIntro).toEqual({
+    topImageHidden: true,
+    bottomImageHidden: false,
+    ghostHidden: true,
+    headingPosition: "relative",
+    headingOpacity: "1",
+  });
+
+  const atBottom = await page.evaluate(async () => {
+    const contactCopy = document.querySelector<HTMLElement>(".copy--contact");
+    const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!contactCopy || !contactSection || !heading) {
+      return null;
+    }
+
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await nextFrame();
+    await nextFrame();
+
+    const rect = contactCopy.getBoundingClientRect();
+    const contactRect = contactSection.getBoundingClientRect();
+    const headingRect = heading.getBoundingClientRect();
+    const contactCopyStyles = window.getComputedStyle(contactCopy);
+    const headingStyles = window.getComputedStyle(heading);
+    const headingBlockHeight =
+      Number.parseFloat(headingStyles.lineHeight) +
+      Number.parseFloat(headingStyles.paddingTop) * 2;
+
+    return {
+      contactTop: contactRect.top,
+      contactHeight: contactRect.height,
+      copyTop: rect.top,
+      copyBottom: rect.bottom,
+      copyCenter: rect.top + rect.height / 2,
+      contactCenter: contactRect.top + contactRect.height / 2,
+      copyTextAlign: contactCopyStyles.textAlign,
+      headingBottom: headingRect.top + headingBlockHeight,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(atBottom).not.toBeNull();
+  expect(Math.abs(atBottom?.contactTop ?? 999)).toBeLessThan(1);
+  expect(Math.abs((atBottom?.contactHeight ?? 0) - (atBottom?.viewportHeight ?? 0))).toBeLessThan(1);
+  expect(atBottom?.copyTextAlign).toBe("center");
+  expect(Math.abs((atBottom?.copyCenter ?? 0) - (atBottom?.contactCenter ?? 999))).toBeLessThan(1);
+  expect(atBottom?.headingBottom ?? 99999).toBeLessThan(atBottom?.contactTop ?? 0);
+  expect(atBottom?.copyTop ?? -1).toBeGreaterThanOrEqual(0);
+  expect(atBottom?.copyBottom ?? 99999).toBeLessThanOrEqual(atBottom?.viewportHeight ?? 0);
+
+  await page.setViewportSize({ width: 390, height: 839 });
+  await openLoadedPage(page);
+
+  const narrowStatic = await page.evaluate(() => {
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+    const heroStrapline = heroTitle?.querySelector<HTMLElement>("span");
+
+    if (!heroTitle || !heroStrapline) {
+      return null;
+    }
+
+    const heroTitleStyles = window.getComputedStyle(heroTitle);
+    const heroStraplineStyles = window.getComputedStyle(heroStrapline);
+
+    return {
+      heroTitleFontSize: heroTitleStyles.fontSize,
+      heroTitleLineHeight: heroTitleStyles.lineHeight,
+      heroStraplineFontSize: heroStraplineStyles.fontSize,
+    };
+  });
+
+  expect(narrowStatic).toEqual({
+    heroTitleFontSize: "83px",
+    heroTitleLineHeight: "68px",
+    heroStraplineFontSize: "40px",
+  });
+});
+
+test("hero title copies stay aligned through the handoff", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+  await openLoadedPage(page);
+
+  const result = await page.evaluate(async () => {
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+    const values: number[] = [];
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!heroTitle || !ghostTitle) {
+      return null;
+    }
+
+    for (const y of [0, 150, 350, 600, window.innerHeight - 1]) {
+      window.scrollTo(0, y);
+      await nextFrame();
+      await nextFrame();
+      const heroTop = heroTitle.getBoundingClientRect().top;
+      const ghostTop = ghostTitle.getBoundingClientRect().top;
+      values.push(Math.abs(heroTop - ghostTop));
+    }
+
+    return {
+      values,
+      heroPosition: window.getComputedStyle(heroTitle).position,
+      heroInlineTransform: heroTitle.style.transform,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result?.heroPosition).toBe("sticky");
+  expect(result?.heroInlineTransform).toBe("");
+
+  for (const delta of result?.values ?? []) {
+    expect(delta).toBeLessThan(1);
+  }
+});
+
+test("hero title stays locked until the ghost title is fully revealed", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+  await openLoadedPage(page);
+
+  const result = await page.evaluate(async () => {
+    const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!heroTitle || !ghostTitle) {
+      return null;
+    }
+
+    const releasePoint = window.innerHeight;
+    const samples = [];
+
+    for (const y of [releasePoint * 0.5, releasePoint * 0.95, releasePoint * 1.25]) {
+      window.scrollTo(0, y);
+      await nextFrame();
+      await nextFrame();
+      samples.push({
+        heroTop: heroTitle.getBoundingClientRect().top,
+        ghostTop: ghostTitle.getBoundingClientRect().top,
+        heroPanelBottom:
+          document.querySelector<HTMLElement>("[data-hero]")?.getBoundingClientRect().bottom ?? null,
+      });
+    }
+
+    return samples;
+  });
+
+  expect(result).not.toBeNull();
+  expect(Math.abs(result?.[0].heroTop ?? 999)).toBeLessThan(1);
+  expect(Math.abs(result?.[0].ghostTop ?? 999)).toBeLessThan(1);
+  expect(Math.abs(result?.[1].heroTop ?? 999)).toBeLessThan(1);
+  expect(Math.abs(result?.[1].ghostTop ?? 999)).toBeLessThan(1);
+  expect(result?.[2].heroPanelBottom ?? 999).toBeLessThanOrEqual(0);
+  expect(result?.[2].ghostTop ?? 0).toBeLessThan(-10);
+});
+
+test("hero ghost title is hidden before the contact image scene", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+  await openLoadedPage(page);
+
+  const result = await page.evaluate(async () => {
+    const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+    const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+    const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+    const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!introSection || !ghostTitle || !topImageLayer || !bottomImageLayer) {
+      return null;
+    }
+
+    const introTop = introSection.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, introTop + 1);
+    await nextFrame();
+    await nextFrame();
+
+    return {
+      ghostHidden: ghostTitle.hidden,
+      topImageHidden: topImageLayer.hidden,
+      bottomImageHidden: bottomImageLayer.hidden,
+    };
+  });
+
+  expect(result).toEqual({
+    ghostHidden: true,
+    topImageHidden: true,
+    bottomImageHidden: false,
+  });
+});
+
+test("contact heading approaches at parallax speed before locking", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+  await openLoadedPage(page);
+
+  const result = await page.evaluate(async () => {
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!heading || !headingSection) {
+      return null;
+    }
+
+    const headingTop = headingSection.getBoundingClientRect().top + window.scrollY;
+    const samples = [];
+
+    for (const y of [headingTop - 300, headingTop - 100]) {
+      window.scrollTo(0, y);
+      await nextFrame();
+      await nextFrame();
+      samples.push({
+        scrollY: window.scrollY,
+        top: heading.getBoundingClientRect().top,
+        opacity: window.getComputedStyle(heading).opacity,
+        fixed: window.getComputedStyle(heading).position === "fixed",
+        inlineTop: heading.style.top,
+        inlineTransform: heading.style.transform,
+      });
+    }
+
+    return {
+      scrollDelta: samples[1].scrollY - samples[0].scrollY,
+      headingDelta: samples[0].top - samples[1].top,
+      samples,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result?.samples.every((sample) => sample.opacity === "0.5")).toBe(true);
+  expect(result?.samples.every((sample) => !sample.fixed)).toBe(true);
+  expect(result?.samples.every((sample) => sample.inlineTop === "0px")).toBe(true);
+  expect(result?.samples.every((sample) => sample.inlineTransform.startsWith("translate3d"))).toBe(true);
+  expect(result?.headingDelta ?? 0).toBeGreaterThan((result?.scrollDelta ?? 0) * 0.45);
+  expect(result?.headingDelta ?? 0).toBeLessThan((result?.scrollDelta ?? 0) * 0.55);
+});
+
+test("contact panel does not jump when contact heading locks", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+  await openLoadedPage(page);
+
+  const result = await page.evaluate(async () => {
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
+    const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
+    const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    if (!heading || !headingSection || !contactSection) {
+      return null;
+    }
+
+    const styles = window.getComputedStyle(heading);
+    const height = Number.parseFloat(styles.lineHeight) + Number.parseFloat(styles.paddingTop) * 2;
+    const headingTop = headingSection.getBoundingClientRect().top + window.scrollY;
+    const threshold = headingTop + height;
+    const samples = [];
+
+    for (const y of [threshold - 1, threshold + 1]) {
+      window.scrollTo(0, y);
+      await nextFrame();
+      await nextFrame();
+
+      samples.push({
+        scrollY: window.scrollY,
+        contactTop: contactSection.getBoundingClientRect().top,
+        headingFixed: window.getComputedStyle(heading).position === "fixed",
+      });
+    }
+
+    return {
+      contactBackgroundColor: window.getComputedStyle(contactSection).backgroundColor,
+      scrollDelta: samples[1].scrollY - samples[0].scrollY,
+      contactDelta: samples[0].contactTop - samples[1].contactTop,
+      samples,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result?.contactBackgroundColor).toBe("rgb(24, 24, 24)");
+  expect(result?.samples[0].headingFixed).toBe(false);
+  expect(result?.samples[1].headingFixed).toBe(true);
+  expect(Math.abs((result?.contactDelta ?? 0) - (result?.scrollDelta ?? 0))).toBeLessThan(1);
+});
+
+test("contact heading fades from image heading to fixed solid heading", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
+
+	await openLoadedPage(page);
+
+  const result = await page.evaluate(async () => {
+    const heading = document.querySelector<HTMLElement>("[data-contact-heading]");
+    const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
+
+    if (!heading || !headingSection) {
+      return null;
+    }
+
+    const styles = window.getComputedStyle(heading);
+    const height = Number.parseFloat(styles.lineHeight) + Number.parseFloat(styles.paddingTop) * 2;
+    const headingTop = headingSection.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo(0, headingTop + height * 0.5);
+    await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    const transparentOpacity = window.getComputedStyle(heading).opacity;
+
+    window.scrollTo(0, headingTop + height + 20);
+    await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    const fixedRect = heading.getBoundingClientRect();
+    const fixedOpacity = window.getComputedStyle(heading).opacity;
+
+    return {
+      transparentOpacity,
+      fixedOpacity,
+      fixedTop: fixedRect.top,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result?.transparentOpacity).toBe("0.5");
+  expect(result?.fixedOpacity).toBe("1");
+  expect(Math.abs(result?.fixedTop ?? 999)).toBeLessThan(1);
+});

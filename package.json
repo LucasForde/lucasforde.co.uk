@@ -1,0 +1,20 @@
+{
+  "name": "lucasforde.co.uk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test:visual": "playwright test"
+  },
+  "dependencies": {
+    "astro": "^7.0.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.0.1",
+    "typescript": "^6.0.3"
+  }
+}

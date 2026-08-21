@@ -1,0 +1,217 @@
+import { getStaticLayoutQuery, shouldUseStaticLayout } from "./static-layout";
+
+type NullableElement<T extends Element> = T | null;
+
+const heroTitle = document.querySelector<HTMLElement>("[data-hero-title]");
+const heroSection = document.querySelector<HTMLElement>("[data-hero]");
+const ghostTitle = document.querySelector<HTMLElement>("[data-ghost-title]");
+const topImageLayer = document.querySelector<HTMLElement>("[data-image-layer='dash']");
+const bottomImageLayer = document.querySelector<HTMLElement>("[data-image-layer='code']");
+const introSection = document.querySelector<HTMLElement>("[data-intro-section]");
+const headingSection = document.querySelector<HTMLElement>("[data-contact-heading-section]");
+const contactHeading = document.querySelector<HTMLElement>("[data-contact-heading]");
+const contactSection = document.querySelector<HTMLElement>("[data-contact-section]");
+const HERO_TITLE_RELEASE_VIEWPORTS = 1;
+
+const requiredNodes: NullableElement<HTMLElement>[] = [
+  heroSection,
+  heroTitle,
+  ghostTitle,
+  topImageLayer,
+  bottomImageLayer,
+  introSection,
+  headingSection,
+  contactHeading,
+  contactSection,
+];
+
+const staticLayoutQuery = getStaticLayoutQuery();
+
+let viewportHeight = window.innerHeight;
+let introTop = 0;
+let headingTop = 0;
+let headingHeight = 0;
+let contactTop = 0;
+let ticking = false;
+
+function px(value: number): string {
+  return `${value}px`;
+}
+
+function documentTop(element: HTMLElement): number {
+  return element.getBoundingClientRect().top + window.scrollY;
+}
+
+function staticViewportHeight(): number {
+  return heroSection?.getBoundingClientRect().height ?? viewportHeight;
+}
+
+function measure(): void {
+  viewportHeight = window.innerHeight;
+
+  if (!introSection || !headingSection || !contactHeading || !contactSection) {
+    return;
+  }
+
+  introTop = documentTop(introSection);
+  headingTop = documentTop(headingSection);
+  contactTop = documentTop(contactSection);
+
+  const headingStyles = window.getComputedStyle(contactHeading);
+  headingHeight =
+    Number.parseFloat(headingStyles.lineHeight) +
+    Number.parseFloat(headingStyles.paddingTop) * 2;
+}
+
+function syncStaticLayoutClass(): boolean {
+  const useStaticLayout = shouldUseStaticLayout(staticLayoutQuery);
+  document.documentElement.classList.toggle("is-static-layout", useStaticLayout);
+  document.body.classList.toggle("is-static-layout", useStaticLayout);
+  return useStaticLayout;
+}
+
+function setStaticLayout(scrollY: number): void {
+  document.body.classList.add("is-static-layout");
+  updateSceneVisibility(scrollY);
+
+  if (ghostTitle) {
+    ghostTitle.hidden = true;
+  }
+
+  ghostTitle?.style.setProperty("transform", "translate3d(0, 0, 0)");
+
+  topImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
+  bottomImageLayer?.style.setProperty("transform", "translate3d(0, 0, 0)");
+
+  if (contactHeading) {
+    const stableViewportHeight = staticViewportHeight();
+    const headingGap = stableViewportHeight * 0.04;
+    const staticHeadingTop = Math.max(0, stableViewportHeight - headingHeight - headingGap);
+
+    contactHeading.classList.remove("is-solid");
+    contactHeading.style.top = px(staticHeadingTop);
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.opacity = "1";
+    contactHeading.style.transform = "none";
+  }
+}
+
+function clearStaticLayout(): void {
+  document.body.classList.remove("is-static-layout");
+  contactHeading?.style.removeProperty("opacity");
+}
+
+function updateSceneVisibility(scrollY: number): void {
+  const showHeroScene = scrollY <= introTop;
+
+  if (ghostTitle) {
+    ghostTitle.hidden = !showHeroScene;
+  }
+
+  if (topImageLayer) {
+    topImageLayer.hidden = !showHeroScene;
+  }
+}
+
+function positionGhostTitle(scrollY: number): void {
+  if (!ghostTitle) {
+    return;
+  }
+
+  const trigger = viewportHeight * HERO_TITLE_RELEASE_VIEWPORTS;
+
+  if (scrollY < trigger) {
+    ghostTitle.style.removeProperty("transform");
+    return;
+  }
+
+  ghostTitle.style.transform = `translate3d(0, ${px((trigger - scrollY) * 0.5)}, 0)`;
+}
+
+function positionImages(scrollY: number): void {
+  if (!topImageLayer || !bottomImageLayer) {
+    return;
+  }
+
+  const topImageStart = introTop - viewportHeight;
+  const topImageShift = Math.max(0, scrollY - topImageStart) * 0.375;
+  const bottomImageShift = Math.max(0, scrollY - headingTop) * 0.375;
+
+  topImageLayer.style.transform = `translate3d(0, ${px(-topImageShift)}, 0)`;
+  bottomImageLayer.style.transform = `translate3d(0, ${px(-bottomImageShift)}, 0)`;
+}
+
+function positionHeading(scrollY: number): void {
+  if (!contactHeading) {
+    return;
+  }
+
+  if (scrollY >= contactTop) {
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = "none";
+    contactHeading.classList.remove("is-solid");
+    return;
+  }
+
+  if (scrollY > headingTop + headingHeight) {
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = "none";
+    contactHeading.classList.add("is-solid");
+    return;
+  }
+
+  contactHeading.classList.remove("is-solid");
+
+  if (scrollY > introTop) {
+    const headingShift = scrollY - headingTop;
+    const parallaxOffset = headingShift * 0.5 + headingHeight * 0.5;
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = `translate3d(0, ${px(parallaxOffset)}, 0)`;
+  } else {
+    contactHeading.style.top = "0";
+    contactHeading.style.marginTop = "0";
+    contactHeading.style.transform = "none";
+  }
+}
+
+function render(): void {
+  ticking = false;
+
+  const scrollY = window.scrollY;
+
+  if (syncStaticLayoutClass()) {
+    setStaticLayout(scrollY);
+    return;
+  }
+
+  clearStaticLayout();
+  updateSceneVisibility(scrollY);
+
+  positionGhostTitle(scrollY);
+  positionImages(scrollY);
+  positionHeading(scrollY);
+}
+
+function requestRender(): void {
+  if (!ticking) {
+    ticking = true;
+    window.requestAnimationFrame(render);
+  }
+}
+
+function refresh(): void {
+  syncStaticLayoutClass();
+  measure();
+  requestRender();
+}
+
+if (requiredNodes.every(Boolean)) {
+  refresh();
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", refresh);
+  staticLayoutQuery.addEventListener("change", refresh);
+  window.addEventListener("load", refresh, { once: true });
+}
