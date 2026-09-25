@@ -1,11 +1,109 @@
-<section class="panel panel--intro" data-intro-section>
-  <article class="copy">
-    <p><strong>Hello.</strong> My name is Lucas Forde. I am a web designer and developer based in Tunbridge Wells. I have over 20 years’ experience designing websites, building web applications and maintaining online products across a range of industries. I offer dependable technical expertise without the agency overhead.</p>
+<section class="panel panel--intro" data-intro-section aria-labelledby="intro-heading">
+  <article class="intro-content">
+    <header class="intro-header">
+      <div>
+        <p class="intro-eyebrow">Lucas Forde · Tunbridge Wells</p>
+        <h2 id="intro-heading">Web design, development and ongoing support.</h2>
+      </div>
+      <p class="intro-lead">I have over 20 years’ experience building and improving websites and web applications. I work directly with businesses from the first brief through to long-term care.</p>
+    </header>
 
-    <p>I create websites and landing pages, audit and improve existing sites, support search engine optimisation (SEO), and manage email campaigns and newsletters. I also provide managed hosting and ongoing support.</p>
+    <div class="intro-services" aria-label="Services">
+      <section>
+        <h3>Design &amp; build</h3>
+        <p>Websites, landing pages and web applications built for your business.</p>
+      </section>
+      <section>
+        <h3>Improve</h3>
+        <p>Site audits, practical improvements and search engine optimisation.</p>
+      </section>
+      <section>
+        <h3>Communicate</h3>
+        <p>Email campaigns and newsletters planned and delivered with care.</p>
+      </section>
+    </div>
 
-    <p>Since I began my career, much of the web industry has become increasingly remote and impersonal. I believe there is still real value in working with someone local, easy to reach and easy to communicate with. My fees are negotiable and agreed before work begins, with reasonable revisions included in the quote.</p>
+    <section class="hosting" aria-labelledby="hosting-heading">
+      <header class="hosting-header">
+        <div>
+          <p class="intro-eyebrow">Managed hosting</p>
+          <h2 id="hosting-heading">Hosting with maintenance built in.</h2>
+        </div>
+        <p>UK hosting, SSL, uptime and certificate monitoring, provider backups, routine compatible updates where applicable, and hosting-related support are included in every tier. Prices are per website, with the right level agreed after a site review.</p>
+      </header>
 
-    <p>If your website needs updating or you have a web project in mind, please get in touch.</p>
+      <div class="hosting-tiers">
+        <section class="hosting-tier" aria-labelledby="tier-essential">
+          <h3 id="tier-essential">Essential</h3>
+          <p class="hosting-tier__price">£45 <span>/ month</span></p>
+          <p class="hosting-tier__description">For static sites and straightforward, low-change WordPress sites.</p>
+          <ul>
+            <li>Monthly maintenance review</li>
+            <li>Hosting-related support</li>
+          </ul>
+        </section>
+        <section class="hosting-tier" aria-labelledby="tier-care">
+          <h3 id="tier-care">Care</h3>
+          <p class="hosting-tier__price">£65 <span>/ month</span></p>
+          <p class="hosting-tier__description">For small-business WordPress sites needing regular care.</p>
+          <ul>
+            <li>Fortnightly maintenance review</li>
+            <li>Up to 30 minutes of minor assistance each month</li>
+          </ul>
+        </section>
+        <section class="hosting-tier" aria-labelledby="tier-support">
+          <h3 id="tier-support">Support</h3>
+          <p class="hosting-tier__price">£85 <span>/ month</span></p>
+          <p class="hosting-tier__description">For more active or plugin-heavy WordPress sites.</p>
+          <ul>
+            <li>Weekly or fortnightly maintenance review</li>
+            <li>Up to 60 minutes of minor assistance each month</li>
+            <li>Priority scheduling during working hours</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="hosting-footer">
+        <p>Migration, domains, business email and third-party licences are separate. Complex sites are quoted individually.</p>
+        <a class="intro-link" href="mailto:lucas@lucasforde.co.uk?subject=Managed%20hosting%20enquiry">Discuss managed hosting</a>
+      </div>
+    </section>
+
+    <section class="testimonial" aria-labelledby="testimonial-heading">
+      <div>
+        <p class="intro-eyebrow" id="testimonial-heading">Client feedback</p>
+        <blockquote>“From the moment we instructed you, the process was seamless.”</blockquote>
+        <p class="testimonial__credit">Darren Austin FCA, Synergee Ltd</p>
+      </div>
+      <a class="intro-link" href="/testimonials/synergee-testimonial.jpg" aria-haspopup="dialog" aria-controls="testimonial-dialog" data-testimonial-open>View the full testimonial</a>
+    </section>
   </article>
+
+  <dialog class="testimonial-dialog" id="testimonial-dialog" aria-labelledby="testimonial-dialog-title" data-testimonial-dialog>
+    <div class="testimonial-dialog__toolbar">
+      <span id="testimonial-dialog-title">Synergee testimonial</span>
+      <a href="/testimonials/synergee-testimonial.jpg" target="_blank" rel="noopener">Open full image</a>
+      <form method="dialog">
+        <button type="submit" aria-label="Close testimonial" autofocus>×</button>
+      </form>
+    </div>
+    <img src="/testimonials/synergee-testimonial.jpg" alt="Signed testimonial letter from Darren Austin FCA of Synergee Ltd about Lucas Forde’s website migration and support." width="927" height="1280" loading="lazy" />
+  </dialog>
 </section>
+
+<script>
+  const testimonialLink = document.querySelector<HTMLAnchorElement>("[data-testimonial-open]");
+  const testimonialDialog = document.querySelector<HTMLDialogElement>("[data-testimonial-dialog]");
+
+  if (testimonialLink && testimonialDialog) {
+    testimonialLink.addEventListener("click", (event) => {
+      if (typeof testimonialDialog.showModal !== "function") return;
+      event.preventDefault();
+      testimonialDialog.showModal();
+    });
+
+    testimonialDialog.addEventListener("click", (event) => {
+      if (event.target === testimonialDialog) testimonialDialog.close();
+    });
+  }
+</script>

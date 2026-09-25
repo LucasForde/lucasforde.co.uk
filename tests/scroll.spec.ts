@@ -389,6 +389,39 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   });
 });
 
+test("contact details and copyright do not overlap on a short phone viewport", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "The short static contact layout is covered on mobile.");
+
+  await page.setViewportSize({ width: 360, height: 640 });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const result = await page.evaluate(async () => {
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+    const copy = document.querySelector<HTMLElement>(".copy--contact");
+    const footer = document.querySelector<HTMLElement>(".site-footer");
+    const links = [...document.querySelectorAll<HTMLAnchorElement>(".contact-method a")];
+
+    if (!copy || !footer) return null;
+
+    return {
+      copyBottom: copy.getBoundingClientRect().bottom,
+      footerTop: footer.getBoundingClientRect().top,
+      footerBottom: footer.getBoundingClientRect().bottom,
+      viewportHeight: window.innerHeight,
+      horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
+      linkCount: links.length,
+    };
+  });
+
+  expect(result).not.toBeNull();
+  expect(result?.copyBottom ?? 999).toBeLessThan(result?.footerTop ?? 0);
+  expect(result?.footerBottom ?? 999).toBeLessThanOrEqual(result?.viewportHeight ?? 0);
+  expect(result?.horizontalOverflow).toBe(false);
+  expect(result?.linkCount).toBe(3);
+});
+
 test("hero title copies stay aligned through the handoff", async ({ page, isMobile }) => {
   test.skip(isMobile, "Desktop scroll choreography switches to a static layout on mobile.");
 
