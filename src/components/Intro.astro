@@ -1,3 +1,7 @@
+---
+import { X } from "@lucide/astro";
+---
+
 <section class="panel panel--intro" data-intro-section aria-labelledby="intro-heading">
   <article class="intro-content">
     <header class="intro-header">
@@ -79,14 +83,12 @@
     </section>
   </article>
 
-  <dialog class="testimonial-dialog" id="testimonial-dialog" aria-labelledby="testimonial-dialog-title" data-testimonial-dialog>
-    <div class="testimonial-dialog__toolbar">
-      <span id="testimonial-dialog-title">Synergee testimonial</span>
-      <a href="/testimonials/synergee-testimonial.jpg" target="_blank" rel="noopener">Open full image</a>
-      <form method="dialog">
-        <button type="submit" aria-label="Close testimonial" autofocus>×</button>
-      </form>
-    </div>
+  <dialog class="testimonial-dialog" id="testimonial-dialog" aria-label="Synergee testimonial" data-testimonial-dialog>
+    <form class="testimonial-dialog__close" method="dialog">
+      <button type="submit" aria-label="Close testimonial" title="Close testimonial" autofocus>
+        <X size={20} aria-hidden="true" />
+      </button>
+    </form>
     <img src="/testimonials/synergee-testimonial.jpg" alt="Signed testimonial letter from Darren Austin FCA of Synergee Ltd about Lucas Forde’s website migration and support." width="927" height="1280" loading="lazy" />
   </dialog>
 </section>
@@ -103,7 +105,11 @@
     });
 
     testimonialDialog.addEventListener("click", (event) => {
-      if (event.target === testimonialDialog) testimonialDialog.close();
+      if (event.target !== testimonialDialog) return;
+      const { left, right, top, bottom } = testimonialDialog.getBoundingClientRect();
+      if (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom) {
+        testimonialDialog.close();
+      }
     });
   }
 </script>
