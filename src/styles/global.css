@@ -4,6 +4,7 @@
   --color-intro-background: #174b66;
   --color-contact-background: #181818;
   --color-foreground: #ffffff;
+  --color-line: rgb(255 255 255 / 25%);
   --font-sans: "Roboto", Arial, Helvetica, sans-serif;
   --loader-exit-duration: 1000ms;
   --loader-exit-ease: cubic-bezier(0.9, 0, 0.1, 1);
@@ -261,6 +262,7 @@ body.is-loaded .loadanim {
 }
 
 .panel--contact {
+  min-height: max(600px, var(--panel-height));
   z-index: 40;
   background: var(--color-contact-background);
 }
@@ -427,7 +429,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .intro-header,
 .contact-header {
   padding-bottom: 72px;
-  border-bottom: 1px solid var(--color-foreground);
+  border-bottom: 1px solid var(--color-line);
 }
 
 .intro-header h2 {
@@ -452,7 +454,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 
 .intro-services section {
   padding-top: 18px;
-  border-top: 1px solid var(--color-foreground);
+  border-top: 1px solid var(--color-line);
 }
 
 .intro-services h3 {
@@ -469,7 +471,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .hosting {
   margin-top: 112px;
   padding-top: 36px;
-  border-top: 2px solid var(--color-foreground);
+  border-top: 1px solid var(--color-line);
 }
 
 .hosting-header {
@@ -492,8 +494,8 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .hosting-tiers {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid var(--color-foreground);
-  border-bottom: 1px solid var(--color-foreground);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
 }
 
 .hosting-tier {
@@ -509,7 +511,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 }
 
 .hosting-tier + .hosting-tier {
-  border-left: 1px solid var(--color-foreground);
+  border-left: 1px solid var(--color-line);
 }
 
 .hosting-tier h3 {
@@ -545,7 +547,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 
 .hosting-tier li {
   padding: 10px 0;
-  border-top: 1px solid var(--color-foreground);
+  border-top: 1px solid var(--color-line);
 }
 
 .hosting-footer,
@@ -568,15 +570,12 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .intro-link {
   display: inline-block;
   flex-shrink: 0;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--color-foreground);
   font-weight: 500;
   line-height: 1.3;
 }
 
 .intro-link:focus-visible,
-.testimonial-dialog button:focus-visible,
-.testimonial-dialog a:focus-visible {
+.testimonial-dialog button:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 4px;
 }
@@ -584,7 +583,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .testimonial {
   margin-top: 112px;
   padding-top: 36px;
-  border-top: 1px solid var(--color-foreground);
+  border-top: 1px solid var(--color-line);
 }
 
 .testimonial blockquote {
@@ -600,58 +599,50 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 }
 
 .testimonial-dialog {
-  width: min(900px, calc(100vw - 32px));
-  max-width: none;
-  max-height: calc(100dvh - 32px);
-  padding: 0;
+  width: fit-content;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  padding: 8px;
   border: 0;
-  background: #f9f6f1;
+  background: var(--color-foreground);
   color: var(--color-contact-background);
-  overflow-y: auto;
+  overflow: visible;
 }
 
 .testimonial-dialog::backdrop {
-  background: rgb(0 0 0 / 82%);
+  background: rgb(0 0 0 / 50%);
 }
 
-.testimonial-dialog__toolbar {
-  position: sticky;
-  top: 0;
+.testimonial-dialog__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  min-height: 58px;
-  padding: 6px 8px 6px 20px;
-  background: var(--color-contact-background);
-  color: var(--color-foreground);
-  font-size: 16px;
-  font-weight: 500;
+  margin: 0;
 }
 
-.testimonial-dialog__toolbar > a {
-  margin-left: auto;
-  font-size: 14px;
-  text-decoration: underline;
-}
-
-.testimonial-dialog__toolbar button {
+.testimonial-dialog__close button {
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
   padding: 0;
   border: 0;
-  background: transparent;
+  border-radius: 0;
+  background: var(--color-foreground);
   color: inherit;
   cursor: pointer;
-  font: 30px/1 Arial, sans-serif;
 }
 
 .testimonial-dialog img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: calc(100vw - 64px);
   height: auto;
+  max-height: calc(100vh - 64px);
+  max-height: calc(100dvh - 64px);
+  object-fit: contain;
 }
 
 .contact-header > p {
@@ -672,7 +663,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .contact-method {
   min-width: 0;
   padding-top: 18px;
-  border-top: 1px solid var(--color-foreground);
+  border-top: 1px solid var(--color-line);
 }
 
 .copy--contact .contact-method__label {
@@ -689,9 +680,6 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.3;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 5px;
 }
 
 .contact-method a:focus-visible {
@@ -705,7 +693,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   bottom: var(--copy-pad-block);
   left: var(--copy-pad-inline);
   padding-top: 18px;
-  border-top: 1px solid var(--color-foreground);
+  border-top: 1px solid var(--color-line);
   font-size: 14px;
   font-weight: 400;
   line-height: 1.4;
@@ -910,7 +898,7 @@ body.is-static-layout {
     place-items: center;
     background: var(--color-intro-background);
     height: var(--static-contact-panel-height);
-    min-height: var(--static-contact-panel-height);
+    min-height: max(600px, var(--static-contact-panel-height));
   }
 
   .copy--contact {
@@ -975,7 +963,7 @@ body.is-static-layout .panel--contact {
   place-items: center;
   background: var(--color-intro-background);
   height: var(--static-contact-panel-height);
-  min-height: var(--static-contact-panel-height);
+  min-height: max(600px, var(--static-contact-panel-height));
 }
 
 body.is-static-layout .copy--contact {
@@ -1067,7 +1055,7 @@ body.is-static-layout .site-title--ghost {
   }
 
   .hosting-tier + .hosting-tier {
-    border-top: 1px solid var(--color-foreground);
+    border-top: 1px solid var(--color-line);
     border-left: 0;
   }
 
@@ -1186,15 +1174,6 @@ body.is-static-layout .site-title--ghost {
     font-size: 23px;
   }
 
-  .testimonial-dialog__toolbar {
-    gap: 8px;
-    padding-left: 12px;
-    font-size: 14px;
-  }
-
-  .testimonial-dialog__toolbar > a {
-    font-size: 12px;
-  }
 }
 
 @media (max-width: 400px) {
