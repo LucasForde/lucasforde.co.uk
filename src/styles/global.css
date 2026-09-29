@@ -419,11 +419,25 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 
 .intro-header,
 .hosting-header,
-.contact-header {
+.contact-header,
+.intro-services,
+.hosting-tiers,
+.contact-methods {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
-  gap: 72px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 36px;
+}
+
+.intro-header,
+.hosting-header,
+.contact-header {
   align-items: end;
+}
+
+.intro-header > div,
+.hosting-header > div,
+.contact-header > div {
+  grid-column: span 2;
 }
 
 .intro-header,
@@ -446,9 +460,6 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 }
 
 .intro-services {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 36px;
   margin-top: 48px;
 }
 
@@ -492,25 +503,21 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 }
 
 .hosting-tiers {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 1px solid var(--color-line);
   border-bottom: 1px solid var(--color-line);
 }
 
 .hosting-tier {
-  padding: 28px 28px 36px;
+  position: relative;
+  padding: 28px 0 36px;
 }
 
-.hosting-tier:first-child {
-  padding-left: 0;
-}
-
-.hosting-tier:last-child {
-  padding-right: 0;
-}
-
-.hosting-tier + .hosting-tier {
+.hosting-tier + .hosting-tier::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -18px;
   border-left: 1px solid var(--color-line);
 }
 
@@ -625,12 +632,12 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .testimonial-dialog__close button {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: var(--color-foreground);
+  background: rgb(255 255 255 / 50%);
   color: inherit;
   cursor: pointer;
 }
@@ -654,9 +661,6 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 }
 
 .contact-methods {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 36px;
   margin-top: 48px;
 }
 
@@ -1036,6 +1040,12 @@ body.is-static-layout .site-title--ghost {
     gap: 24px;
   }
 
+  .intro-header > div,
+  .hosting-header > div,
+  .contact-header > div {
+    grid-column: auto;
+  }
+
   .intro-lead,
   .hosting-header > p,
   .contact-header > p {
@@ -1048,15 +1058,16 @@ body.is-static-layout .site-title--ghost {
     grid-template-columns: 1fr;
   }
 
-  .hosting-tier,
-  .hosting-tier:first-child,
-  .hosting-tier:last-child {
+  .hosting-tier {
     padding: 24px 0;
   }
 
   .hosting-tier + .hosting-tier {
     border-top: 1px solid var(--color-line);
-    border-left: 0;
+  }
+
+  .hosting-tier + .hosting-tier::before {
+    display: none;
   }
 
   .intro-content .hosting-tier__description {
