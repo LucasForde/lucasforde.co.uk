@@ -565,9 +565,7 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 }
 
 .testimonial {
-  margin-top: 112px;
-  padding-top: 36px;
-  border-top: 1px solid var(--color-line);
+  margin-top: 48px;
 }
 
 .testimonial blockquote {
@@ -1127,10 +1125,13 @@ body.is-static-layout .site-title--ghost {
     font-size: 21px;
   }
 
-  .hosting,
-  .testimonial {
+  .hosting {
     margin-top: 72px;
     padding-top: 28px;
+  }
+
+  .testimonial {
+    margin-top: 36px;
   }
 
   .hosting-header {
