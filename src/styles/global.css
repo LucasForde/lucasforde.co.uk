@@ -443,7 +443,6 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .intro-header,
 .contact-header {
   padding-bottom: 72px;
-  border-bottom: 1px solid var(--color-line);
 }
 
 .intro-header h2 {
@@ -457,10 +456,6 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   max-width: 33ch;
   font-size: 22px;
   line-height: 1.4;
-}
-
-.intro-services {
-  margin-top: 48px;
 }
 
 .intro-services section {
@@ -633,10 +628,6 @@ body.is-loading:not(.is-loaded) .site-title--hero {
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.5;
-}
-
-.contact-methods {
-  margin-top: 48px;
 }
 
 .contact-method {
@@ -1088,7 +1079,6 @@ body.is-static-layout .site-title--ghost {
 
   .contact-methods {
     gap: 16px;
-    margin-top: 32px;
   }
 
   .contact-method {
@@ -1115,10 +1105,6 @@ body.is-static-layout .site-title--ghost {
 
   .intro-lead {
     font-size: 18px;
-  }
-
-  .intro-services {
-    margin-top: 36px;
   }
 
   .intro-services h3 {
