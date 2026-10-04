@@ -225,8 +225,8 @@ test("static layout matches the original mobile branch", async ({ page, isMobile
   expect(initial?.heroTitleLineHeight).toBe("102px");
   expect(initial?.heroStraplineFontSize).toBe("60px");
   expect(initial?.copyFontSize).toBe("28px");
-  expect(initial?.introBackgroundColor).toBe("rgb(200, 20, 47)");
-  expect(initial?.contactBackgroundColor).toBe("rgb(23, 75, 102)");
+  expect(initial?.introBackgroundColor).toBe("rgb(23, 75, 102)");
+  expect(initial?.contactBackgroundColor).toBe("rgb(24, 24, 24)");
   expect(initial?.heroTitleOffset ?? 0).toBeLessThan(0);
   expect(initial?.heroTitleCenter ?? 99999).toBeLessThan((initial?.viewportHeight ?? 0) * 0.5);
   expect(Math.abs((initial?.fixedSceneHeight ?? 0) - (initial?.stableViewportHeight ?? 0))).toBeLessThan(1);

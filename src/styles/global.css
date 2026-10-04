@@ -860,13 +860,11 @@ body.is-static-layout {
 
   .panel--intro {
     margin-top: 0;
-    background: var(--color-hero-background);
   }
 
   .panel--contact {
     display: grid;
     place-items: center;
-    background: var(--color-intro-background);
     height: var(--static-contact-panel-height);
     min-height: max(600px, var(--static-contact-panel-height));
   }
@@ -925,13 +923,11 @@ body.is-static-layout .site-title--hero {
 
 body.is-static-layout .panel--intro {
   margin-top: 0;
-  background: var(--color-hero-background);
 }
 
 body.is-static-layout .panel--contact {
   display: grid;
   place-items: center;
-  background: var(--color-intro-background);
   height: var(--static-contact-panel-height);
   min-height: max(600px, var(--static-contact-panel-height));
 }
