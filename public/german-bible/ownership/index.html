@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>The German Wartime Inscription in the Family Bible</title><style>
+:root{
+  --ink:#211b17;
+  --muted:#6e6257;
+  --paper:#f6f0e5;
+  --paper-2:#efe5d5;
+  --panel:#fffaf1;
+  --rule:#c8b79f;
+  --accent:#70452f;
+  --accent-2:#9a7657;
+  --shadow:0 18px 48px rgba(46,33,23,.13);
+  --radius:18px;
+  --max:1180px;
+  --hero-image-width:420px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(154,118,87,.12), transparent 30rem),
+    linear-gradient(#f8f3ea,#f2eadf);
+  font-family:Georgia,"Times New Roman",serif;
+  line-height:1.65;
+}
+a{color:var(--accent);text-underline-offset:3px}
+a:hover{color:#4d2e20}
+.shell{width:calc(100% - 44px);max-width:var(--max);margin:auto}
+.hero{padding:24px 0 16px}
+.hero-card{
+  overflow:hidden;
+  border:1px solid var(--rule);
+  border-radius:var(--radius);
+  background:var(--panel);
+  box-shadow:0 9px 28px rgba(53,38,26,.06);
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) var(--hero-image-width);
+  min-height:480px
+}
+.hero-copy{padding:40px}
+.kicker{
+  letter-spacing:.16em;text-transform:uppercase;font-size:.78rem;
+  color:var(--accent);font-weight:700
+}
+h1,h2,h3{font-weight:600;line-height:1.17;margin-top:0}
+h1{font-size:clamp(1.85rem,3.6vw,3.4rem);margin:.35rem 0 .8rem;letter-spacing:-.035em}
+h2{font-size:clamp(1.65rem,3vw,2.45rem);margin-bottom:.65rem}
+h3{font-size:1.18rem;margin-bottom:.45rem}
+.lede{font-size:1.08rem;color:#493d34;max-width:44rem}
+.hero-summary{
+  margin:18px 0 0;padding:16px 18px;background:var(--paper-2);
+  border-left:4px solid var(--accent-2);border-radius:0 12px 12px 0;
+  color:#493d34;
+}
+.hero-image{position:relative;background:#ddd;min-height:420px}
+.hero-image img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.hero-image::after{content:"";position:absolute;inset:0;box-shadow:inset 22px 0 48px rgba(25,17,11,.15)}
+.badges{margin-top:18px}
+.badge{
+  display:inline-block;border:1px solid #b89c7f;background:#efe1cf;border-radius:999px;
+  padding:4px 9px;margin:0 5px 5px 0;font-size:.82rem;color:#553c2b
+}
+.layout{
+  display:grid;grid-template-columns:270px minmax(0,1fr);
+  gap:20px;align-items:start;padding:8px 0 48px
+}
+.toc{
+  position:sticky;top:18px;border:1px solid var(--rule);
+  border-radius:var(--radius);background:rgba(255,250,241,.88);
+  backdrop-filter:blur(8px);padding:18px
+}
+.toc strong{
+  display:block;margin-bottom:9px;text-transform:uppercase;
+  letter-spacing:.1em;font-size:.78rem;color:var(--muted)
+}
+.toc a{display:block;padding:5px 0;text-decoration:none;color:#4b3e34;font-size:.95rem}
+.toc a:hover{color:var(--accent)}
+main{min-width:0;display:flex;flex-direction:column}
+section{
+  scroll-margin-top:24px;background:var(--panel);border:1px solid var(--rule);
+  border-radius:var(--radius);padding:28px;margin-bottom:16px;
+  box-shadow:0 9px 28px rgba(53,38,26,.06)
+}
+.section-num{
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:700
+}
+p{margin:.7rem 0 1rem}
+blockquote,.note{
+  margin:16px 0;padding:18px 20px;background:var(--paper-2);
+  border-left:4px solid var(--accent-2);border-radius:0 12px 12px 0;
+  color:#493d34
+}
+pre{
+  white-space:pre-wrap;overflow:auto;background:#f4eadb;border:1px solid #ddcfba;
+  border-radius:12px;padding:16px;font-family:Georgia,"Times New Roman",serif;
+}
+code{
+  background:#f1e6d7;border:1px solid #ddcfba;border-radius:5px;
+  padding:.08em .3em;color:#553c2b
+}
+table{
+  width:100%;border-collapse:collapse;margin:15px 0 20px;background:#fffaf1
+}
+th,td{border:1px solid #ddcfba;padding:10px 11px;text-align:left;vertical-align:top}
+th{background:#f4eadb;color:#493d34}
+.confidence{
+  display:inline-block;border:1px solid #b89c7f;background:#efe1cf;
+  border-radius:999px;padding:2px 8px;font-size:.82rem;color:#553c2b
+}
+figure{
+  margin:0;overflow:hidden;display:flex;flex-direction:column;
+  border:1px solid var(--rule);border-radius:14px;background:#eadfce
+}
+figure img{display:block;width:100%;height:auto}
+figcaption{flex:1;padding:11px 13px 13px;color:#5e5147;font-size:.9rem;background:#fbf5eb}
+.two,.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0}
+.two figure:first-child img{max-height:760px;object-fit:contain;background:#e9decd}
+.two figure:nth-child(2) img{max-height:760px;object-fit:contain;background:#e9decd}
+ul,ol{padding-left:1.25rem}
+li{margin:.42rem 0}
+hr{border:0;border-top:1px solid var(--rule);margin:1.6rem 0}
+.small,.muted{color:var(--muted);font-size:.9rem}
+.footer{padding:0 0 48px;text-align:center;color:var(--muted);font-size:.9rem}
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-copy{padding:32px 28px}
+  .hero-image{min-height:360px}
+  .layout{grid-template-columns:1fr}
+  .toc{position:relative;top:auto}
+  .toc nav{columns:2;column-gap:24px}
+}
+@media (max-width:620px){
+  .shell{width:calc(100% - 24px)}
+  .hero{padding-top:12px}
+  .hero-copy{padding:24px 20px}
+  section{padding:22px 18px}
+  .two,.gallery{grid-template-columns:1fr}
+  .toc nav{columns:1}
+}
+@media print{
+  body{background:#fff}
+  .shell{max-width:none;padding:0}
+  .hero{padding:0 0 16px}
+  .hero-card,section,.toc{box-shadow:none}
+  .hero-grid{grid-template-columns:1fr 1fr}
+  .layout{display:block}
+  .toc{position:static;margin-bottom:18px}
+  .toc nav{columns:3}
+  section{break-inside:avoid-page}
+  a{color:inherit;text-decoration:none}
+}
+</style></head><body><header class="hero"><div class="shell"><div class="hero-card"><div class="hero-grid"><div class="hero-copy"><div class="kicker">Family Bible research · Wartime inscription</div><h1>The German Wartime Inscription in the Family Bible</h1><p class="lede">Working research note — a synthesis of the photographs, the earlier bibliographical study, handwriting analysis, family-history assumptions supplied by the owner, and subsequent archival and aviation research.</p><div class="badges"><span class="badge">Dilherr / Endter</span><span class="badge">Nuremberg</span><span class="badge">1843 flyleaf</span><span class="badge">German aviation note</span><span class="badge">WWI hypothesis</span></div><div class="hero-summary">
+<strong>Summary.</strong> The Bible is a seventeenth-century German Luther Bible of the Dilherr/Endter tradition, printed in Nuremberg in the older series of about 1656–1706. A flyleaf carries an ownership inscription dated <strong>7 May 1843</strong> naming <strong>Anna Maria Elisabeth Derlin, née Gerds/Geertz, of Klein Sarau</strong>. On the reverse of that same leaf is a faint German pencil inscription referring unmistakably to <strong>“Bomben in England”</strong> (“bombs in England”), apparently to <strong>three English aircraft</strong>, and to a <strong>“Luftaufnahme”</strong> (“aerial photograph”) from <strong>May</strong>. The exact wording is partly damaged, but the aviation context is clearly wartime. The handwriting and the May aviation context favour the <strong>First World War, probably 1917–18</strong>, over the Second World War, although WWII cannot yet be excluded absolutely. The overwritten signature appears most compatible with <strong>Walther/Walter</strong>, with <strong>Wilhelm</strong> another possibility.
+</div></div><div class="hero-image"><img alt="German wartime pencil inscription in the family Bible" src="images/wartime-inscription.jpg"/></div></div></div></div></header><div class="shell layout"><aside class="toc"><strong>Contents</strong><nav><a href="#the-bible-itself">The Bible itself</a><a href="#the-1843-ownership-inscription">The 1843 ownership inscription</a><a href="#why-the-location-of-the-wartime-note-matters">Why the location of the wartime note matters</a><a href="#the-wartime-pencil-inscription">The wartime pencil inscription</a><a href="#the-overwritten-name">The overwritten name</a><a href="#why-the-inscription-is-wartime">Why the inscription is wartime</a><a href="#why-the-first-world-war-is-currently-favoured">Why the First World War is currently favoured</a><a href="#what-this-means-for-the-bible-s-journey-to-south-africa">What this means for the Bible's journey to South Africa</a><a href="#a-reconstructed-chronology">A reconstructed chronology</a><a href="#the-most-important-new-discovery-the-derlin-klein-sarau-link">The most important new discovery: the Derlin/Klein Sarau link</a><a href="#what-is-established-and-what-is-not">What is established, and what is not</a><a href="#best-next-research-steps">Best next research steps</a><a href="#sources-and-research-status">Sources and research status</a></nav></aside><main><section id="the-bible-itself"><div class="section-num">01 · Research note</div><h2>1. The Bible itself</h2><p>The earlier study identifies the volume with very high confidence as a large-format illustrated German <strong>Luther Bible</strong> from the celebrated <strong>Dilherr-Bibel</strong> series published by the <strong>Endter</strong> house in <strong>Nürnberg (Nuremberg)</strong>. Its pagination and editorial apparatus place it in the older <strong>Endter I</strong> setting, printed between <strong>1656 and 1706</strong>. The exact printing year has not yet been established.</p><p>The surviving binding consists of heavy wooden boards covered in leather and shows evidence of lost metal furniture or clasps. The book was not kept as a pristine display object: it was used heavily over generations. That matters because the blank leaves and endpapers have become a family archive in their own right.</p></section><section id="the-1843-ownership-inscription"><div class="section-num">02 · Research note</div><h2>2. The 1843 ownership inscription</h2><div class="two">
+<figure>
+<img alt="1843 ownership inscription on the Bible flyleaf" src="images/flyleaf-1843-rotated.jpg"/>
+<figcaption>The front of the flyleaf. The ornate inscription is dated 1843.</figcaption>
+</figure>
+<figure>
+<img alt="German wartime pencil inscription on the reverse of the 1843 flyleaf" src="images/wartime-inscription.jpg"/>
+<figcaption>The reverse of the same leaf, carrying the later pencil inscription. The 1843 lettering visibly shows through the paper in reverse.</figcaption>
+</figure>
+</div><p>The calligraphic inscription can now be read much more securely than in the earlier study:</p><pre>Anna Maria Elisabeth
+Derlin geborne Gerds.
+Klein-Sarau d. 7ten Mai
+1843.</pre><p>In modern English:</p><blockquote>
+<strong>Anna Maria Elisabeth Derlin, née Gerds.<br/>
+Klein Sarau, 7 May 1843.</strong>
+</blockquote><p><em>Geborne</em> is an older spelling of modern German <em>geborene</em>, meaning “born [as]” or “née”. The place-name, initially difficult to recognise, is now very likely <strong>Klein Sarau</strong> in the Herzogtum Lauenburg area of Schleswig-Holstein.</p><div class="note">
+<strong>Independent archival corroboration.</strong> The Deutsche Digitale Bibliothek, drawing on the Landesarchiv Schleswig-Holstein, catalogues an 1841–1843 legal case concerning the <em>“verwitwete Vollhufnerin Anna Maria Elisabeth Derlin geb. Geertz zu Klein Sarau”</em> — the widowed full-farm holder Anna Maria Elisabeth Derlin, née Geertz, of Klein Sarau. The match of full name, married surname, maiden surname, place and exact date range is exceptionally strong. “Gerds” on the Bible and “Geertz” in the archive are plausible spelling variants. Formal identity should still be confirmed from the underlying church or court records, but the evidence strongly indicates that the 1843 inscription refers to this historical woman.
+</div><p>A secondary genealogical database also records <strong>Anna Maria Elisabeth Gerds</strong> (born 1791) in a Derlin family at Klein Sarau and identifies children of that family there. This is useful corroboration, but it should be treated as a lead rather than a substitute for primary records.</p></section><section id="why-the-location-of-the-wartime-note-matters"><div class="section-num">03 · Research note</div><h2>3. Why the location of the wartime note matters</h2><p>The pencil writing is <strong>not on a loose scrap</strong> and is not merely an inserted photograph. It is written directly on the reverse of the 1843 family flyleaf. The large “1843” and portions of the ornate calligraphy can be seen showing through backwards on the pencil side.</p><p>That establishes a physical sequence:</p><ol>
+<li>The seventeenth-century Bible remained in use as a family object.</li>
+<li>Anna Maria Elisabeth Derlin marked the flyleaf at Klein Sarau on 7 May 1843.</li>
+<li>Decades later, someone in the same book wrote a personal German note connected with aerial warfare over England.</li>
+</ol><p>The subject matter is unusual for a Bible, but the <em>location</em> is less surprising than it first appears. Family Bibles commonly accumulated ownership records, births, marriages, deaths, personal notes and other family material on their blank leaves. This Bible was already functioning that way in 1843.</p></section><section id="the-wartime-pencil-inscription"><div class="section-num">04 · Research note</div><h2>4. The wartime pencil inscription</h2><p>The pencil is faded, the paper is stained, and the strong 1843 lettering shows through from the other side. Some words are therefore secure and others remain provisional. It is important to distinguish the two.</p><h3>Conservative line-by-line reading</h3><table>
+<thead><tr><th>Line</th><th>German reading</th><th>English sense</th><th>Confidence</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>Ich [grüße?] … Frau u. Kind</code></td><td>“I [send greetings?] … wife and child.”</td><td><span class="confidence">Medium</span></td></tr>
+<tr><td>2</td><td><code>Küsschen von deinem [überstrichenen Namen]</code></td><td>“Kisses from your [overwritten name].”</td><td><span class="confidence">Medium–high</span></td></tr>
+<tr><td>3</td><td><code>Bomben in England</code></td><td>“Bombs in England.”</td><td><span class="confidence">High</span></td></tr>
+<tr><td>4</td><td><code>[Jagd?] … 3 engl. [Maschinen?]</code></td><td>Apparently a pursuit/engagement involving “3 English” aircraft.</td><td><span class="confidence">Medium</span></td></tr>
+<tr><td>5</td><td><code>[genommen?] … [Angriff?] … England</code></td><td>Possibly “taken during/at the attack on England”; still too indistinct for a firm literal transcription.</td><td><span class="confidence">Low</span></td></tr>
+<tr><td>6</td><td><code>Eine Luftaufnahme … Mai</code>, probably <code>Eine Luftaufnahme vom Mai</code></td><td>“An aerial photograph from May.”</td><td><span class="confidence">Medium–high</span></td></tr>
+</tbody>
+</table><h3>Provisional fuller reconstruction</h3><p>A useful working reconstruction — <strong>not a diplomatic transcription</strong> — is:</p><pre>Ich grüße [meine/euch?] Frau u. Kind
+Küsschen von deinem [Name]
+Bomben in England
+Jagd nach 3 engl. [Maschinen?]
+[genommen beim?] Angriff auf England
+Eine Luftaufnahme vom Mai</pre><p>A corresponding English rendering would be:</p><blockquote>
+“I send greetings to [my/you?] wife and child.<br/>
+Kisses from your [name].<br/>
+Bombs in England.<br/>
+Pursuit of / engagement with three English [aircraft?].<br/>
+[Taken during?] the attack on England.<br/>
+An aerial photograph from May.”
+</blockquote><p>The last four lines may be better understood as <strong>captions or notes relating to photographs</strong> rather than as a single continuous sentence. The explicit word <em>Luftaufnahme</em> (“aerial photograph”) strongly suggests that photographs or aerial reconnaissance/bombing images were part of the original context, even if those images are no longer with the page.</p><figure>
+<img alt="Contrast enhanced research copy of the wartime inscription" src="images/wartime-inscription-enhanced.png"/>
+<figcaption>Contrast-enhanced research copy. Enhancement makes several strokes easier to compare but cannot restore ink or pencil information that was never captured in the photograph.</figcaption>
+</figure></section><section id="the-overwritten-name"><div class="section-num">05 · Research note</div><h2>5. The overwritten name</h2><p>The word at the right of the personal greeting/sign-off has been heavily overwritten or crossed through, but surviving strokes remain visible. Repeated enlargement, contrast work and comparison of the letter forms produced the following shortlist:</p><ol>
+<li><strong>Walther</strong> — currently the strongest candidate.</li>
+<li><strong>Walter</strong> — almost equally plausible; the difference depends on whether one tall stroke belongs to the original name or to the overwriting.</li>
+<li><strong>Wilhelm</strong> — possible, especially if the ending has been misread.</li>
+<li><strong>Willi</strong> — possible but weaker; the visible word appears somewhat too long.</li>
+</ol><p>The initial seems more likely to be a <strong>W</strong> than M, H or F. This remains one of the least certain parts of the inscription, and no specific historical airman should be identified from it yet.</p></section><section id="why-the-inscription-is-wartime"><div class="section-num">06 · Research note</div><h2>6. Why the inscription is wartime</h2><p>The phrase <strong>“Bomben in England”</strong>, combined with an apparent reference to English aircraft and an aerial photograph, places the note in the age of German aerial warfare against Britain. In historical terms, the realistic contexts are the <strong>First World War</strong> and the <strong>Second World War</strong>.</p><p>German air attacks on England began in the First World War with Zeppelin raids in 1915. Fixed-wing German bombing became especially significant in 1917. Historic England records that on <strong>25 May 1917</strong> the Germans launched a mass raid on south-east England with <strong>23 Gotha heavy bombers</strong>. The RAF Museum likewise describes 25 May as the first large-scale German daylight raid on Britain.</p><p>In the Second World War the Luftwaffe bombed Britain on a vastly greater scale, particularly during the Blitz beginning in 1940. Therefore <em>Bomben in England</em> by itself cannot distinguish WWI from WWII.</p></section><section id="why-the-first-world-war-is-currently-favoured"><div class="section-num">07 · Research note</div><h2>7. Why the First World War is currently favoured</h2><p>The WWI interpretation rests on several clues taken together, rather than on one decisive word:</p><ul>
+<li><strong>The handwriting.</strong> It looks more like older German Kurrent or a Kurrent-influenced personal hand than the more upright Sütterlin taught widely between the wars. This is supportive, not decisive: older writers continued using Kurrent long after newer scripts were introduced.</li>
+<li><strong>The month of May.</strong> The apparent phrase <em>“Luftaufnahme vom Mai”</em> is particularly suggestive because the large-scale Gotha campaign against Britain began on <strong>25 May 1917</strong>.</li>
+<li><strong>The operational language.</strong> “Bombs in England”, an apparent engagement with three English aircraft, and an aerial photograph read naturally as notes connected with an air operation.</li>
+<li><strong>The personal sign-off.</strong> The greeting to wife/child and “Küsschen von deinem …” makes the material feel personal rather than like a detached newspaper quotation.</li>
+</ul><p>On 25 May 1917, 23 Gothas were dispatched for London. Bad weather forced the formation onto targets in Kent, including Folkestone and Shorncliffe. The RAF Museum records that British aircraft were scrambled and that the returning Gothas were also engaged near the Belgian coast. That historical setting is strikingly compatible with the surviving phrases, although there is <strong>not enough evidence to identify a particular raid</strong>.</p><div class="note">
+<strong>Current dating judgment:</strong> WWI, probably <strong>1917–18</strong>, is the stronger interpretation. It should not yet be presented as mathematically proven, because WWII also involved German bombing of England and an older person could still have written in an older German hand in the 1940s.
+</div></section><section id="what-this-means-for-the-bible-s-journey-to-south-africa"><div class="section-num">08 · Research note</div><h2>8. What this means for the Bible's journey to South Africa</h2><p>For this reconstruction, the following family-history premises are being accepted as supplied:</p><ul>
+<li>The Bible remained in the possession of the same German-speaking family over many generations.</li>
+<li>Once it went to South Africa, it <strong>did not return to Europe</strong>.</li>
+<li>The present owner’s family tradition is therefore one of continuous inherited possession rather than later antiquarian purchase.</li>
+</ul><p>Under those premises, the wartime inscription materially changes the provenance story. A previous assumption that the Bible had permanently left Europe for South Africa <strong>before 1914</strong> becomes difficult to reconcile with a personal, apparently first-hand German aviation note written directly into the Bible.</p><p>There is one logical qualification. The words alone do not prove the <em>geographical location of the Bible at the moment the pencil touched the paper</em>: in principle, someone in South Africa could have received photographs or correspondence from Europe and annotated the Bible there. However, the personal sign-off, the caption-like operational wording, the overwritten name, and the continuous German family context make a European wartime origin the simpler explanation.</p><blockquote>
+<strong>Best provenance conclusion at present:</strong> the Bible was still in Europe — or at least still directly embedded in the family’s European wartime experience — during the First World War if the WWI reading is correct. If there was genuinely no return journey from South Africa, the traditional idea of a permanent pre-WWI migration should be treated as doubtful and the final move to South Africa should be sought <strong>after the wartime inscription</strong>.
+</blockquote></section><section id="a-reconstructed-chronology"><div class="section-num">09 · Research note</div><h2>9. A reconstructed chronology</h2><table>
+<thead><tr><th>Date</th><th>Evidence / event</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>1656–1706</td><td>Dilherr/Endter Luther Bible printed in Nuremberg in the older Endter I series.</td><td>High confidence</td></tr>
+<tr><td>7 May 1843</td><td>Flyleaf inscribed: Anna Maria Elisabeth Derlin, née Gerds, Klein Sarau.</td><td>Very high confidence</td></tr>
+<tr><td>1841–1843</td><td>Archival case names widowed full-farm holder Anna Maria Elisabeth Derlin née Geertz of Klein Sarau.</td><td>Independent institutional record; likely the same woman</td></tr>
+<tr><td>1915 onward</td><td>German aerial bombing of England during WWI begins with airships.</td><td>Historical fact</td></tr>
+<tr><td>25 May 1917</td><td>First large-scale German daylight Gotha raid on Britain; major fixed-wing England campaign begins.</td><td>Historical fact</td></tr>
+<tr><td>c. 1917–18?</td><td>Probable date of the pencil aviation inscription.</td><td>Strong working hypothesis</td></tr>
+<tr><td>Later</td><td>Bible ultimately travels to South Africa and remains in the family.</td><td>Family-history fact; exact date still to establish</td></tr>
+</tbody>
+</table></section><section id="the-most-important-new-discovery-the-derlin-klein-sarau-link"><div class="section-num">10 · Research note</div><h2>10. The most important new discovery: the Derlin/Klein Sarau link</h2><p>The archival match means the 1843 page is no longer just an anonymous old family inscription. It can probably be attached to a real person and place. The Landesarchiv catalogue describes Anna Maria Elisabeth Derlin as a <strong>widow</strong> and <strong>Vollhufnerin</strong> (a holder of a full farm holding) involved in litigation with the Amt Ratzeburg over dispossession between 1841 and 1843.</p><p>This provides a promising route forward: instead of searching blindly through German aircrew lists, the family can be traced <strong>forward from Anna Maria Elisabeth Derlin and Klein Sarau</strong>. If a descendant or close family member named Walter, Walther, Wilhelm or a similar W-name appears at military age in 1914–18, the overwritten signature can then be tested against a real family candidate.</p></section><section id="what-is-established-and-what-is-not"><div class="section-num">11 · Research note</div><h2>11. What is established, and what is not</h2><table>
+<thead><tr><th>Finding</th><th>Assessment</th></tr></thead>
+<tbody>
+<tr><td>The Bible is a German Dilherr/Endter Luther Bible, older Endter I series.</td><td><strong>Very strong</strong></td></tr>
+<tr><td>The flyleaf says Anna Maria Elisabeth Derlin, née Gerds, Klein Sarau, 7 May 1843.</td><td><strong>Very strong</strong></td></tr>
+<tr><td>The archival Anna Maria Elisabeth Derlin née Geertz of Klein Sarau is the same woman.</td><td><strong>Highly likely</strong>, but primary record comparison would make it definitive.</td></tr>
+<tr><td>The pencil note says “Bomben in England”.</td><td><strong>Strong</strong></td></tr>
+<tr><td>It refers to three English aircraft.</td><td><strong>Probable</strong></td></tr>
+<tr><td>It refers to an aerial photograph from May.</td><td><strong>Probable to strong</strong></td></tr>
+<tr><td>The overwritten name is Walther or Walter.</td><td><strong>Plausible, not proven</strong></td></tr>
+<tr><td>The inscription is connected with wartime German aerial operations against England.</td><td><strong>Very strong</strong></td></tr>
+<tr><td>It dates specifically to WWI.</td><td><strong>Favoured interpretation</strong>, not absolute proof.</td></tr>
+<tr><td>It is specifically the May 1917 Gotha raid.</td><td><strong>Interesting hypothesis only</strong>.</td></tr>
+<tr><td>The Bible physically remained in Europe until the war.</td><td><strong>Likely under the family-history premises and first-hand interpretation</strong>, but location is not stated explicitly in the note.</td></tr>
+</tbody>
+</table></section><section id="best-next-research-steps"><div class="section-num">12 · Research note</div><h2>12. Best next research steps</h2><ol>
+<li><strong>Trace the Derlin family forward from Klein Sarau.</strong> Use church books, civil registers and the Lauenburg archival records to build the descendants of Anna Maria Elisabeth Derlin.</li>
+<li><strong>Obtain the 1841–1843 court file.</strong> The archival references include <code>LASH, Abt. 216 Nr. 248</code> and a related Arcinsys entry <code>Abt. 217 Nr. 76</code>. These may contain family relationships, property details or signatures.</li>
+<li><strong>Look for W-names in the WWI generation.</strong> Walter, Walther and Wilhelm should be prioritised, but the handwriting should lead the genealogy rather than the other way around.</li>
+<li><strong>Only then search military aviation records.</strong> A family candidate with a full name, birth date and place would make military identification much more realistic.</li>
+<li><strong>When physical access is possible again, photograph the note under raking light from several directions.</strong> High-resolution RAW images, and ideally professional infrared/UV or multispectral imaging, may separate the overwritten signature from the underlying writing.</li>
+<li><strong>Do not erase, clean, trace or chemically treat the pencil.</strong> The faint note is now significant provenance evidence.</li>
+</ol></section><section id="sources-and-research-status"><div class="section-num">13 · Research note</div><h2>13. Sources and research status</h2><ul>
+<li><strong>Primary evidence:</strong> photographs of the Bible and both sides of the 1843/wartime flyleaf supplied by the family.</li>
+<li><strong>Earlier bibliographical study:</strong> the family’s previous research report identifying the Dilherr/Endter Bible, hosted at <a href="https://lucasforde.co.uk/german-bible/">lucasforde.co.uk/german-bible/</a>.</li>
+<li><strong>Deutsche Digitale Bibliothek / Landesarchiv Schleswig-Holstein:</strong> <a href="https://www.deutsche-digitale-bibliothek.de/item/ELIMHGELP3YSQKHGAIUDASVHDFHHQU2G">1841–1843 case of Anna Maria Elisabeth Derlin née Geertz of Klein Sarau</a>.</li>
+<li><strong>Historic England:</strong> <a href="https://historicengland.org.uk/research/current/discover-and-understand/military/first-world-war-home-front/air/first-blitz/">First World War: The First Blitz</a>.</li>
+<li><strong>RAF Museum:</strong> <a href="https://www.rafmuseum.org.uk/research/research-enquiries/history-of-aviation-timeline/british-military-aviation/1917-2/">British military aviation timeline — 1917</a> and <a href="https://www.rafmuseum.org.uk/blog/the-few-and-the-first-battle-of-britain-part/">The Few and the First Battle of Britain</a>.</li>
+<li><strong>Handwriting context:</strong> <a href="https://www.transkribus.org/de/suetterlin-schrift">Transkribus overview of Kurrent and Sütterlin</a>. Handwriting style is used only as supporting evidence, not as a standalone date.</li>
+<li><strong>Secondary genealogical lead:</strong> Genealogie Online records for the Derlin/Gerds family in Klein Sarau. These should be checked against original Lutheran registers before being treated as proven genealogy.</li>
+</ul><hr/><p class="small muted"><strong>Interpretive caution:</strong> This document deliberately separates secure readings from reconstructions. Old German handwriting, faded pencil and show-through from the 1843 inscription create a real risk of seeing plausible words that are not actually present. The phrases “Bomben in England” and “Luftaufnahme … Mai” are the key anchors; the name, line 4 and line 5 remain the main unresolved areas.</p></section></main></div><div class="shell footer">Prepared as a working research synthesis. Secure readings and provisional interpretations are distinguished in the text.</div></body></html>
