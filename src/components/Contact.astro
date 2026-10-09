@@ -29,6 +29,13 @@ const year = new Date().getFullYear();
   </article>
 
   <footer class="site-footer">
-    <span>&copy; Lucas Forde {year}</span>
+    <span>&copy; Lucas Forde <span data-copyright-year>{year}</span></span>
   </footer>
 </section>
+
+<script>
+  const copyrightYear = document.querySelector("[data-copyright-year]");
+  if (copyrightYear) {
+    copyrightYear.textContent = String(new Date().getFullYear());
+  }
+</script>

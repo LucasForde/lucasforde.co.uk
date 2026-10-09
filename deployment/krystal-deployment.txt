@@ -1,0 +1,87 @@
+Krystal deployment - 07-10-2026
+
+Latest update - 09-10-2026
+Rebuilt and manually published the current working copy, including the restored
+german-bible, one-page-scroll, saxon-15-months and saxon-2-months folders.
+The footer now updates its copyright year in the browser on each page load,
+with the build-time year retained as a fallback when JavaScript is disabled.
+Verified all 29 published files against local SHA-256 hashes over public HTTPS.
+All six restored directory page URLs returned HTTP 200. The live footer script
+also displayed 2027 when executed with a simulated future year.
+The homepage rendered without console errors or horizontal overflow.
+Backup before this update:
+/home/lucasforde/lucasforde-backup-2026-10-09-before-year-update.zip
+Uploaded assets archive retained outside the web root:
+/home/lucasforde/lucasforde-release-2026-10-09.zip
+Assets and restored folders were published before the new homepage.
+The server's .htaccess and .well-known were preserved; CNAME was excluded.
+Publishing remains manual. No DNS changes or Git commit/push for this update.
+
+Live site: https://lucasforde.co.uk/
+Hosting: Krystal Unity reseller service, existing allocation
+Server: c116.lon.cloudhosting.net
+IPv4: 185.199.220.116
+cPanel account: lucasforde
+Package: dcdfbddd_managed_2gb
+Document root: /home/lucasforde/public_html
+Access: Krystal > WHM > List Accounts > lucasforde > cPanel
+
+The initial deployment published the Astro static build, excluding the deleted
+german-bible, one-page-scroll, saxon-15-months and saxon-2-months directories.
+The GitHub Pages CNAME file is not needed on Krystal and was not uploaded.
+
+DNS
+Nameservers remain at Fasthosts (ns1/ns2/ns3.livedns.co.uk).
+The four GitHub Pages apex A records were replaced by 185.199.220.116.
+The www CNAME changed from lucasforde.github.io to lucasforde.co.uk.
+All other records, including Google email and client subdomains, are unchanged.
+The before/after CSV exports in this directory are the DNS rollback reference.
+Temporary Krystal verification and ACME challenge TXT records were removed.
+
+HTTPS
+A Let's Encrypt certificate for apex and www was installed before DNS cutover.
+It expires on 05-01-2027. cPanel reports is_autossl=1, provider LetsEncrypt,
+and AutoSSL active for the website. Mail and unused service hostnames are
+excluded from this account's AutoSSL; their public DNS has not been changed.
+The status page still retained DCV errors from before the DNS cutover during
+verification. A successful future renewal has not been observed in this task.
+Check SSL/TLS Status after DNS caches expire if those warnings remain.
+Mail routing is explicitly Remote Mail Exchanger; Google handles email.
+
+Redirects
+public/.htaccess redirects HTTP and www to https://lucasforde.co.uk/ and
+disables directory listings. ACME challenge paths are exempt from redirects.
+On the server, the existing cPanel-generated PHP handler block was preserved
+below these rules. Do not overwrite server-generated configuration blindly.
+
+Verification
+Production build passed. All seven public HTML/JS/CSS/image/icon files matched
+the local build SHA-256 hashes when fetched directly from Krystal over HTTPS.
+Apex HTTPS, HTTP-to-HTTPS and www-to-apex redirects passed.
+The live browser response identified LiteSpeed, confirming the Krystal origin.
+Desktop screenshot checked at 1440x900. Mobile DOM checked at 393x852 with
+Android/touch emulation: static layout active, no horizontal overflow, contact
+section fills the viewport at the bottom. Mobile screenshot capture stalled;
+this was not a physical-device test.
+
+Future publishing
+Run npm ci and npm run build. Upload the CONTENTS of dist to public_html,
+excluding CNAME. Retain .well-known and cPanel-generated configuration.
+Preserve server backups and review deletions before replacing a live release.
+Publishing to Krystal is manual; no automatic deployment is configured.
+Following the migration, GitHub Pages was confirmed off (has_pages=false) for
+both LucasForde/lucasforde.co.uk and LucasForde/ingaforde.co.uk. Both Pages
+settings screens require an upgrade or public repository to enable Pages.
+Removed lucasforde.co.uk's .github/workflows/deploy.yml from main in commit
+f6954527dcfaa858054db28155f565ac7284de69 and fast-forwarded the local checkout.
+That commit changes only the obsolete Pages workflow. Inga's repository has
+no custom deployment workflow to remove; its working copy was left untouched.
+GitHub's legacy dynamic/pages/pages-build-deployment entries remain marked
+active. Attempts to disable those entries or delete Pages returned HTTP 500;
+Pages itself remains off. No hosting or DNS changes were made during cleanup.
+
+Rollback
+GitHub Pages is no longer an available rollback target without re-enabling
+it and publishing a verified build first. Prefer restoring a known-good build
+on Krystal. The old DNS export is historical, not a ready-to-use rollback.
+Do not restore the entire zone over subsequent unrelated DNS changes.
