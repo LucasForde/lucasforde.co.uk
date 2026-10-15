@@ -549,6 +549,8 @@ body.is-loading:not(.is-loaded) .site-title--hero {
 .intro-link {
   display: inline-block;
   flex-shrink: 0;
+  padding: 10px 16px;
+  border: 1px solid var(--color-foreground);
   font-weight: 500;
   line-height: 1.3;
 }
