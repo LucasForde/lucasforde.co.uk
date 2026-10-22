@@ -9,6 +9,35 @@ import Contact from "../components/Contact.astro";
 import { STATIC_LAYOUT_MEDIA_QUERY, STATIC_LAYOUT_USER_AGENT_TOKENS } from "../scripts/static-layout";
 
 const title = "Lucas Forde | Web Design and Development | Tunbridge Wells";
+const description = "Lucas Forde is a freelance web designer and developer in Tunbridge Wells, offering website design, improvements, managed hosting and ongoing support.";
+const canonicalUrl = new URL("/", Astro.site).href;
+const personId = `${canonicalUrl}#lucas-forde`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${canonicalUrl}#website`,
+      name: "Lucas Forde",
+      url: canonicalUrl,
+      description,
+      inLanguage: "en-GB",
+      publisher: { "@id": personId },
+    },
+    {
+      "@type": "Person",
+      "@id": personId,
+      name: "Lucas Forde",
+      url: canonicalUrl,
+      jobTitle: "Freelance web designer and developer",
+      description,
+      sameAs: [
+        "https://www.linkedin.com/in/lucasforde/",
+        "https://github.com/LucasForde",
+      ],
+    },
+  ],
+};
 const staticLayoutUserAgentTokens = STATIC_LAYOUT_USER_AGENT_TOKENS;
 const staticLayoutMediaQuery = STATIC_LAYOUT_MEDIA_QUERY;
 ---
@@ -39,6 +68,19 @@ const staticLayoutMediaQuery = STATIC_LAYOUT_MEDIA_QUERY;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="google-site-verification" content="4ekPkqUgAg1MzQnLCZxqd2duRcxTQTkQVVDWY0Uecy0" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lucas Forde" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body class="is-loading">
     <Loader />
